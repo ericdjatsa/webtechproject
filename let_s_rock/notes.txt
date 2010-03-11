@@ -1,0 +1,4 @@
+Subversion : http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=8100
+
+
+PATH=C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\TortoiseSVN\bin;C:\Program Files\Graphviz2.24\bin;C:\Program Files\QuickTime\QTSystem\;C:\Program Files\Google\google_appengine\;C:\Program Files\gettext-utils\bin;C:\Python26
