@@ -1,4 +1,10 @@
-Subversion : http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=8100
+Subversion :
+	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=8100
 
-
-PATH=C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\TortoiseSVN\bin;C:\Program Files\Graphviz2.24\bin;C:\Program Files\QuickTime\QTSystem\;C:\Program Files\Google\google_appengine\;C:\Program Files\gettext-utils\bin;C:\Python26
+IMDB - API & Interfaces (IMDBPHP) :
+	http://www.izzysoft.de/software/docs/imdbphp/
+	http://www.izzysoft.de/software/demos/imdbphp/
+	http://projects.izzysoft.de/trac/imdbphp/wiki/IMDBPHP
+	http://www.imdb.com/interfaces
+	http://projects.izzysoft.de/trac/imdbphp/browser/branches/php4-imdbonly/test/imdb_trailers.inc
+	www.php.net

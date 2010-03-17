@@ -4,7 +4,8 @@ Created on 14 mars 2010
 @author: Christophe
 '''
 
-from db.backends.mysql import creation
+from django.db import models
+
 from base.Base_Models import Individual_Model
 from base.Base_Models import WTP_Serializable_Model
 
