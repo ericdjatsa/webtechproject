@@ -1,0 +1,14 @@
+{% block content %}
+<a href="/playground/sandbox/">back</a><br />
+<h1>Message</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<table>
+<tr><td>title</td><td>{{ message.title }}</td></tr>
+<tr><td>text</td><td>{{ message.text }}</td></tr>
+<tr><td>timestamp</td><td>{{ message.timestamp }}</td></tr>
+</table>
+
+{% endblock content %}
+
