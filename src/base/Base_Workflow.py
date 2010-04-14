@@ -43,40 +43,40 @@ class Base_Workflow():
     def request(self):
         return self.__request
 
-    def isInRequest(self, fieldName):
+    def is_in_request(self, fieldName):
         return self.__request.has_key(fieldName)
 
-    def fieldIsNotEmpty(self, fieldName):
+    def field_is_not_empty(self, fieldName):
         if self.isInRequest(fieldName):
             if self.request()[fieldName] != "" and self.request()[fieldName]:
                 return True
             else: return False
         else: return False
 
-    def dataPipe(self):
+    def data_pipe(self):
         return self.__dataPipe
 
     def response(self):
         return self.__response
 
-    def add2Response(self, key, value):
+    def add_to_response(self, key, value):
         self.__response[key] = value
 
-    def registerInvalidField(self, fieldName, comments):
+    def register_invalid_field(self, fieldName, comments):
         self.__response["invalid_fields"][fieldName] = comments
         self.isInputValid = False
 
-    def getInvalidFields(self):
+    def get_invalid_fields(self):
         return self.__response["invalid_fields"]
 
-    def validateFieldNotNull(self, fieldName):
+    def validate_field_not_null(self, fieldName):
         if self.request().has_key(fieldName):
             if self.request()[fieldName] is not None: return True
         
         self.registerInvalidField(fieldName, "field value is empty")
         return None
 
-    def validateStringFieldNotEmpty(self, fieldName):
+    def validate_string_field_not_empty(self, fieldName):
 
         if not self.request().has_key(fieldName): value = None
         else: value = self.request()[fieldName]
@@ -86,7 +86,7 @@ class Base_Workflow():
             return False
         else: return True
 
-    def validateIntField(self, fieldName):
+    def validate_int_field(self, fieldName):
 
         if not self.request().has_key(fieldName) : value = None
         else: value = self.request()[fieldName]
@@ -96,7 +96,7 @@ class Base_Workflow():
             return False
         else: return True
 
-    def validateDateField(self, fieldName):
+    def validate_date_field(self, fieldName):
 
         if not self.request().has_key(fieldName): value = None
         else : value = self.request()[fieldName]
@@ -106,7 +106,7 @@ class Base_Workflow():
             return False
         else: return True
 
-    def validateFieldValueInRange(self, fieldName, range):
+    def validate_field_value_in_range(self, fieldName, range):
 
         if not self.request().has_key(fieldName): value = None
         else : value = self.request()[fieldName]
@@ -116,7 +116,7 @@ class Base_Workflow():
             self.registerInvalidField(fieldName, "value is not supported")
             return False
 
-    def validateInput(self):
+    def validate_input(self):
         """
             perform input validation, requestParameters are validated (+ permissions based on the authorization)
 
