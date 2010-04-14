@@ -15,6 +15,11 @@ class Base_Entity():
 
     def update(self):
         self.__model.put()
+        
+    @classproperty    
+    def model():
+        def fget(self): return self.__model
+        def fset(self, model): pass
 
     @classproperty
     def id():
