@@ -1,0 +1,90 @@
+<html>
+<head>
+<style type="text/css">
+#film_image_cell
+{
+	text-align: center; 
+}
+</style>
+</head>
+<body>
+
+<table id="mainlayout">
+ <tr>
+  <td colspan="2" id="page_header">
+   <!-- page header -->
+  </td>
+ </tr>
+ <tr>
+  <td id="page_navigation">
+   <!-- navigation -->
+  </td>
+  <td id="page_content">
+   <!-- page content -->
+   <!-- pagination links -->
+   <div class="pager">
+   {% if has_previous %}
+      <span class="page">
+      <a href="?page={{ previous }}">&lt; Prev</a>
+      </span>
+   {% endif %}
+
+   {% if show_first %}
+      <span class="page"><a href="?page=1">1</a></span>
+      <span class="ellipsis">...</span>
+   {% endif %}
+   {% for linkpage in page_numbers %}
+      {% ifequal linkpage page %}
+         <span class="current">{{ page }}</span>
+      {% else %}
+         <span class="page"><a href="?page={{ linkpage }}"
+               >{{ linkpage }}</a></span>
+      {% endifequal %}
+   {% endfor %}
+   {% if show_last %}
+      <span class="ellipsis">...</span>
+      <span class="page"><a href="?page=last">{{ pages }}</a></span>
+   {% endif %}
+   {% if has_next %}
+      <span class="page"><a href="?page={{ next }}">Next &gt;</a></span>
+   {% endif %}
+   </div>
+   <!-- film list -->
+
+  {% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
+
+   {% if object_list %}
+   <ul>{% for film in object_list %}
+      <li>
+	<table>
+		<tr><td>{{ film.title }}: {{ film.release_date.year }}</td></tr>
+		<tr><td id="film_image_cell"><img src="{{ film.image }}" /></td></tr>
+	</table>
+     </li>
+   {% endfor %}</ul>
+   {% endif %}
+
+   {% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
+
+  </td>
+ </tr>
+ <tr>
+  <td id="page_footer">
+   <!-- page footer -->
+  </td>
+ </tr>
+</table>
+
+<!--
+{% if latest_message_list %}
+    <ul>
+    {% for msg in latest_message_list %}
+        <li><a href="/playground/sandbox/message/{{ msg.id }}/">{{ msg.timestamp}}  {{ msg.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No messages posted yet.</p>
+{% endif %}
+-->
+</body>
+</html>
