@@ -78,4 +78,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'playground.sandbox', 
+    'playground.film', 
+    'playground.utils',
 )

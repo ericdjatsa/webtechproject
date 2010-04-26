@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Example:
     (r'^playground/', include('playground.sandbox.urls')),
+    (r'^film/', include('playground.film.urls')),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
