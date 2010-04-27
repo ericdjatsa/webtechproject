@@ -1,25 +1,26 @@
-<html>
-<head>
-<style type="text/css">
-#film_image_cell
+{% extends "film/base.html" %}
+
+{% block style %}
+.film_thumbnail
+{
+ float:	left;
+ width:	33%
+}
+
+td.center
 {
 	text-align: center; 
 }
-</style>
-</head>
-<body>
+{% endblock style %}
 
-<table id="mainlayout">
- <tr>
-  <td colspan="2" id="page_header">
+{% block page_header %}
    <!-- page header -->
-  </td>
- </tr>
- <tr>
-  <td id="page_navigation">
+   <a href="{% url playground.film.views.add_to_db %}">add film</a> 
+{% endblock page_header %}
+{% block page_nav %}
    <!-- navigation -->
-  </td>
-  <td id="page_content">
+{% endblock page_nav %}
+{% block page_content %}
    <!-- page content -->
    <!-- pagination links -->
    <div class="pager">
@@ -53,38 +54,21 @@
 
   {% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
 
+
    {% if object_list %}
-   <ul>{% for film in object_list %}
-      <li>
+   {% for film in object_list %}
+      <div class="film_thumbnail">
 	<table>
-		<tr><td>{{ film.title }}: {{ film.release_date.year }}</td></tr>
-		<tr><td id="film_image_cell"><img src="{{ film.image }}" /></td></tr>
+		<tr><td class="center"><img src="{{ film.image }}" /></td></tr>
+		<tr><td>{{ film.title }}</td></tr>
+		<tr><td class="center">{{ film.release_date.year }}</td></tr>
 	</table>
-     </li>
-   {% endfor %}</ul>
+      </div>
+   {% endfor %}
    {% endif %}
 
    {% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
-
-  </td>
- </tr>
- <tr>
-  <td id="page_footer">
+{% endblock page_content %}
+{% block page_footer %}
    <!-- page footer -->
-  </td>
- </tr>
-</table>
-
-<!--
-{% if latest_message_list %}
-    <ul>
-    {% for msg in latest_message_list %}
-        <li><a href="/playground/sandbox/message/{{ msg.id }}/">{{ msg.timestamp}}  {{ msg.title }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No messages posted yet.</p>
-{% endif %}
--->
-</body>
-</html>
+{% endblock page_footer %}
