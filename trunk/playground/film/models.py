@@ -8,3 +8,15 @@ class Film(models.Model):
 	release_date = models.DateTimeField('release_date')
 	image = models.CharField(max_length=200)
 
+class DiskScanResult(models.Model):
+	filename = models.CharField(max_length=256)
+	extension = models.CharField(max_length=32)
+	path = models.CharField(max_length=256)
+	md5 = models.CharField(max_length=64)
+
+class IgnoreTable(models.Model):
+	filename = models.CharField(max_length=256)
+	extension = models.CharField(max_length=32)
+	path = models.CharField(max_length=256)
+	md5 = models.CharField(max_length=64)
+	

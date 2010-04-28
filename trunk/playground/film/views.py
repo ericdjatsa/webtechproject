@@ -4,11 +4,32 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render_to_response
+from imdb import IMDb
 
+from playground.film.models import DiskScanResult
 
 def add_to_db(request):
-	template = loader.get_template('film/base.html')
+	diskScanResult  = DiskScanResult.objects.all()
+	#ignoredFiles = IgnoreFilms.objects().all()
+	imdb = IMDb(accessSystem='http')
+	imdbMatches = {}
+
+	#TODO subtract films from ignore list here
+	
+	imdb.set_proxy('')
+
+	for result in diskScanResult:
+		imdbResultSet = imdb.search_movie(result.filename)[:5]
+		imdbMatches[result.filename] = []
+		for imdbResult in imdbResultSet:
+#movie = imdb.get_movie(imdbResult)
+			imdbMatches[result.filename].append(imdbResult)
+		
+
+	template = loader.get_template('film/add_to_db.html')
 	context = Context({
+		'disk_scan_result': diskScanResult,
+		'imdb_matches': imdbMatches,
 	})
 	return HttpResponse(template.render(context))
 
