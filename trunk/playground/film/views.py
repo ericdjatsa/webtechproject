@@ -11,7 +11,7 @@ from playground.film.models import DiskScanResult
 def add_to_db(request):
 	diskScanResult  = DiskScanResult.objects.all()
 	#ignoredFiles = IgnoreFilms.objects().all()
-	imdb = IMDb(accessSystem='http')
+	imdb = IMDb(accessSystem='http', adultSearch=0)
 	imdbMatches = {}
 
 	#TODO subtract films from ignore list here
