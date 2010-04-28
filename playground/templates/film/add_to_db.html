@@ -28,6 +28,11 @@
 	    <table>
 	      {% for imdb_match in imdb_matches|key:result.filename %}
 	       <tr>
+	          <td>
+{# {% if imdb_match|key:'cover url' %} #}
+		     <img src="{{ imdb_match|key:'cover url' }}" alt="cover image"/>
+{#{% endif %} #}
+		  </td>
 	          <td>{{ imdb_match.title }}: {{ imdb_match.year }}</td>
 		  <td></td>
 	       </tr>

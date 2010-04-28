@@ -22,7 +22,7 @@ def add_to_db(request):
 		imdbResultSet = imdb.search_movie(result.filename)[:5]
 		imdbMatches[result.filename] = []
 		for imdbResult in imdbResultSet:
-#movie = imdb.get_movie(imdbResult)
+			imdb.update(imdbResult)
 			imdbMatches[result.filename].append(imdbResult)
 		
 
