@@ -4,12 +4,30 @@
 .film_thumbnail
 {
  float:	left;
- width:	33%
+ height: 240px; 
+ width: 180px;
+ margin: 4px;
+ text-align: center;
 }
+
+.thumbnail_image
+{
+ height: 60%;
+}	
 
 td.center
 {
 	text-align: center; 
+}
+
+p
+{
+ margin: 2px;
+}
+
+.bordered
+{
+	border: 	1px solid black;
 }
 {% endblock style %}
 
@@ -54,15 +72,14 @@ td.center
 
   {% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
 
-
-   {% if object_list %}
-   {% for film in object_list %}
-      <div class="film_thumbnail">
-	<table>
-		<tr><td class="center"><img src="{{ film.image }}" /></td></tr>
-		<tr><td>{{ film.title }}</td></tr>
-		<tr><td class="center">{{ film.release_date.year }}</td></tr>
-	</table>
+{% if object_list %}
+{% for film in object_list %}
+   <div class="film_thumbnail">
+	<div class="bordered">
+		<p class="center"><img src="{{ film.image }}" class="thumbnail_image"/></p>
+		<p>{{ film.title }}</p>
+		<p class="center">{{ film.release_date.year }}</p>
+	</div>
       </div>
    {% endfor %}
    {% endif %}
