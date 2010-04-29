@@ -7,23 +7,54 @@ from django.shortcuts import get_object_or_404, render_to_response
 from imdb import IMDb
 
 from playground.film.models import DiskScanResult
+from playground.film.models import Film
 
 def add_to_db(request):
 	diskScanResult  = DiskScanResult.objects.all()
 	#ignoredFiles = IgnoreFilms.objects().all()
 	imdb = IMDb(accessSystem='http', adultSearch=0)
 	imdbMatches = {}
+#	threadPool = ThreadPool(5)
+
 
 	#TODO subtract films from ignore list here
 	
 	imdb.set_proxy('')
 
+#	def parallelQueryImdbDetails(movie):
+#		imdb.update(movie)
+#		return 0
+#
+#	def parallelQueryImdbMovie(movieName):
+#		movies = imdb.search_movie(movieName)[:5]
+#		requests = makeRequests(parallelQueryImdbDetails, movies)
+#		[threadPool.putRequest(request) for request in requests]
+#		pool.wait()
+#		return movies
+#
+#	def parallelQueryImdbMovies(movies)
+#		requests = makeRequests(parallelQueryImdbMovie, movies)
+#		[threadPool.putRequest(request) for request in requests]
+#		pool.wait()
+#		return 
+		 
+
+
 	for result in diskScanResult:
 		imdbResultSet = imdb.search_movie(result.filename)[:5]
 		imdbMatches[result.filename] = []
+		firstResult = 1
 		for imdbResult in imdbResultSet:
+			#update only first of found movies to contain all data, as data retrieval takes a long time
+#			if firstResult:
+#				firstResult = 0
 			imdb.update(imdbResult)
 			imdbMatches[result.filename].append(imdbResult)
+		m = Film(title=imdbResultSet[0]['title'], release_date = datetime(year = imdbResultSet[0]['year'], month=1, day=1), image = imdbResultSet[0]['cover url'])
+		try:
+			m.save()
+		except:
+			pass
 		
 
 	template = loader.get_template('film/add_to_db.html')

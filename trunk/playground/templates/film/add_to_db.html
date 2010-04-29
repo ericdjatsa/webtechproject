@@ -3,6 +3,10 @@
 {% load custom_filters %}
 
 {% block style %}
+table.bordered, th.bordered, td.bordered, tr.bordered
+{
+border: 1px solid black;
+}
 {% endblock style %}
 
 {% block page_header %}
@@ -16,18 +20,18 @@
 
 
    {% if disk_scan_result %}
-   <table>
+   <table >
       <tr><th>filename</th><th>extension</th><th>path</th><th>MD5</th><th>imdb matches</th></tr>
    {% for result in disk_scan_result %}
-      <tr>
-         <td>{{ result.filename }}</td>
+      <tr class="bordered">
+         <td class>{{ result.filename }}</td>
 	 <td>{{ result.extension }}</td>
 	 <td>{{ result.path }}</td>
 	 <td>{{ result.md5 }}</td>
 	 <td>
 	    <table>
 	      {% for imdb_match in imdb_matches|key:result.filename %}
-	       <tr>
+	       <tr class="bordered">
 	          <td>
 {# {% if imdb_match|key:'cover url' %} #}
 		     <img src="{{ imdb_match|key:'cover url' }}" alt="cover image"/>
