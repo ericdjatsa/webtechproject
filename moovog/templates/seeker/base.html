@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>moovog - the movie catalog</title>
+    
+    {% block styles %}{% endblock %}
+    {% block scripts %}{% endblock %}
+    
+</head>
+<body>
+	<center>
+		<div class="contentMain" style="width: 500px;">
+		<h1 style="color: rgb(56, 149, 19); text-transform: uppercase;">moovog</h1>
+		    <div class="headerContent"><strong><label>Search Bar</label></strong></div>
+			    <form action="/seeker/general-search/" method="POST">
+	                <p>
+	                    <input name="search-bar" type="text" size="30" />
+	                </p>
+	                <p>
+	                    <input type="submit" value="Let's Go" />
+	                </p>
+	                <input type="radio" name="group1" value="general_search"> an actor ?<br>
+					<input type="radio" name="group1" value="movie_search"> a movie ?<br>
+					<input type="radio" name="group1" value="release_date_search"> a release date ?<br>
+					<input type="radio" name="group1" value="general_search" checked> don't know...<br>
+			    </form>
+	    </div>
+	    
+	    {% block results %}
+	    <div class="contentMain" style="width: 500px;">
+	    	<h2 style="color: rgb(128, 53, 19); text-transform: uppercase;">search result</h2>
+	    </div>
+	    <table border="1">
+			<tr>
+				<td>Cell 1</td>
+				<td>Cell 2</td>
+			</tr>
+		</table>
+		{% endblock %}
+		
+    </center>
+</body>
