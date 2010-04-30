@@ -43,19 +43,20 @@ p
    <!-- page content -->
    <!-- pagination links -->
    <!-- film list -->
-<p>
-  {% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
-</p>
-{% if object_list %}
-{% for film in object_list %}
-   <a href="{% url django.views.generic.list_detail.object_detail film.id %}">
-   <div class="film_thumbnail">
-	<p class="center"><img src="{{ film.image }}" class="thumbnail_image"/></p>
-	<p>{{ film.title }}</p>
-	<p class="center">{{ film.release_date.year }}</p>
-      </div>
-   </a>
-   {% endfor %}
+
+   {% if object %}
+   <div>
+      <p>
+         <h3>{{ object.title }}<h3>
+      </p>
+      <p>
+         {{ object.release_date.year }}
+      </p>
+      <p>
+         <img src="{{ object.image }}">
+      </p>	 
+   </div>   
+ 
    {% endif %}
 
 {% endblock page_content %}
