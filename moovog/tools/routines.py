@@ -22,3 +22,7 @@ def isValidInt(intString):
         i = int(intString)
         return i is not None
     except Exception, x : return False
+    
+def ModifyNoneToEmptyString(input):
+    if input is None : return ""
+    else: return input
