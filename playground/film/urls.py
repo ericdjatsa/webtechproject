@@ -4,7 +4,7 @@ from playground.film.models import Film
 
 film_dict = {
 	'queryset' : Film.objects.all(), 
-	'paginate_by' : 24,
+	'paginate_by' : 5,
 }
 
 urlpatterns = patterns('',
