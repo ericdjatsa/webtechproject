@@ -30,28 +30,18 @@ class General_Search_WF(Base_Workflow):
         # go and find into the models
         
         return result_movie_list
-        
-class Specific_Search_WF(Base_Workflow):
-    '''    SPECIFIC SEARCH
-        INPUT :
-            search string
-        OUTPUT :
-            list of models that correspond to the specific search options
-    '''
-    def __init__(self, input, authorization):
-        Base_Workflow.__init__(self, input, authorization_pipe)
     
-    def validate_input(self):
-        pass
-    
-    def process(self):
-        to_search = self.request()["search-bar"]
-        specific_options = self.request()["options"]
-        
-        result_list = []
-        # go and find the model according to the search options
-        
-        return result_list
+class Find_Movie_By_Actor(Base_Workflow):
+    pass
+
+class Find_Actor(Base_Workflow):
+    pass
+
+class Find_Director(Base_Workflow):
+    pass
+
+class Find_Writer(Base_Workflow):
+    pass
 
 class Fake_Actor_Builder(Base_Workflow):
     '''    FAKER TO BUILD ACTORS
