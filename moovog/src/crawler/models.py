@@ -13,28 +13,22 @@ except ImportError:
 class File(models.Model):
 	filename = models.CharField(max_length=255)
 	extension = models.CharField(max_length=5)
-	path = models.CharField(max_length=300)
-	hash_code = models.CharField(max_length=300)
+	path = models.CharField(max_length=255,unique=True)
+	hash_code = models.CharField(max_length=255,unique=True)
 
 	def __unicode__(self):
 		return self.filename
 	
-	#calcuates a file's url, and md5, also stores path, url, and md5 as attributes
+	#calculates a file's url, and md5, also stores path, url, and md5 as attributes
 	def setFields(self,path,index):
 		self.path=path
 		self.index=index
 			
 	def genMD5(self,depth=None):
-		print 'entering genMD5'
-		#if not depth:
-		#	print 'no value for depth'
-		#	f=open(self.path,'rb').read()
-		#else:
-		print 'file path:',self.path
 		f=open(self.path,'rb').read(depth)
 		#for python 2.5
 		#self.hash_code=md5.new(f).hexdigest()
 		md5_constructor.update(f)
 		self.hash_code=md5_constructor.hexdigest()
 		
-admin.site.register(File)
+#admin.site.register(File)
