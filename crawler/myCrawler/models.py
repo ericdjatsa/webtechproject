@@ -2,9 +2,11 @@
 from django.db import models
 from django.contrib import admin
 try:
+	#for python 2.6
 	import hashlib
 	md5_constructor = hashlib.md5()
 except ImportError:
+	#for python 2.5
 	import md5
 	md5_constructor = md5.new()
 
@@ -13,6 +15,7 @@ class File(models.Model):
 	extension = models.CharField(max_length=5)
 	path = models.CharField(max_length=300)
 	hash_code = models.CharField(max_length=300)
+
 	def __unicode__(self):
 		return self.filename
 	
