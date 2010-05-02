@@ -82,4 +82,5 @@ INSTALLED_APPS = (
     'moovog.src.seeker',
     'moovog.src.frontend',
     'moovog.src.utils',
+	'moovog.src.crawler',
 )
