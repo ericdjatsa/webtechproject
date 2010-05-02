@@ -7,6 +7,9 @@ admin.autodiscover()
 urlpatterns = patterns('',
                        (r'^$','views.index'),
                        (r'^seeker/', include('src.seeker.urls')),
+
+
+    (r'^frontend/', include('src.frontend.urls')),
     # Example:
     # (r'^moovog/', include('moovog.foo.urls')),
 

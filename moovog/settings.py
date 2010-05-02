@@ -69,7 +69,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    r'C:\xampplite\svn\moovog\templates'
+    r'C:\xampplite\svn\moovog\templates',
+    r'/home/zaddach/projects/webtech/svn/trunk/moovog/templates',
 )
 
 INSTALLED_APPS = (
@@ -79,4 +80,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'moovog.src.seeker',
+    'moovog.src.frontend',
+    'moovog.src.utils',
 )
