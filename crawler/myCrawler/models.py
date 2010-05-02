@@ -32,11 +32,9 @@ class File(models.Model):
 		#else:
 		print 'file path:',self.path
 		f=open(self.path,'rb').read(depth)
-		print 'bytes read from file:',f
 		#for python 2.5
 		#self.hash_code=md5.new(f).hexdigest()
 		md5_constructor.update(f)
 		self.hash_code=md5_constructor.hexdigest()
-		print 'hash code',self.hash_code
 		
 admin.site.register(File)

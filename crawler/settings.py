@@ -10,9 +10,9 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'MovieDB'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'moviedb'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'moviedb'         # Not used with sqlite3.
+DATABASE_NAME = 'playground'             # Or path to database file if using sqlite3.
+DATABASE_USER = 'playground'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'playground'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
