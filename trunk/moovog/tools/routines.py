@@ -4,6 +4,8 @@ Created on 19 avr. 2010
 @author: Christophe
 '''
 
+from tools.parser import parse
+
 def isValidDate(dateString):
     """
         checks if provided date string contains a valid date
@@ -23,6 +25,8 @@ def isValidInt(intString):
         return i is not None
     except Exception, x : return False
     
-def ModifyNoneToEmptyString(input):
-    if input is None : return ""
-    else: return input
+def isValidTime(timeString):
+    """ 
+        returns True if the timeString contains a valid time
+    """
+    pass

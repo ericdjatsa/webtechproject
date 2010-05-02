@@ -6,6 +6,7 @@ Replace these with more appropriate tests for your application.
 """
 
 from django.test import TestCase
+from src.seeker.models import *
 
 class SimpleTest(TestCase):
     def test_basic_addition(self):
@@ -21,3 +22,7 @@ Another way to test that 1 + 1 is equal to 2.
 True
 """}
 
+class Movie_Model_Test(TestCase):
+
+    def add_movie_model_test(self):
+        pass
