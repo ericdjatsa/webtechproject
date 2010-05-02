@@ -4,7 +4,7 @@
 #
 #Usage:
 #
-##################################Configuration Variables####################################################################################
+###############################Configuration Variables#######################################################################
 BIT_DEPTH=2048 #depth to read to when check a file's md5 signature - used for excluding duplicates from the index, 2kb seems to work well
 URL_BASES=['http://localhost/'] #url bases for the directories to be crawled,they are located on the NAS
 #DIRS=['\\\\movies\\action\\','\\\\movies\\romance\\','\\\\acmecorp\\cartoons\\'] #directories to crawl
@@ -23,43 +23,8 @@ class crawler:
 	def __init__(self):
 		print 'executing crawler.init()'
 		self.start_time=time.time() #start time for progress and logging
-        
-	def crawl(self):
-		#walk listed directories and then generate file 
-		#objects (url, md5, path) for each acceptable file
-		self.__walk()
-		self.paths_unique=[]
-		self.crawl_times=[]
-		cnt_total=0; cnt=0
 
-		#File.delete_all()
-		
-		for f_path in self.full_paths:
-			paths_d={}                      #files - these dictonary files contain unique files to be indexed
-			try:                        #catch various errors that may occur here - bad file names, files 
-				f=File(filename=os.path.basename(f_path),path=f_path)
-				f_ext=os.path.splitext(f.filename)[1]
-				f.extension=f_ext
-				print 'file:',f,'path:',f.path
-				f_ext=os.path.splitext(f.filename)[1]
-				f.genMD5(BIT_DEPTH)     #removed between the os.walk and this bit of execution, etc.
-				if not paths_d.has_key(f.hash_code):
-					print 'file info'
-					print 'file extension:',f.extension
-					#f.save()
-					paths_d[f.hash_code]=[f.path]
-				else:
-					f_list=paths_d[f.hash_code]
-					f_list.append(f)
-					paths_d[f.hash_code]=f_list
-			except:
-				print 'Error processing', f_path
-			self.paths_unique.append(paths_d)
-		print 'paths unique',self.paths_unique
-		#save results into DB
-		
-		
-	def __walk(self):
+        def walk(self):
 		#walk the parent directories, saving a list of files to be indexed
 		self.paths=[]
 		self.full_paths=[]
@@ -69,16 +34,17 @@ class crawler:
 			paths=[]
 			found=0
 			for dirpath, dirnames, filenames in os.walk(p):
+				print 'dirpath :',dirpath,' dirnames: ',dirnames
 				paths.extend([os.path.join(dirpath,p)])
 				print 'filenames',filenames
-				for i in filenames:
-					if self.__ok_ext(i):
+				for f in filenames:
+					if self.__ok_ext(f):
 						found+=1
 						#print len(paths), 'files found in', p+'.'
-						self.paths.append(paths)
-						self.full_paths.extend([os.path.join(dirpath,i)])
-						tmp=len(paths)
-						cnt+=tmp
+						#self.paths.append(paths)
+						self.full_paths.extend([os.path.join(dirpath,f)])
+						#tmp=len(paths)
+						#cnt+=tmp
 			#print '%i files found in %s' %(tmp, p)
 		print 'full paths',self.full_paths
 		print 'A total of %i files were found in the %i directories scanned' %(found, len(DIRS))
@@ -89,4 +55,42 @@ class crawler:
 		if f_ext in CRAWL_EXT and fname[0]!='~':
 			return True
 		return False
-	
+
+	def crawl(self):
+		#walk listed directories and then generate file 
+		#objects (url, md5, path) for each acceptable file
+		self.walk()
+		self.Files={} #dictionary : {key=file_hash,value=file}
+		self.paths_unique=[] #this is a list [key=file_hash, value= file_path]
+		#self.crawl_times=[]
+		cnt_total=0; cnt=0
+
+		#File.delete_all()
+		
+		for f_path in self.full_paths:
+			paths_d={}                  #files - these dictonary files contain unique files to be indexed
+			try:                        #catch various errors that may occur here - bad file names, files 
+				f=File(filename=os.path.basename(f_path),path=f_path)
+				f_ext=os.path.splitext(f.filename)[1]
+				f.extension=f_ext
+				print 'file:',f,'path:',f.path
+				f.genMD5(BIT_DEPTH)
+				if not paths_d.has_key(f.hash_code):
+					print 'file info'
+					print 'file extension:',f.extension
+					paths_d[f.hash_code]=[f.path]
+				else:
+					paths_d[f.hash_code].append(f.path)
+			except:
+				print 'Error processing', f_path
+			self.Files[f.hash_code]=f
+			self.paths_unique.append(paths_d)
+		print 'Files: ',self.Files
+
+	def saveToDB(self):
+		print 'looping into files'
+		for (k,f) in self.Files.items():
+			print 'filename: ', f.filename
+			#save results into DB
+			f.save()
+    
