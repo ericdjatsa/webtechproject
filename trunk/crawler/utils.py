@@ -8,7 +8,7 @@
 BIT_DEPTH=2048 #depth to read to when check a file's md5 signature - used for excluding duplicates from the index, 2kb seems to work well
 URL_BASES=['http://localhost/'] #url bases for the directories to be crawled,they are located on the NAS
 #DIRS=['\\\\movies\\action\\','\\\\movies\\romance\\','\\\\acmecorp\\cartoons\\'] #directories to crawl
-DIRS=['Movies/']
+DIRS=['/home/zaddach/Movies/']
 DIRS_BASES=['\\\\acmecorp\\action\\','\\\\acmecorp\\romance\\','\\\\acmecorp\\cartoons\\'] #web root of these directories 
 CRAWL_EXT=['.avi','.mpeg','.divx','.wmv'] #file types to list
 START_DIR=DIRS[0] #the directory where the 'master' url list is located - this list has hyperlinks to the other lists
@@ -21,7 +21,7 @@ class crawler:
         #extensions (CRAWL_EXT variable), dictionary keys are the file's md5 hash (computed to BIT_DEPTH
         #in the file), and the dictionary values are list of file objects for a given md5 value. 
 	def __init__(self):
-		print 'executing crawler.init()'
+		#print 'executing crawler.init()'
 		self.start_time=time.time() #start time for progress and logging
 
         def walk(self):
@@ -34,9 +34,9 @@ class crawler:
 			paths=[]
 			found=0
 			for dirpath, dirnames, filenames in os.walk(p):
-				print 'dirpath :',dirpath,' dirnames: ',dirnames
+				#print 'dirpath :',dirpath,' dirnames: ',dirnames
 				paths.extend([os.path.join(dirpath,p)])
-				print 'filenames',filenames
+				#print 'filenames',filenames
 				for f in filenames:
 					if self.__ok_ext(f):
 						found+=1
@@ -72,12 +72,12 @@ class crawler:
 			try:                        #catch various errors that may occur here - bad file names, files 
 				f=File(filename=os.path.basename(f_path),path=f_path)
 				f_ext=os.path.splitext(f.filename)[1]
-				f.extension=f_ext
-				print 'file:',f,'path:',f.path
+				f.extension=f_ext[1:]
+				#print 'file:',f,'path:',f.path
 				f.genMD5(BIT_DEPTH)
 				if not paths_d.has_key(f.hash_code):
-					print 'file info'
-					print 'file extension:',f.extension
+					#print 'file info'
+					#print 'file extension:',f.extension
 					paths_d[f.hash_code]=[f.path]
 				else:
 					paths_d[f.hash_code].append(f.path)
@@ -85,12 +85,12 @@ class crawler:
 				print 'Error processing', f_path
 			self.Files[f.hash_code]=f
 			self.paths_unique.append(paths_d)
-		print 'Files: ',self.Files
+		#print 'Files: ',self.Files
 
 	def saveToDB(self):
 		print 'looping into files'
 		for (k,f) in self.Files.items():
-			print 'filename: ', f.filename
+			#print 'filename: ', f.filename
 			#save results into DB
 			f.save()
     
