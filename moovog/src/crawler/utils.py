@@ -15,7 +15,8 @@ START_DIR=DIRS[0] #the directory where the 'master' url list is located - this l
 OUT_FNAME='default.htm' #output filename
 #############################################################################################################################################
 import MySQLdb, time, os, os.path
-from myCrawler.models import File
+#from . .settings.py import *
+from models import File
 class crawler:
         #crawl a list of directories, creating a list of dictionary files which match acceptable file
         #extensions (CRAWL_EXT variable), dictionary keys are the file's md5 hash (computed to BIT_DEPTH
