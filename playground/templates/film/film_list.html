@@ -1,19 +1,35 @@
 {% extends "film/base.html" %}
 
+{% block head %}
+<script src="http://cdn.jquerytools.org/1.1.2/jquery.tools.min.js"></script>
+<script type="text/javascript">
+$(document).ready(
+	function() 
+	{	 
+		// enable tooltip for "download" element. use the "slide" effect 
+		$(".film_thumbnail").tooltip({ 
+			effect: "toggle",
+			position: "bottom center",
+			offset: [-100, 0],
+			predelay: 1000,});  
+	});
+</script>
+{% endblock %}
+
 {% block style %}
 .film_thumbnail
 {
- float:	left;
- height: 240px; 
- width: 180px;
- margin: 4px;
- text-align: center;
- border: 1px solid black;
+	float:	left;
+	height: 240px; 
+	width: 180px;
+	margin: 4px;
+	text-align: center;
+	border: 1px solid black;
 }
 
 .thumbnail_image
 {
- height: 70%;
+	height: 60%;
 }	
 
 td.center
@@ -23,18 +39,27 @@ td.center
 
 p
 {
- margin: 2px;
+	margin: 2px;
 }
 
 .bordered
 {
 	border: 	1px solid black;
 }
+
+.film_tooltip
+{
+	display:		none;
+	height:		240px;
+	width:		320px;
+	background:	#555555; 
+	color:		#000000;
+}
 {% endblock style %}
 
 {% block page_header %}
-   <!-- page header -->
-   <a href="{% url playground.film.views.add_to_db %}">add film</a> 
+	<!-- page header -->
+	<a href="{% url playground.film.views.add_to_db %}">add film</a> 
 {% endblock page_header %}
 {% block page_nav %}
    <!-- navigation -->
@@ -48,15 +73,20 @@ p
 </p>
 {% if object_list %}
 {% for film in object_list %}
-   <a href="{% url django.views.generic.list_detail.object_detail film.id %}">
-   <div class="film_thumbnail">
-	<p class="center"><img src="{{ film.image }}" class="thumbnail_image"/></p>
-	<p>{{ film.title }}</p>
-	<p class="center">{{ film.release_date.year }}</p>
-      </div>
-   </a>
+	<div class="film_thumbnail">
+		<a href="{% url django.views.generic.list_detail.object_detail film.id %}">
+			<p class="center"><img src="{{ film.image }}" class="thumbnail_image"/></p>
+			<p>{{ film.title }}</p>
+			<p class="center">{{ film.release_date.year }}</p>
+		</a>
+	</div>
+	<div class="film_tooltip">
+		This is a tooltip for {{ film.title }}.
+	</div>
    {% endfor %}
    {% endif %}
+
+
 
 {% endblock page_content %}
 {% block page_footer %}
