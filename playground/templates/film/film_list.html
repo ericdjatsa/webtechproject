@@ -1,4 +1,5 @@
 {% extends "film/base.html" %}
+{% load custom_filters %}
 
 {% block head %}
 <script src="http://cdn.jquerytools.org/1.1.2/jquery.tools.min.js"></script>
@@ -81,7 +82,9 @@ p
 		</a>
 	</div>
 	<div class="film_tooltip">
-		This is a tooltip for {{ film.title }}.
+{% autoescape off %} 
+		{{ film.title|trailer_addict_embedded_player:320 }}
+{% endautoescape %} 
 	</div>
    {% endfor %}
    {% endif %}
