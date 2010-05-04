@@ -1,6 +1,6 @@
 
 from django.conf.urls.defaults import *
-from playground.film.models import Film
+from src.frontend.models import Film
 
 film_dict = {
 	'queryset' : Film.objects.all(), 
@@ -13,6 +13,6 @@ film_detail_dict = {
 
 urlpatterns = patterns('',
     (r'^$', 'django.views.generic.list_detail.object_list', film_dict),
-    (r'^add_to_db/$', 'playground.film.views.add_to_db'),
+    (r'^add_to_db/$', 'src.frontend.views.add_to_db'),
     (r'^movie/(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', film_detail_dict),
 )
