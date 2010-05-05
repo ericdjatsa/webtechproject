@@ -4,7 +4,7 @@ Created on 19 avr. 2010
 @author: Christophe
 '''
 
-from tools.parser import parse
+from tools.dateutil.parser import parse
 
 def isValidDate(dateString):
     """
