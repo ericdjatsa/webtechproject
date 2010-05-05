@@ -312,7 +312,7 @@ class Movie_Model(models.Model):
     # .avi, .mkv, .mpeg, ...
     path = models.CharField(max_length=200)
     # path to movie on disk
-    md5 = models.CharField(max_length=32)
+    hash_code = models.CharField(max_length=32)
     # md5 of the movie (1st minute)
     
     @classmethod
@@ -320,14 +320,15 @@ class Movie_Model(models.Model):
         return "Movie_Model"
 
     @staticmethod
-    def add_movie_model(original_title, duration, thumbnail_url, filename, extension, path_on_disk, md5):
+    def add_movie_model(original_title, duration, user_rating, thumbnail_url, filename, extension, path_on_disk, hashcode):
         movie_model = Movie_Model(original_title = original_title,
                                   runtime = duration,
+                                  user_rating = user_rating,
                                   thumbnail_url = thumbnail_url,
                                   filename = filename,
                                   extension = extension,
                                   path = path_on_disk,
-                                  md5 = md5)
+                                  hash_code = hashcode)
         movie_model.save()
         return movie_model
     

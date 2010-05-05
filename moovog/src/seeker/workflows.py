@@ -14,6 +14,7 @@ class General_Search_WF(Base_Workflow):
     '''    GENERAL SEARCH
         INPUT :
             search string
+            
         OUTPUT :
             list of models that correspond to the search
     '''
@@ -29,46 +30,31 @@ class General_Search_WF(Base_Workflow):
         result_movie_list = []
         # go and find into the models
         
-        return result_movie_list
-    
-class Find_Movie_By_Actor_WF(Base_Workflow):
-    pass
-
-class Find_Actor_WF(Base_Workflow):
-    pass
-
-class Find_Director_WF(Base_Workflow):
-    pass
-
-class Find_Writer_WF(Base_Workflow):
-    pass
+        pass
 
 class Create_Or_Get_Movie_WF(Base_Workflow):
     '''
         INPUT :
-            DIRECT INPUTS :
-                original_title
-                runtime
-                user_rating
-                thumbnail
-                filename
-                extension
-                path
-                md5
-            RELATED INPUTS :
-                original_countries : list of Country_Model
-                akas : list of Aka_Model
-                characters : list of Character_Model
-                actors : list of Actor_Model
-                writers : list of Writer_Model
-                directors : list of Director_Model
-                release_dates : list of Release_Date_Model
-                synopsises : list of Synopsis_Model
-                genres : list of Genre_Model
+            original-title
+            runtime
+            user-rating
+            thumbnail
+            filename
+            extension
+            path
+            md5
         OUTPUT :
             status : "ok"
-            movie model id
-            already_created (boolean)
+            movie-id
+            already-created (boolean)  
+              
+        BE AWARE : The models that are related to the Movie_Model (pk : movie-id)
+        with a ManyToOneField (=ForeignKey) must be created AFTER the processing
+        of this workflow, using the corresponding Create_Or_Get workflow and the
+        movie-id rendered by this workflow.
+        Otherwise, the Movie_Model (pk : movie-id) will lack its foreignkey related
+        models (Complete_Movie_Model_WF DOES NOT take care of this particular type
+        of relation)
     '''    
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -81,7 +67,7 @@ class Create_Or_Get_Movie_WF(Base_Workflow):
         self.validate_string_field_not_empty("filename")
         self.validate_string_field_not_empty("extension")
         self.validate_string_field_not_empty("path-on-disk")
-        self.validate_string_field_not_empty("md5")
+        self.validate_string_field_not_empty("hashcode")
     
     def process(self):
         original_title = self.request()["original-title"]
@@ -91,45 +77,116 @@ class Create_Or_Get_Movie_WF(Base_Workflow):
         filename = self.request()["filename"]
         extension = self.request()["extension"]
         path_on_disk = self.request()["path-on-disk"]
-        md5 = self.request()["md5"]
-        if self.validate_field_not_null("original-countries"): original_countries = self.request()["original-countries"]
-        else: original_countries = None
-        if self.validate_field_not_null("akas"): akas = self.request()["akas"]
-        else: akas = None
-        if self.validate_field_not_null("characters"): characters = self.request()["characters"]
-        else: characters = None
-        if self.validate_field_not_null("actors"): actors = self.request()["actors"]
-        else: actors = None
-        if self.validate_field_not_null("writers"): writers = self.request()["writers"]
-        else: writers = None
-        if self.validate_field_not_null("directors"): directors = self.request()["directors"]
-        else: directors = None
-        if self.validate_field_not_null("release-dates"): release_dates = self.request()["release-dates"]
-        else: release_dates = None
-        if self.validate_field_not_null("synopsises"): synopsises = self.request()["synopsises"]
-        else: synopsises = None
-        if self.validate_field_not_null("genres"): genres = self.request()["genres"]
-        else: genres = None
+        hash_code = self.request()["hashcode"]
         
-        query = Movie_Model.get_movie_model(filename, extension, path_on_disk, md5)
+        query = Movie_Model.get_movie_model(filename, extension, path_on_disk, hash_code)
         if query is None:
             already_existed = False
-            movie = Movie_Model.add_movie_model(original_title, duration, thumbnail_url, filename, extension, path_on_disk, md5)
+            movie = Movie_Model.add_movie_model(original_title, duration, user_rating, thumbnail_url,
+                                                filename, extension, path_on_disk, hash_code)
+            movie_id = movie.id
+        else:
+            already_existed = True
+            movie_id = query.id
             
+        self.add_to_response("status", "ok")
+        self.add_to_response("movie-id", movie_id)
+        self.add_to_response("already-existed", already_existed)
+
+class Complete_Movie_Model_WF(Base_Workflow):
+    """
+        This workflow complete the movie model, adding all the ManyToManyField
+        related models to the beneath the Movie_Model which primary key is movie-id
+    
+        INPUT:
+            movie-id : id of the movie (got or created by Create_Or_Get_Movie_WF)
+            original-countries : list of Country_Model
+            awards : list of Award_Model
+            characters : list of Character_Model
+            actors : list of Actor_Model
+            writers : list of Writer_Model
+            directors : list of Director_Model
+            genres : list of Genre_Model
+        OUTPUT:
+            status = "ok"
+            movie-id
+    """
+    def __init(self, input, authorization):
+        Base_Workflow.__init__(self, input, authorization_pipe)
+    
+    def validate_input(self):
+        self.validate_string_field_not_empty("movie-id")
+    
+    def process(self):
+        movie_id = self.request()["movie-id"]
+        
+        if self.validate_field_not_null("original-countries"):
+            original_countries = self.request()["original-countries"]
+        else: original_countries = None
+        if self.validate_field_not_null("awards"):
+            awards = self.request()["awards"]
+        else: awards = None
+        if self.validate_field_not_null("actors"):
+            actors = self.request()["actors"]
+        else: actors = None
+        if self.validate_field_not_null("writers"):
+            writers = self.request()["writers"]
+        else: writers = None
+        if self.validate_field_not_null("directors"):
+            directors = self.request()["directors"]
+        else: directors = None
+        if self.validate_field_not_null("genres"):
+            genres = self.request()["genres"]
+        else: genres = None
+        
+        movie = Movie_Model.get_movie_model_by_id(movie_id)
+        if original_countries is not None:
+            movie_original_countries = movie.original_countries.all()
+            for original_country in original_countries:
+                if original_country not in movie_original_countries:
+                    movie.original_countries.add(original_country)
+        if awards is not None:
+            movie_awards = movie.awards.all()
+            for award in awards:
+                if award not in movie_awards:
+                    movie.awards.add(award)
+        if actors is not None:
+            movie_actors = movie.actors.all()
+            for actor in actors:
+                if actor not in movie_actors:
+                    movie.actors.add(actor)
+        if writers is not None:
+            movie_writers = movie.writers.all()
+            for writer in writers:
+                if writer not in movie_writers:
+                    movie.writers.add(writer)
+        if directors is not None:
+            movie_directors = movie.directors.all()
+            for director in directors:
+                if director not in movie_directors:
+                    movie.directors.add(director)
+        if genres is not None:
+            movie_genres = movie.genres.all()
+            for genre in genres:
+                if genre not in movie_genres:
+                    movie.genres.add(genre)
+        
+        self.add_to_response("status", "ok")
+        self.add_to_response("actor-id", movie_id)
     
 class Create_Or_Get_Actor_WF(Base_Workflow):
     """
         INPUT:
-            first_name
-            last_name
-            birth_date
-            nick_name (optional)
-            death_date (optional)
+            first-name
+            last-name
+            birth-date
+            nick-name (optional)
+            death-date (optional)
             awards (optional, list of Award_Model)
         OUTPUT:
             status = "ok"
             actor_id
-            already_existed (boolean)
+            already-existed (boolean)
     """
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -168,16 +225,16 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
 class Create_Or_Get_Writer_WF(Base_Workflow):
     """
         INPUT:
-            first_name
-            last_name
-            birth_date
-            nick_name (optional)
-            death_date (optional)
+            first-name
+            last-name
+            birth-date
+            nick-name (optional)
+            death-date (optional)
             awards (optional, list of Award_Model)
         OUTPUT:
             status = "ok"
             writer_id
-            already_existed (boolean)
+            already-existed (boolean)
     """
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -216,16 +273,16 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
 class Create_Or_Get_Director_WF(Base_Workflow):
     """
         INPUT:
-            first_name
-            last_name
-            birth_date
-            nick_name (optional)
-            death_date (optional)
+            first-name
+            last-name
+            birth-date
+            nick-name (optional)
+            death-date (optional)
             awards (optional, list of Award_Model)
         OUTPUT:
             status = "ok"
             director_id
-            already_existed (boolean)
+            already-existed (boolean)
     """
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -264,11 +321,11 @@ class Create_Or_Get_Director_WF(Base_Workflow):
 class Create_Or_Get_Country_WF(Base_Workflow):
     """
         INPUT:
-            country_name
+            country-name
         OUTPUT:
             status = "ok"
-            country_id
-            already_existed (boolean)
+            country-id
+            already-existed (boolean)
     """
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -295,11 +352,11 @@ class Create_Or_Get_Country_WF(Base_Workflow):
 class Create_Or_Get_Award_Category_WF(Base_Workflow):
     """
         INPUT:
-            award_category_name
+            award-category-name
         OUTPUT:
             status = "ok"
-            award_category_id
-            already_existed (boolean)
+            award-category-id
+            already-existed (boolean)
     """
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -326,15 +383,15 @@ class Create_Or_Get_Award_Category_WF(Base_Workflow):
 class Create_Or_Get_Award_WF(Base_Workflow):
     """
         DIRECT INPUT:
-            award_name
-            date_of_awarding
-            award_status (string, see Award_Model.STATUSES)
+            award-name
+            date-of-awarding
+            award-status (string, see Award_Model.STATUSES)
         RELATED INPUT:
-            award_categories (list of Award_Category_Model)
+            award-categories (list of Award_Category_Model)
         OUTPUT:
             status = "ok"
-            award_id
-            already_existed (boolean)
+            award-id
+            already-existed (boolean)
     """
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -368,11 +425,11 @@ class Create_Or_Get_Award_WF(Base_Workflow):
 class Create_Or_Get_Genre_WF(Base_Workflow):
     """
         INPUT:
-            genre_name
+            genre-name
         OUTPUT:
             status = "ok"
-            country_id
-            already_existed (boolean)
+            country-id
+            already-existed (boolean)
     """
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -399,14 +456,14 @@ class Create_Or_Get_Genre_WF(Base_Workflow):
 class Create_Or_Get_Character_WF(Base_Workflow):
     """
         DIRECT INPUT:
-            character_name
+            character-name
         RELATED INPUT:
-            related_actors (list of Actor_Model)
-            related_movies (list of Movie_Model)
+            related-actors (list of Actor_Model)
+            related-movies (list of Movie_Model)
         OUTPUT:
             status = "ok"
-            country_id
-            already_existed (boolean)
+            country-id
+            already-existed (boolean)
     """
     def __init(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization_pipe)

@@ -11,22 +11,7 @@
 </head>
 <body>
 	<center>
-		<div class="contentMain" style="width: 500px;">
-		<h1 style="color: rgb(56, 149, 19); text-transform: uppercase;">moovog</h1>
-		    <div class="headerContent"><strong><label>Search Bar</label></strong></div>
-			    <form action="/seeker/general-search/" method="POST">
-	                <p>
-	                    <input name="search-bar" type="text" size="30" />
-	                </p>
-	                <p>
-	                    <input type="submit" value="Let's Go" />
-	                </p>
-	                <input type="radio" name="group1" value="general_search"> an actor ?<br>
-					<input type="radio" name="group1" value="movie_search"> a movie ?<br>
-					<input type="radio" name="group1" value="release_date_search"> a release date ?<br>
-					<input type="radio" name="group1" value="general_search" checked> don't know...<br>
-			    </form>
-	    </div>
+		{% include "seeker/search_bar.html" %}
 	    
 	    {% block results %}
 	    <div class="contentMain" style="width: 500px;">

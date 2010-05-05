@@ -1,6 +1,7 @@
 #Application:myCrawler
 from django.db import models
 from django.contrib import admin
+
 try:
 	#for python 2.6
 	import hashlib

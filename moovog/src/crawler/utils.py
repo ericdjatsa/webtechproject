@@ -13,10 +13,17 @@ DIRS_BASES=['\\\\acmecorp\\action\\','\\\\acmecorp\\romance\\','\\\\acmecorp\\ca
 CRAWL_EXT=['.avi','.mpeg','.divx','.wmv'] #file types to list
 START_DIR=DIRS[0] #the directory where the 'master' url list is located - this list has hyperlinks to the other lists
 #############################################################################################################################################
-import MySQLdb, time, os, os.path
+
+import time
+import os
+import os.path
+
 import django
 import re
-from models import File
+
+import MySQLdb
+from src.crawler.models import File
+
 class Crawler:
         #crawl a list of directories, creating a list of dictionary files which match acceptable file
         #extensions (CRAWL_EXT variable), dictionary keys are the file's md5 hash (computed to BIT_DEPTH
