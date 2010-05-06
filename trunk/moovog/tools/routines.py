@@ -30,3 +30,18 @@ def isValidTime(timeString):
         returns True if the timeString contains a valid time
     """
     pass
+
+def areListEqual(list1, list2):
+    """
+        returns True if the lists are equal (same length, same values)
+    """
+    a = []
+    if len(list1) == len(list2):
+        list1.sort()
+        list2.sort()
+        for i in range(0, len(list1)):
+            if list1[i] != list2[i]:
+                return False
+        return True
+    else:
+        return False
