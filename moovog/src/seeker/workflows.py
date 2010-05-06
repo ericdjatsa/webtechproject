@@ -21,39 +21,59 @@ class Search_WF(Base_Workflow):
             search-result : a list of Movie_Model that correspond to the search
     '''
     
-    SEARCH_OPTIONS = ["unknown", "actor", "director", "writer", "movie-original-title",
-                      "movie-aka-title", "genre", "character", "award"]
+    SEARCH_OPTIONS = {u"unknown" : 'a', u"actor" : 'b', u"director" :'c', u"writer" : 'd',
+                      u"movie-original-title" : 'e', u"movie-aka-title" : 'f', u"genre" : 'g',
+                      u"character" : 'h', u"award" : 'i', None : 'j'}
     
     def __init__(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
         self.validate_string_field_not_empty("search-string")
+        self.string_cleaner("search-string")
         self.validate_string_field_not_empty("search-option")
+        self.string_cleaner("search-option")
     
     def process(self):
         search_string = self.request()["search-string"]
+        strings_to_search = search_string.split()
+        
         search_option = self.request()["search-option"]
         if search_option not in Search_WF.SEARCH_OPTIONS: search_option = None
-        result_list = []
-        
-        # Is it a movie original title ?
-        query = Movie_Model.objects.get(original_title = search_string)
-        if query is not None:
-            for model in query: result_list.append(model)
+        else:
+            search_results = []
+            for string_to_search in strings_to_search:
+                search_result = {
+                'a': lambda string_to_search: self.repository().search_all(string_to_search),
+                'b': lambda string_to_search: self.repository().search_actor(string_to_search),
+                'c': lambda string_to_search: self.repository().search_director(string_to_search),
+                'd': lambda string_to_search: self.repository().search_writer(string_to_search),
+                'e': lambda string_to_search: self.repository().search_movie(string_to_search),
+                'f': lambda string_to_search: self.repository().search_aka(string_to_search),
+                'g': lambda string_to_search: self.repository().search_genre(string_to_search),
+                'h': lambda string_to_search: self.repository().search_character(string_to_search),
+                'i': lambda string_to_search: self.repository().search_award(string_to_search),
+                'j': lambda string_to_search: string_to_search
+                }[Search_WF.SEARCH_OPTIONS[search_option]](string_to_search)
+                search_results.append(search_result)
             
-        # Is it a movie aka title ?
-        query = Aka_Model.objects.get(aka_name = search_string)
-        if query is not None:
-            for model in query: result_list.append(model.related_movie)
+        # TO DO : merge informations for different search_results
+        # INPUT : search_results
+        # Kill repetitions
+        # Knock each elements from search_results against each others
+        # OUTPUT : {"movie-models" : [movie_model, ...], actors-models : [actor_model, ...], ...}
+        # (See search functions in seeker.repository.py to know all possible keys)
+        merged_result = {}
         
-        # Is it an actor name ?
-        query = Actor_Model.objects.get(first_name = search_string) # beurk ...
-        
-        # ...
+        # TO DO : page rank the result in merged_result (ERIC)
+        # INPUT : merged_result
+        # Sort them ascendantly
+        # OUTPUT : page_ranked_result
+        page_ranked_result = {}
         
         self.add_to_response("status", "ok")
-        self.add_to_response("search-result", result_list)
+        self.add_to_response("search-result", search_results)
+#        self.add_to_response("search-result", page_ranked_result)
 
 class Create_Or_Get_Movie_WF(Base_Workflow):
     '''
@@ -84,13 +104,20 @@ class Create_Or_Get_Movie_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("original-title")
-        self.validate_time_field("runtime")
+        self.string_cleaner("original-title")
         self.validate_string_field_not_empty("user-rating")
+        self.string_cleaner("user-rating")
         self.validate_string_field_not_empty("thumbnail-url")
+        self.string_cleaner("thumbnail-url")
         self.validate_string_field_not_empty("filename")
+        self.string_cleaner("filename")
         self.validate_string_field_not_empty("extension")
+        self.string_cleaner("extension")
         self.validate_string_field_not_empty("path-on-disk")
+        self.string_cleaner("path-on-disk")
         self.validate_string_field_not_empty("hashcode")
+        self.string_cleaner("hashcode")
+        self.validate_time_field("runtime")
     
     def process(self):
         original_title = self.request()["original-title"]
@@ -220,7 +247,9 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("first-name")
+        self.string_cleaner("first-name")
         self.validate_string_field_not_empty("last-name")
+        self.string_cleaner("last-name")
         self.validate_date_field("birth-date")
     
     def process(self):
@@ -229,7 +258,9 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
         birth_date = self.request()["birth_date"]
         if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
-        if self.validate_string_field_not_empty("nick-name"): nick_name = self.request()["nick-name"]
+        if self.validate_string_field_not_empty("nick-name"):
+            self.string_cleaner("nick-name")
+            nick_name = self.request()["nick-name"]
         else: nick_name = None
         if self.validate_field_not_null("awards"): awards = self.request()["awards"]
         else: awards = None
@@ -266,7 +297,9 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("first-name")
+        self.string_cleaner("first-name")
         self.validate_string_field_not_empty("last-name")
+        self.string_cleaner("last-name")
         self.validate_date_field("birth-date")
     
     def process(self):
@@ -275,7 +308,9 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
         birth_date = self.request()["birth_date"]
         if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
-        if self.validate_string_field_not_empty("nick-name"): nick_name = self.request()["nick-name"]
+        if self.validate_string_field_not_empty("nick-name"):
+            self.string_cleaner("nick-name")
+            nick_name = self.request()["nick-name"]
         else: nick_name = None
         if self.validate_field_not_null("awards"): awards = self.request()["awards"]
         else: awards = None
@@ -312,7 +347,9 @@ class Create_Or_Get_Director_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("first-name")
+        self.string_cleaner("first-name")
         self.validate_string_field_not_empty("last-name")
+        self.string_cleaner("last-name")
         self.validate_date_field("birth-date")
     
     def process(self):
@@ -321,7 +358,9 @@ class Create_Or_Get_Director_WF(Base_Workflow):
         birth_date = self.request()["birth_date"]
         if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
-        if self.validate_string_field_not_empty("nick-name"): nick_name = self.request()["nick-name"]
+        if self.validate_string_field_not_empty("nick-name"):
+            self.string_cleaner("nick-name")
+            nick_name = self.request()["nick-name"]
         else: nick_name = None
         if self.validate_field_not_null("awards"): awards = self.request()["awards"]
         else: awards = None
@@ -355,6 +394,7 @@ class Create_Or_Get_Country_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("country-name")
+        self.string_cleaner("country-name")
     
     def process(self):
         country_name = self.request()["country-name"]
@@ -377,7 +417,7 @@ class Create_Or_Get_Award_Category_WF(Base_Workflow):
             award-category-name
         OUTPUT:
             status = "ok"
-            award-category (an Award_Category_Model)
+            award-category-model (an Award_Category_Model)
             already-existed (boolean)
     """
     def __init__(self, input, authorization):
@@ -385,6 +425,7 @@ class Create_Or_Get_Award_Category_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("award-category-name")
+        self.string_cleaner("award-category-name")
     
     def process(self):
         award_category_name = self.request()["award-category-name"]
@@ -398,7 +439,7 @@ class Create_Or_Get_Award_Category_WF(Base_Workflow):
             award_category_model = query
         
         self.add_to_response("status", "ok")
-        self.add_to_response("award-category", award_category_model)
+        self.add_to_response("award-category-model", award_category_model)
         self.add_to_response("already-existed", already_existed)
    
 class Create_Or_Get_Award_WF(Base_Workflow):
@@ -420,8 +461,10 @@ class Create_Or_Get_Award_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("award-name")
-        self.validate_date_field("date-of-awarding")
+        self.string_cleaner("award-name")
         self.validate_string_field_not_empty("award-status")
+        self.string_cleaner("award-status")
+        self.validate_date_field("date-of-awarding")
     
     def process(self):
         award_name = self.request()["award-name"]
@@ -457,6 +500,7 @@ class Create_Or_Get_Genre_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("genre-name")
+        self.string_cleaner("genre-name")
     
     def process(self):
         genre_name = self.request()["genre-name"]
@@ -489,6 +533,7 @@ class Create_Or_Get_Character_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("character-name")
+        self.string_cleaner("character-name")
         self.validate_field_not_null("related-actor")
         self.validate_field_not_null("related-movie")
     
@@ -527,6 +572,7 @@ class Create_Or_Get_Synopsises_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("plain-text")
+        # No control on that input !
         self.validate_field_not_null("movie-model")
         self.validate_list_field_not_empty("country-models")
     
@@ -566,6 +612,7 @@ class Create_Or_Get_Aka_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("aka-name")
+        self.string_cleaner("aka-name")
         self.validate_field_not_null("movie-model")
         self.validate_list_field_not_empty("country-models")
     
@@ -617,11 +664,11 @@ class Create_Or_Get_Release_Date_WF(Base_Workflow):
         if query is None:
             already_existed = False
             release_date_model = Release_Date_Model.add_release_date_model(release_date, movie_model)
-            aka_model = self.repository().add_countries(release_date_model, country_models)
+            release_date_model = self.repository().add_countries(release_date_model, country_models)
         else:
             already_existed = True
-            aka_model = query
+            release_date_model = query
 
         self.add_to_response("status", "ok")
-        self.add_to_response("aka-model", aka_model)
+        self.add_to_response("release-date-model", release_date_model)
         self.add_to_response("already-existed", already_existed)

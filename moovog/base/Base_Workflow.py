@@ -6,6 +6,7 @@ Created on 14 mars 2010
 
 from tools.routines import isValidInt, isValidDate
 from src.utils.Authorization_Pipe import Authorization_Pipe
+from src.utils.clean_name import cleanName
 
 from src.seeker.repository import Repository
 
@@ -70,6 +71,9 @@ class Base_Workflow():
 
     def get_invalid_fields(self):
         return self.__response["invalid_fields"]
+    
+    def string_cleaner(self, fieldName):
+        return cleanName(fieldName)
 
     def validate_field_not_null(self, fieldName):
         if self.request().has_key(fieldName):
