@@ -45,3 +45,20 @@ def areListEqual(list1, list2):
         return True
     else:
         return False
+    
+def special_dictionary_merger(dict_a, dict_b):
+    """
+        merges 2 dictionaries, this function is symmetric
+    """
+    for k in dict_a.keys():
+        if dict_b.has_key(k):
+            try:
+                # simple tests to know if dict_a and dict_b are lists
+                dict_a[k].reverse()
+                dict_b[k].reverse()
+                for thing in dict_a[k]:
+                    if thing not in dict_b[k]:
+                        dict_b[k].append(thing)
+            except Exception: continue
+        else: dict_b[k] = dict_a[k]
+    return dict_b

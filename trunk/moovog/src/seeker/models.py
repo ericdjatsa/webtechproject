@@ -218,15 +218,15 @@ class Writer_Model(models.Model):
         return writer_model
     
     @staticmethod
-    def get_writer_model_by_id(actor_id):
+    def get_writer_model_by_id(writer_id):
         try:
-            writer_model = Writer_Model.objects.get(id = actor_id)
+            writer_model = Writer_Model.objects.get(id = writer_id)
         except Exception: return None
         return writer_model
     
     @staticmethod
-    def delete_writer_model(actor_id):
-        writer_model = Writer_Model.get_writer_model_by_id(actor_id)
+    def delete_writer_model(writer_id):
+        writer_model = Writer_Model.get_writer_model_by_id(writer_id)
         if writer_model is None: return False
         else:
             writer_model.delete()
@@ -267,15 +267,15 @@ class Director_Model(models.Model):
         return director_model
     
     @staticmethod
-    def get_director_model_by_id(actor_id):
+    def get_director_model_by_id(director_id):
         try:
-            director_model = Director_Model.objects.get(id = actor_id)
+            director_model = Director_Model.objects.get(id = director_id)
         except Exception: return None
         return director_model
     
     @staticmethod
-    def delete_director_model(actor_id):
-        director_model = Director_Model.get_director_model_by_id(actor_id)
+    def delete_director_model(director_id):
+        director_model = Director_Model.get_director_model_by_id(director_id)
         if director_model is None: return False
         else:
             director_model.delete()

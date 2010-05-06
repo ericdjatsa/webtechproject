@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 
 import logging
-import datetime
+from datetime import datetime
 
 from src.seeker.workflows import *
 from django.utils.simplejson import JSONDecoder, JSONEncoder
@@ -11,10 +11,18 @@ def index(request):
     return render_to_response("seeker/base.html", {})
 
 def search(request):
+    """
+        OUTPUT :
+            Search_WF OUTPUT
+            time-to-serve
+    """
+    start = datetime.now()
     if request.method == "GET": HttpResponse("POST excepted")
     wf = Search_WF(request.POST, None)
     result = wf.work()
-    return render_to_response("template_targeted", result)
+    result["time-to-serve"] = datetime.now() - start
+#    return render_to_response("template_targeted", result)
+    return HttpResponse(str(result))
 
 def create_movie_completely(request):
     """
@@ -64,6 +72,7 @@ def create_movie_completely(request):
             RELATED TO SYNOPSISES :
                 synopsises-list : [[plain-text-1, country-name-1, country-names-2, ...], ...]
     """
+    start = datetime.now()
     if request.method == "GET": HttpResponse("POST excepted")
     
     # Build or get the movie structure
@@ -91,7 +100,7 @@ def create_movie_completely(request):
                 wf_create_award_category = Create_Or_Get_Award_Category_WF({"award-category-name" : award_category_name},
                                                                            None)
                 result_create_award_category = wf_create_award_category.work()
-                award_category_models.append(result_create_award_category["award-category"])
+                award_category_models.append(result_create_award_category["award-category-model"])
             wf_create_award = Create_Or_Get_Award_WF({"award-name" : award_data["award-name"],
                                                       "date-of-awarding" : award_data["date-of-awarding"],
                                                       "award-status" : award_data["award-status"],
@@ -261,6 +270,8 @@ def create_movie_completely(request):
                                                      None)
         result_complete_movie = wf_complete_movie.work()
         
+        global_result = {"movie-id" : movie_model.id, "time-to-serve" : datetime.now() - start}
+        
         if result_complete_movie["status"] == "ok":
-            return render_to_response("template_targeted", {"movie-id" : movie_model.id})
+            return render_to_response("template_targeted", global_result)
     return HttpResponse("The movie you intended to create already existed")
