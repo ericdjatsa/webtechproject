@@ -6,8 +6,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 	(r'^frontend/', include('src.frontend.urls')),
-#	(r'^$','views.index'),
-# 	(r'^seeker/', include('src.seeker.urls')),
+	(r'^$','views.index'),
+ 	(r'^seeker/', include('src.seeker.urls')),
 
 
     # Example:

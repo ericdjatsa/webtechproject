@@ -5,6 +5,8 @@ Created on 14 mars 2010
 '''
 
 from tools.routines import isValidInt, isValidDate
+from src.utils.Authorization_Pipe import Authorization_Pipe
+
 from src.seeker.repository import Repository
 
 class Base_Workflow():
@@ -35,6 +37,7 @@ class Base_Workflow():
         self.__response["invalid_fields"] = {}
         self.isInputValid = True
         self.__repository = data_pipe
+        self.__authorization_pipe = authorization_pipe
 
     def request(self):
         return self.__request
@@ -54,12 +57,15 @@ class Base_Workflow():
 
     def response(self):
         return self.__response
+    
+    def authorization(self):
+        return self.__authorization_pipe
 
     def add_to_response(self, key, value):
-        self.__response[key] = value
+        self.response()[key] = value
 
     def register_invalid_field(self, fieldName, comments):
-        self.__response["invalid_fields"][fieldName] = comments
+        self.response()["invalid_fields"][fieldName] = comments
         self.isInputValid = False
 
     def get_invalid_fields(self):
@@ -69,16 +75,25 @@ class Base_Workflow():
         if self.request().has_key(fieldName):
             if self.request()[fieldName] is not None: return True
         
-        self.registerInvalidField(fieldName, "field value is empty")
+        self.register_invalid_field(fieldName, "field value is empty")
         return None
+    
+    def validate_list_field_not_empty(self, fieldName):
+        if not self.request().has_key(fieldName): value = None
+        else: value = self.request()[fieldName]
+
+        if value is None or value == []:
+            self.register_invalid_field(fieldName, "list value is empty")
+            return False
+        else: return True 
 
     def validate_string_field_not_empty(self, fieldName):
 
         if not self.request().has_key(fieldName): value = None
         else: value = self.request()[fieldName]
 
-        if value is None or value == "" :
-            self.registerInvalidField(fieldName, "string value is empty")
+        if value is None or value == "":
+            self.register_invalid_field(fieldName, "string value is empty")
             return False
         else: return True
 
@@ -88,7 +103,7 @@ class Base_Workflow():
         else: value = self.request()[fieldName]
 
         if not isValidInt(value):
-            self.registerInvalidField(fieldName, "invalid number")
+            self.register_invalid_field(fieldName, "invalid number")
             return False
         else: return True
         
@@ -102,7 +117,7 @@ class Base_Workflow():
         else : value = self.request()[fieldName]
 
         if not isValidDate(value):
-            self.registerInvalidField(fieldName, "invalid date")
+            self.register_invalid_field(fieldName, "invalid date")
             return False
         else: return True
 
@@ -113,7 +128,7 @@ class Base_Workflow():
 
         if value in range : return True
         else :
-            self.registerInvalidField(fieldName, "value is not supported")
+            self.register_invalid_field(fieldName, "value is not supported")
             return False
 
     def validate_input(self):
@@ -142,10 +157,10 @@ class Base_Workflow():
            @raise WorkflowInputNotValidException: workflow input is invalid
                                                   the list of invalid fields with additional comments can be obtained from response["invalid_fields"] (dictionary)
         """
-        self.validateInput()
+        self.validate_input()
         if not self.isInputValid : raise WorkflowInputNotValidException()
         self.process()
-        return self.__response
+        return self.response()
 
 class WorkflowInputNotValidException(Exception):
     def __init__(self):

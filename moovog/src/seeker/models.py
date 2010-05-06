@@ -357,24 +357,24 @@ class Movie_Model(models.Model):
         
 class Character_Model(models.Model):
     character_name = models.CharField(max_length = 127)
-    related_actors = models.ForeignKey(Actor_Model)
-    related_movies = models.ForeignKey(Movie_Model)
+    related_actor = models.ForeignKey(Actor_Model)
+    related_movie = models.ForeignKey(Movie_Model)
     
     @classmethod
     def kind(cls):
         return "Character_Model"
     
     @staticmethod
-    def add_character_model(character_name, related_actors, related_movies):
-        character_model = Character_Model(character_name = character_name, related_actors = related_actors,
-                                          related_movies = related_movies)
+    def add_character_model(character_name, related_actor, related_movie):
+        character_model = Character_Model(character_name = character_name, related_actor = related_actor,
+                                          related_movie = related_movie)
         character_model.save()
         return character_model
     
     @staticmethod
     def get_character_model(character_name):
         try:
-            character_model = Character_Model.objects.get(character_name)
+            character_model = Character_Model.objects.get(character_name = character_name)
         except Exception: return None
         return character_model
     
@@ -402,19 +402,11 @@ class Aka_Model(models.Model):
     def kind(cls):
         return "Aka_Model"
     
-    def add_countries(self, country_models):
-        # countries is a list of Country_Model
-        if country_models is not None:
-            for country_model in country_models:
-                self.countries.add(country_model)
-            self.save()
-        return self
-    
     @staticmethod
-    def add_aka_model(aka_name, countries, movie_model):
+    def add_aka_model(aka_name, movie_model):
         aka_model = Aka_Model(aka_name = aka_name, related_movie = movie_model)
         aka_model.save()
-        return aka_model.add_country(countries)
+        return aka_model
     
     @staticmethod
     def get_aka_model(aka_name):
@@ -471,7 +463,7 @@ class Release_Date_Model(models.Model):
 
 class Synopsis_Model(models.Model):
     plain_text = models.TextField()
-    country = models.ManyToManyField(Country_Model)
+    countries = models.ManyToManyField(Country_Model)
     related_movie = models.ForeignKey(Movie_Model)
     
     @staticmethod
