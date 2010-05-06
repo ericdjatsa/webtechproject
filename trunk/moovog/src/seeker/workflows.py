@@ -29,7 +29,7 @@ class Search_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("search-string")
-        self.validate_string_field_not_empty("search-options")
+        self.validate_string_field_not_empty("search-option")
     
     def process(self):
         search_string = self.request()["search-string"]
