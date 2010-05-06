@@ -8,7 +8,9 @@
 BIT_DEPTH=2048 #depth to read to when check a file's md5 signature - used for excluding duplicates from the index, 2kb seems to work well
 URL_BASES=['http://localhost/'] #url bases for the directories to be crawled,they are located on the NAS
 #DIRS=['\\\\movies\\action\\','\\\\movies\\romance\\','\\\\acmecorp\\cartoons\\'] #directories to crawl
-DIRS=['/home/zaddach/projects/webtech/svn/trunk/testmovies']
+
+DIRS=['../testmovies'] #relative path to movie folder
+
 DIRS_BASES=['\\\\acmecorp\\action\\','\\\\acmecorp\\romance\\','\\\\acmecorp\\cartoons\\'] #web root of these directories 
 CRAWL_EXT=['.avi','.mpeg','.divx','.wmv'] #file types to list
 START_DIR=DIRS[0] #the directory where the 'master' url list is located - this list has hyperlinks to the other lists
@@ -78,6 +80,11 @@ class Crawler:
 				print 'Error processing', f_path
 			self.Files[f.hash_code]=f
 			self.paths_unique.append(paths_d)
+
+	def showFiles(self):
+		for (k,f) in self.Files.items():
+			print 'Filename:',f.filename,' extension',f.extension
+			
 
 	def saveToDB(self):
 		print 'looping into files'
