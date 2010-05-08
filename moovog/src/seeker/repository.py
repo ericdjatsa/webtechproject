@@ -23,7 +23,7 @@ class Repository:
         movie_synopsis_models = movie_model.synopsis_model_set.all()
         
         for movie_synopsis_model in movie_synopsis_models:
-            movie_synopsis_countries = movie_synopsis.countries.all()
+            movie_synopsis_countries = movie_synopsis_model.countries.all()
             movie_synopsis_country_names = []
             for movie_synopsis_country in movie_synopsis_countries:
                 movie_synopsis_country_names.append(movie_synopsis_country.country_name)
@@ -38,7 +38,7 @@ class Repository:
             Tries to find a match between the countries of its release dates
             and the country_models
         """
-        release_date_models = movie_model.release_data_model_set.all()
+        release_date_models = movie_model.release_date_model_set.all()
         for release_date_model in release_date_models:
             compared_list = release_date_model.countries.all()
             if len(country_models) == len(compared_list):
@@ -163,7 +163,7 @@ class Repository:
         """
         query = Movie_Model.objects.filter(original_title__contains = string_to_search)
         result = []
-        for model_id in query: result.append(Movie_Model.get_movie_model_by_id(model_id))
+        for model in query: result.append(model)
         return {"movie-models" : result}
     
     @staticmethod
