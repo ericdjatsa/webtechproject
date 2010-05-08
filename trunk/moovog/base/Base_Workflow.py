@@ -4,7 +4,7 @@ Created on 14 mars 2010
 @author: Christophe
 '''
 
-from tools.routines import isValidInt, isValidDate
+from tools.routines import *
 from src.utils.Authorization_Pipe import Authorization_Pipe
 from src.utils.clean_name import cleanName
 
@@ -36,7 +36,7 @@ class Base_Workflow():
         self.__request = input
         self.__response = {}
         self.__response["invalid_fields"] = {}
-        self.isInputValid = True
+        self.is_input_valid = True
         self.__repository = data_pipe
         self.__authorization_pipe = authorization_pipe
 
@@ -67,7 +67,7 @@ class Base_Workflow():
 
     def register_invalid_field(self, fieldName, comments):
         self.response()["invalid_fields"][fieldName] = comments
-        self.isInputValid = False
+        self.is_input_valid = False
 
     def get_invalid_fields(self):
         return self.__response["invalid_fields"]
@@ -92,7 +92,6 @@ class Base_Workflow():
         else: return True 
 
     def validate_string_field_not_empty(self, fieldName):
-
         if not self.request().has_key(fieldName): value = None
         else: value = self.request()[fieldName]
 
@@ -102,7 +101,6 @@ class Base_Workflow():
         else: return True
 
     def validate_int_field(self, fieldName):
-
         if not self.request().has_key(fieldName) : value = None
         else: value = self.request()[fieldName]
 
@@ -111,12 +109,21 @@ class Base_Workflow():
             return False
         else: return True
         
+    def validate_float_field(self, fieldName):
+        if isValidFloat(self.request()[fieldName]):
+            return True
+        else:
+            self.register_invalid_field(fieldName, "invalid float")
+            return False
+        
     def validate_time_field(self, fieldName):
-        # TO DO
-        pass
+        if isValidTime(self.request()[fieldName]):
+            return True
+        else:
+            self.register_invalid_field(fieldName, "invalid time")
+            return False
 
     def validate_date_field(self, fieldName):
-
         if not self.request().has_key(fieldName): value = None
         else : value = self.request()[fieldName]
 
@@ -126,7 +133,6 @@ class Base_Workflow():
         else: return True
 
     def validate_field_value_in_range(self, fieldName, range):
-
         if not self.request().has_key(fieldName): value = None
         else : value = self.request()[fieldName]
 
@@ -162,7 +168,7 @@ class Base_Workflow():
                                                   the list of invalid fields with additional comments can be obtained from response["invalid_fields"] (dictionary)
         """
         self.validate_input()
-        if not self.isInputValid : raise WorkflowInputNotValidException()
+        if not self.is_input_valid : raise WorkflowInputNotValidException()
         self.process()
         return self.response()
 

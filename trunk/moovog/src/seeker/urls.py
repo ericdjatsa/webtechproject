@@ -8,6 +8,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
                        (r'^$','src.seeker.views.index'),
+                       (r'^__fake/complete-movie-creation/$','src.seeker.views.create_fake_complete_movie'),
                        (r'^search/$','src.seeker.views.search'),
                        (r'^create-movie-completely/$','src.seeker.views.create_movie_completely'),
 )

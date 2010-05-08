@@ -5,16 +5,21 @@ Created on 19 avr. 2010
 '''
 
 from tools.dateutil.parser import parse
+import datetime
 
-def isValidDate(dateString):
-    """
-        checks if provided date string contains a valid date
-    """
-    if dateString is None or dateString == "" : return False
-    try:
-        d = parse(dateString)
-        return True
-    except Exception, x: return False
+#def isValidDate(dateString):
+#    """
+#        checks if provided date string contains a valid date
+#    """
+#    if dateString is None or dateString == "" : return False
+#    try:
+#        d = parse(dateString)
+#        return True
+#    except Exception, x: return False
+
+def isValidDate(date):
+    reference = datetime.date.today()
+    return date.__class__ in reference.__class__.mro()
     
 def isValidInt(intString):
     """
@@ -25,11 +30,21 @@ def isValidInt(intString):
         return i is not None
     except Exception, x : return False
     
+def isValidFloat(floatString):
+    """
+        returns True if the floatString
+    """
+    try:
+        f = float(floatString)
+        return f is not None
+    except Exception, x: return False
+    
 def isValidTime(timeString):
     """ 
         returns True if the timeString contains a valid time
     """
-    pass
+    reference = datetime.time(hour=1)
+    return timeString.__class__ in reference.__class__.mro()
 
 def areListEqual(list1, list2):
     """

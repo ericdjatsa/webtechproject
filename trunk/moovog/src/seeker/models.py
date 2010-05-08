@@ -16,9 +16,10 @@ class Award_Category_Model(models.Model):
     @staticmethod
     def get_award_category_model(award_category_name):
         try:
-            award_category_model = Award_Category_Model.objects.get(award_category_name = award_category_name)
+            query = Award_Category_Model.objects.filter(award_category_name = award_category_name)
         except Exception: return None
-        return award_category_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_award_category_model_by_id(award_category_id):
@@ -38,7 +39,7 @@ class Award_Category_Model(models.Model):
 class Award_Model(models.Model):
     award_name = models.CharField(max_length = 127) # Oscar, Saturn Award, Eddie ...
     date_of_awarding = models.DateField()
-    award_categories = models.ManyToManyField(Award_Category_Model)
+    award_categories = models.ManyToManyField(Award_Category_Model, through = "Award_Matcher_Model")
     award_status = models.CharField(max_length = 31)
     
     STATUSES = ["Won", "Nominated"]
@@ -58,10 +59,11 @@ class Award_Model(models.Model):
     @staticmethod
     def get_award_model(award_name, date_of_awarding):
         try:
-            award_model = Award_Model.objects.get(award_name = award_name,
-                                                  date_of_awarding = date_of_awarding)
+            query = Award_Model.objects.filter(award_name = award_name,
+                                               date_of_awarding = date_of_awarding)
         except Exception: return None
-        return award_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_award_model_by_id(award_id):
@@ -94,9 +96,10 @@ class Country_Model(models.Model):
     @staticmethod
     def get_country_model(country_name):
         try:
-            country_model = Country_Model.objects.get(country_name = country_name)
+            query = Country_Model.objects.filter(country_name = country_name)
         except Exception: return None
-        return country_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_country_model_by_id(country_id):
@@ -129,9 +132,10 @@ class Genre_Model(models.Model):
     @staticmethod
     def get_genre_model(genre_name):
         try:
-            genre_model = Genre_Model.objects.get(genre_name = genre_name)
+            query = Genre_Model.objects.filter(genre_name = genre_name)
         except Exception: return None
-        return genre_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_genre_model_by_id(genre_id):
@@ -154,7 +158,7 @@ class Actor_Model(models.Model):
     nick_name = models.CharField(max_length = 127, null = True)
     birth_date = models.DateField()
     death_date = models.DateField(null = True)
-    awards = models.ManyToManyField(Award_Model) # must be a list of Award_Model if any
+    awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     
     @classmethod
     def kind(cls):
@@ -170,10 +174,11 @@ class Actor_Model(models.Model):
     @staticmethod
     def get_actor_model(first_name, last_name, birth_date):
         try:
-            actor_model = Actor_Model.objects.get(first_name = first_name, last_name = last_name,
-                                                  birth_date = birth_date)
+            query = Actor_Model.objects.filter(first_name = first_name, last_name = last_name,
+                                               birth_date = birth_date)
         except Exception: return None
-        return actor_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_actor_model_by_id(actor_id):
@@ -196,7 +201,7 @@ class Writer_Model(models.Model):
     nick_name = models.CharField(max_length = 127, null = True)
     birth_date = models.DateField()
     death_date = models.DateField(null = True)
-    awards = models.ManyToManyField(Award_Model) # must be a list of Award_Model if any
+    awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     
     @classmethod
     def kind(cls):
@@ -212,10 +217,11 @@ class Writer_Model(models.Model):
     @staticmethod
     def get_writer_model(first_name, last_name, birth_date):
         try:
-            writer_model = Writer_Model.objects.get(first_name = first_name, last_name = last_name,
-                                                    birth_date = birth_date)
+            query = Writer_Model.objects.filter(first_name = first_name, last_name = last_name,
+                                                birth_date = birth_date)
         except Exception: return None
-        return writer_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_writer_model_by_id(writer_id):
@@ -238,33 +244,27 @@ class Director_Model(models.Model):
     nick_name = models.CharField(max_length = 127, null = True)
     birth_date = models.DateField()
     death_date = models.DateField(null = True)
-    awards = models.ManyToManyField(Award_Model) # must be a list of Award_Model if any
+    awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     
     @classmethod
     def kind(cls):
         return "Director_Model"
     
-    def add_awards(self, awards_models):
-        if awards_models is not None:
-            for award_model in awards_models:
-                self.awards.add(award_model)
-            self.save()
-        return self
-    
     @staticmethod
-    def add_writer_model(first_name, last_name, birth_date, death_date = None, nick_name = None, awards = None):
+    def add_director_model(first_name, last_name, birth_date, death_date = None, nick_name = None, awards = None):
         director_model = Director_Model(first_name = first_name, last_name = last_name, nick_name = nick_name,
                                         birth_date = birth_date, death_date = death_date)
         director_model.save()
-        return director_model.add_awards(awards)
+        return director_model
 
     @staticmethod
     def get_director_model(first_name, last_name, birth_date):
         try:
-            director_model = Director_Model.objects.get(first_name = first_name, last_name = last_name,
-                                                        birth_date = birth_date)
+            query = Director_Model.objects.filter(first_name = first_name, last_name = last_name,
+                                                  birth_date = birth_date)
         except Exception: return None
-        return director_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_director_model_by_id(director_id):
@@ -286,11 +286,8 @@ class Movie_Model(models.Model):
     # the original title of the movie, in original country(ies)
     original_countries = models.ManyToManyField(Country_Model)
     # the original movie country, from which it comes
-    awards = models.ManyToManyField(Award_Model)
-    # the differents "as known as" titles, with related country(ies)
-    # SHOULDN'T BE this way, in a perfect design
-    # We should have a Foreign key to Movie_Model in Award_Model
-    # We can't have that, thanks to django linear parsing of models.py file
+    awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model")
+    # the awards of the movie (won or nominated, it has its importance)
     actors = models.ManyToManyField(Actor_Model)
     # actors of the movie
     writers = models.ManyToManyField(Writer_Model)
@@ -306,21 +303,21 @@ class Movie_Model(models.Model):
     
     thumbnail_url = models.CharField(max_length=255)
     # url of the thumbnail of the movie
-    filename = models.CharField(max_length=200)
+    filename = models.CharField(max_length=255)
     # name of movie on local disk
-    extension = models.CharField(max_length=32)
+    extension = models.CharField(max_length=31)
     # .avi, .mkv, .mpeg, ...
-    path = models.CharField(max_length=200)
+    path = models.CharField(max_length=255)
     # path to movie on disk
-    hash_code = models.CharField(max_length=32)
-    # md5 of the movie (1st minute)
+    hash_code = models.CharField(max_length=31)
+    # hashcode of the movie
     
     @classmethod
     def kind(cls):
         return "Movie_Model"
 
     @staticmethod
-    def add_movie_model(original_title, duration, user_rating, thumbnail_url, filename, extension, path_on_disk, hashcode):
+    def add_movie_model(original_title, duration, user_rating, thumbnail_url, filename, extension, path_on_disk, hash_code):
         movie_model = Movie_Model(original_title = original_title,
                                   runtime = duration,
                                   user_rating = user_rating,
@@ -328,17 +325,17 @@ class Movie_Model(models.Model):
                                   filename = filename,
                                   extension = extension,
                                   path = path_on_disk,
-                                  hash_code = hashcode)
+                                  hash_code = hash_code)
         movie_model.save()
         return movie_model
     
     @staticmethod
-    def get_movie_model(filename, extension, path, md5):
+    def get_movie_model(filename, extension, path, hash_code):
         try:
-            movie_model = Movie_Model.objects.get(filename = filename, extension = extension,
-                                                  path = path, md5 = md5)
+            query = Movie_Model.objects.filter(filename = filename,extension = extension, path = path, hash_code = hash_code)
         except Exception: return None
-        return movie_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_movie_model_by_id(movie_id):
@@ -353,6 +350,60 @@ class Movie_Model(models.Model):
         if movie_model is None: return False
         else:
             movie_model.delete()
+            return True
+        
+class Award_Matcher_Model(models.Model):
+    movie = models.ForeignKey(Movie_Model)
+    actor = models.ForeignKey(Actor_Model, null = True)
+    director = models.ForeignKey(Director_Model, null = True)
+    writer = models.ForeignKey(Writer_Model, null = True)
+    award = models.ForeignKey(Award_Model)
+    award_category = models.ForeignKey(Award_Category_Model)
+    
+    @classmethod
+    def kind(cls):
+        return "Award_Manager_Model"
+    
+    @staticmethod
+    def add_award_matcher_model(movie, actor, director, writer, award, award_category):
+        try:
+            award_matcher_model = Award_Matcher_Model(movie = movie,
+                                                      actor = actor,
+                                                      director = director,
+                                                      writer = writer,
+                                                      award = award,
+                                                      award_category = award_category)
+            award_matcher_model.save()
+        except Exception, x: return None
+        return award_matcher_model
+    
+    @staticmethod
+    def get_award_matcher(movie_model, actor_model, director_model, writer_model,
+                          award_model, award_category_model):
+        try:
+            query = Award_Matcher_Model.objects.filter(movie = movie_model,
+                                                               actor = actor_model,
+                                                               director = director_model,
+                                                               writer = writer_model,
+                                                               award = award_model,
+                                                               award_category = award_category_model)
+        except Exception, x: return None
+        if len(query) != 0: return query[0]
+        else: return None
+    
+    @staticmethod
+    def get_award_matcher_by_id(award_matcher_id):
+        try:
+            award_matcher = Award_Matcher_Model.objects.get(id = award_matcher_id)
+        except Exception, x: return None
+        return award_matcher
+    
+    @staticmethod
+    def delete_award_matcher_model(award_matcher_id):
+        award_matcher = Award_Matcher_Model.get_award_matcher_by_id(award_matcher_id)
+        if award_matcher is None: return False
+        else:
+            award_matcher.delete()
             return True
         
 class Character_Model(models.Model):
@@ -374,9 +425,10 @@ class Character_Model(models.Model):
     @staticmethod
     def get_character_model(character_name):
         try:
-            character_model = Character_Model.objects.get(character_name = character_name)
+            query = Character_Model.objects.filter(character_name = character_name)
         except Exception: return None
-        return character_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_character_model_by_id(character_id):
@@ -411,9 +463,10 @@ class Aka_Model(models.Model):
     @staticmethod
     def get_aka_model(aka_name):
         try:
-            aka_model = Aka_Model.objects.get(aka_name = aka_name)
+            query = Aka_Model.objects.filter(aka_name = aka_name)
         except Exception: return None
-        return aka_model
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_aka_model_by_id(aka_id):
@@ -445,6 +498,15 @@ class Release_Date_Model(models.Model):
                                                 related_movie = related_movie_model)
         release_date_model.save()
         return release_date_model
+    
+    @staticmethod
+    def get_release_date_model(release_date, related_movie):
+        try:
+            query = Release_Date_Model.objects.filter(release_date = release_date,
+                                                      related_movie = related_movie)
+        except Exception, x: return None
+        if len(query) != 0: return query[0]
+        else: return None
     
     @staticmethod
     def get_release_date_model_by_id(release_date_id):

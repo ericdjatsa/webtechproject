@@ -12,17 +12,32 @@ def index(request):
 
 def search(request):
     """
+        INPUT :
+            search-string
+            search-option
         OUTPUT :
-            Search_WF OUTPUT
+            Search_WF's OUTPUT
             time-to-serve
     """
     start = datetime.now()
     if request.method == "GET": HttpResponse("POST excepted")
     wf = Search_WF(request.POST, None)
     result = wf.work()
-    result["time-to-serve"] = datetime.now() - start
 #    return render_to_response("template_targeted", result)
-    return HttpResponse(str(result))
+    return HttpResponse(JSONEncoder().encode(" ".join([str(result), str(datetime.now() - start)])))
+
+def create_fake_complete_movie(request):
+    """
+        INPUT :
+            None
+        OUTPUT :
+            Create_Fake_Movie_WF's 
+    """
+    wf = Create_Fake_Movie_WF({}, None)
+    result = wf.work()
+    return HttpResponse(JSONEncoder().encode(", ".join([result["status"],
+                                                        str(result["already-existed"]),
+                                                        str(result["time-to-serve"])])))
 
 def create_movie_completely(request):
     """
