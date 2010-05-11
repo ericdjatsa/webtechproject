@@ -7,8 +7,10 @@ This file gather all together the logic behind the views
 
 from base.Base_Workflow import Base_Workflow
 from src.seeker.models import *
+from tools.routines import special_dictionary_merger
 
 import logging
+from datetime import datetime
 
 class Search_WF(Base_Workflow):
     '''    
@@ -35,6 +37,7 @@ class Search_WF(Base_Workflow):
 #        self.string_cleaner("search-option")
     
     def process(self):
+        start = datetime.now()
         search_string = self.request()["search-string"]
         strings_to_search = search_string.split()
         
@@ -42,7 +45,9 @@ class Search_WF(Base_Workflow):
         if search_option not in Search_WF.SEARCH_OPTIONS: search_option = None
         else:
             search_results = []
+            print "lambdas approaching"
             for string_to_search in strings_to_search:
+                print " ".join(["lambda for", string_to_search])
                 search_result = {
                 'a': lambda string_to_search: self.repository().search_all(string_to_search),
                 'b': lambda string_to_search: self.repository().search_actor(string_to_search),
@@ -63,7 +68,9 @@ class Search_WF(Base_Workflow):
         # Knock each elements from search_results against each others
         # OUTPUT : {"movie-models" : [movie_model, ...], actors-models : [actor_model, ...], ...}
         # (See search functions in seeker.repository.py to know all possible keys)
-        merged_result = {}
+        merged_results = {}
+        for dict in search_results:
+            merged_result = special_dictionary_merger(dict, merged_results)
         
         # TO DO : page rank the result in merged_result (ERIC)
         # INPUT : merged_result
@@ -72,16 +79,15 @@ class Search_WF(Base_Workflow):
         page_ranked_result = {}
         
         self.add_to_response("status", "ok")
-        self.add_to_response("search-result", search_results)
+        self.add_to_response("search-result", merged_results)
+        self.add_to_response("time-to-serve", datetime.now() - start)
 #        self.add_to_response("search-result", page_ranked_result)
 
 class Create_Or_Get_Movie_WF(Base_Workflow):
     '''
         INPUT :
+            imdb-id
             original-title
-            runtime
-            user-rating
-            thumbnail-url
             filename
             extension
             path-on-disk
@@ -103,12 +109,10 @@ class Create_Or_Get_Movie_WF(Base_Workflow):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
+        self.validate_string_field_not_empty("imdb-id")
+        self.string_cleaner("imdb-id")
         self.validate_string_field_not_empty("original-title")
         self.string_cleaner("original-title")
-        self.validate_float_field("user-rating")
-        # No cleaning on user-rating
-        self.validate_string_field_not_empty("thumbnail-url")
-        # No cleaning on thumbnail-url
         self.validate_string_field_not_empty("filename")
         # No cleaning on filename
         self.validate_string_field_not_empty("extension")
@@ -117,23 +121,20 @@ class Create_Or_Get_Movie_WF(Base_Workflow):
         # No cleaning on path-on-disk
         self.validate_string_field_not_empty("hashcode")
         self.string_cleaner("hashcode")
-        self.validate_time_field("runtime")
     
     def process(self):
+        imdb_id = self.request()["imdb-id"]
         original_title = self.request()["original-title"]
-        runtime = self.request()["runtime"]
-        user_rating = self.request()["user-rating"]
-        thumbnail_url = self.request()["thumbnail-url"]
         filename = self.request()["filename"]
         extension = self.request()["extension"]
         path_on_disk = self.request()["path-on-disk"]
         hash_code = self.request()["hashcode"]
         
-        query = Movie_Model.get_movie_model(filename, extension, path_on_disk, hash_code)
+        query = Movie_Model.get_movie_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            movie_model = Movie_Model.add_movie_model(original_title, runtime, user_rating, thumbnail_url,
-                                                filename, extension, path_on_disk, hash_code)
+            movie_model = Movie_Model.add_movie_model(imdb_id, original_title, filename,
+                                                      extension, path_on_disk, hash_code)
         else:
             already_existed = True
             movie_model = query
@@ -149,6 +150,9 @@ class Complete_Movie_Model_WF(Base_Workflow):
         Create_Or_Get_Movie_WF)
     
         INPUT:
+            runtime
+            user-rating
+            thumbnail-url
             movie-model : the movie model (got or created by Create_Or_Get_Movie_WF)
             original-countries : list of Country_Model
             actors : list of Actor_Model
@@ -163,9 +167,11 @@ class Complete_Movie_Model_WF(Base_Workflow):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
+        self.validate_string_field_not_empty("runtime")
+        self.validate_string_field_not_empty("user-rating")
+        self.validate_string_field_not_empty("thumbnail-url")
         self.validate_field_not_null("movie-model")
         self.validate_list_field_not_empty("original-countries")
-#        self.validate_list_field_not_empty("awards")
         self.validate_list_field_not_empty("actors")
         self.validate_list_field_not_empty("writers")
         self.validate_list_field_not_empty("directors")
@@ -173,13 +179,13 @@ class Complete_Movie_Model_WF(Base_Workflow):
     
     def process(self):
         movie_model = self.request()["movie-model"]
+        movie_model.add_some_more_infos(self.request()["runtime"],
+                                        self.request()["user-rating"],
+                                        self.request()["thumbnail-url"])
         
         if self.validate_field_not_null("original-countries"):
             original_countries = self.request()["original-countries"]
         else: original_countries = None
-#        if self.validate_field_not_null("awards"):
-#            awards = self.request()["awards"]
-#        else: awards = None
         if self.validate_field_not_null("actors"):
             actors = self.request()["actors"]
         else: actors = None
@@ -198,11 +204,6 @@ class Complete_Movie_Model_WF(Base_Workflow):
             for original_country in original_countries:
                 if original_country not in movie_original_countries:
                     movie_model.original_countries.add(original_country)
-#        if awards is not None:
-#            movie_awards = movie_model.awards.all()
-#            for award in awards:
-#                if award not in movie_awards:
-#                    movie_model.awards.add(award)
         if actors is not None:
             movie_actors = movie_model.actors.all()
             for actor in actors:
@@ -230,8 +231,8 @@ class Complete_Movie_Model_WF(Base_Workflow):
 class Create_Or_Get_Actor_WF(Base_Workflow):
     """
         INPUT:
-            first-name
-            last-name
+            imdb-id
+            full-name
             birth-date
             nick-name (optional)
             death-date (optional)
@@ -244,15 +245,15 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
-        self.validate_string_field_not_empty("first-name")
-        self.string_cleaner("first-name")
-        self.validate_string_field_not_empty("last-name")
-        self.string_cleaner("last-name")
+        self.validate_string_field_not_empty("imdb-id")
+        self.string_cleaner("imdb-id")
+        self.validate_string_field_not_empty("full-name")
+        self.string_cleaner("full-name")
         self.validate_date_field("birth-date")
     
     def process(self):
-        first_name = self.request()["first-name"]
-        last_name = self.request()["last-name"]
+        imdb_id = self.request()["imdb-id"]
+        full_name = self.request()["full-name"]
         birth_date = self.request()["birth-date"]
         if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
@@ -260,14 +261,12 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
             self.string_cleaner("nick-name")
             nick_name = self.request()["nick-name"]
         else: nick_name = None
-#        if self.validate_field_not_null("awards"): awards = self.request()["awards"]
-#        else: awards = None
         
-        query = Actor_Model.get_actor_model(first_name, last_name, birth_date)
+        query = Actor_Model.get_actor_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            actor_model = Actor_Model.add_actor_model(first_name, last_name, birth_date, death_date, nick_name)
-#            if awards is not None: self.repository().add_awards(actor_model, awards)
+            actor_model = Actor_Model.add_actor_model(imdb_id, full_name,
+                                                      birth_date, death_date, nick_name)
         else:
             already_existed = True
             actor_model = query
@@ -279,29 +278,29 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
 class Create_Or_Get_Writer_WF(Base_Workflow):
     """
         INPUT:
-            first-name
-            last-name
+            imdb-id
+            full-name
             birth-date
             nick-name (optional)
             death-date (optional)
         OUTPUT:
             status = "ok"
-            writer-model
+            writer-model (a Writer_Model)
             already-existed (boolean)
     """
     def __init__(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
-        self.validate_string_field_not_empty("first-name")
-        self.string_cleaner("first-name")
-        self.validate_string_field_not_empty("last-name")
-        self.string_cleaner("last-name")
+        self.validate_string_field_not_empty("imdb-id")
+        self.string_cleaner("imdb-id")
+        self.validate_string_field_not_empty("full-name")
+        self.string_cleaner("full-name")
         self.validate_date_field("birth-date")
     
     def process(self):
-        first_name = self.request()["first-name"]
-        last_name = self.request()["last-name"]
+        imdb_id = self.request()["imdb-id"]
+        full_name = self.request()["full-name"]
         birth_date = self.request()["birth-date"]
         if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
@@ -309,14 +308,12 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
             self.string_cleaner("nick-name")
             nick_name = self.request()["nick-name"]
         else: nick_name = None
-#        if self.validate_field_not_null("awards"): awards = self.request()["awards"]
-#        else: awards = None
         
-        query = Writer_Model.get_writer_model(first_name, last_name, birth_date)
+        query = Writer_Model.get_writer_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            writer_model = Writer_Model.add_writer_model(first_name, last_name, birth_date, death_date, nick_name)
-#            if awards is not None: self.repository().add_awards(writer_model, awards)
+            writer_model = Writer_Model.add_writer_model(imdb_id, full_name, birth_date,
+                                                         death_date, nick_name)
         else:
             already_existed = True
             writer_model = query
@@ -328,30 +325,29 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
 class Create_Or_Get_Director_WF(Base_Workflow):
     """
         INPUT:
-            first-name
-            last-name
+            imdb-id
+            full-name
             birth-date
             nick-name (optional)
             death-date (optional)
-            awards (optional, list of Award_Model)
         OUTPUT:
             status = "ok"
-            director-model
+            director-model (a Director_Model)
             already-existed (boolean)
     """
     def __init__(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
-        self.validate_string_field_not_empty("first-name")
-        self.string_cleaner("first-name")
-        self.validate_string_field_not_empty("last-name")
-        self.string_cleaner("last-name")
+        self.validate_string_field_not_empty("imdb-id")
+        self.string_cleaner("imdb-id")
+        self.validate_string_field_not_empty("full-name")
+        self.string_cleaner("full-name")
         self.validate_date_field("birth-date")
     
     def process(self):
-        first_name = self.request()["first-name"]
-        last_name = self.request()["last-name"]
+        imdb_id = self.request()["imdb-id"]
+        full_name = self.request()["full-name"]
         birth_date = self.request()["birth-date"]
         if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
@@ -359,14 +355,12 @@ class Create_Or_Get_Director_WF(Base_Workflow):
             self.string_cleaner("nick-name")
             nick_name = self.request()["nick-name"]
         else: nick_name = None
-#        if self.validate_field_not_null("awards"): awards = self.request()["awards"]
-#        else: awards = None
         
-        query = Director_Model.get_director_model(first_name, last_name, birth_date)
+        query = Director_Model.get_director_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            director_model = Director_Model.add_director_model(first_name, last_name, birth_date, death_date, nick_name)
-#            if awards is not None: self.repository().add_awards(director_model, awards)
+            director_model = Director_Model.add_director_model(imdb_id, full_name,
+                                                               birth_date, death_date, nick_name)
         else:
             already_existed = True
             director_model = query
@@ -513,6 +507,7 @@ class Create_Or_Get_Genre_WF(Base_Workflow):
 class Create_Or_Get_Character_WF(Base_Workflow):
     """
         DIRECT INPUT:
+            imdb-id
             character-name
             related-actor (an Actor_Model)
             related-movie (a Movie_Model)
@@ -529,16 +524,19 @@ class Create_Or_Get_Character_WF(Base_Workflow):
         self.string_cleaner("character-name")
         self.validate_field_not_null("related-actor")
         self.validate_field_not_null("related-movie")
+        self.validate_string_field_not_empty("imdb-id")
     
     def process(self):
+        imdb_id = self.request()["imdb-id"]
         character_name = self.request()["character-name"]
         related_actor = self.request()["related-actor"]
         related_movie = self.request()["related-movie"]
         
-        query = Character_Model.get_character_model(character_name)
+        query = Character_Model.get_character_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            character_model = Character_Model.add_character_model(character_name, related_actor, related_movie)
+            character_model = Character_Model.add_character_model(imdb_id, character_name,
+                                                                  related_actor, related_movie)
         else:
             already_existed = True
             character_model = query
@@ -747,10 +745,8 @@ class Create_Fake_Movie_WF(Base_Workflow):
         from datetime import time, date, datetime
         start = datetime.now()
         
-        result = Create_Or_Get_Movie_WF({"original-title" : "My Favourite Movie",
-                                         "runtime" : time(hour = 2, minute = 24),
-                                         "user-rating" : 8.6,
-                                         "thumbnail-url" : "http://www.t-site.com/my_favourite_movie/thumbnail.png",
+        result = Create_Or_Get_Movie_WF({"imdb-id" : "MOVIE_IMDB_ID",
+                                         "original-title" : "My Favourite Movie",
                                          "filename" : "My Favourite Movie.avi",
                                          "extension" : ".avi",
                                          "path-on-disk" : "Z:\\Movies\\",
@@ -759,34 +755,34 @@ class Create_Fake_Movie_WF(Base_Workflow):
         movie_model = result["movie-model"]
         
         if not result["already-existed"]:
-            actor_1 = Create_Or_Get_Actor_WF({"first-name" : "John",
-                                              "last-name" : "Actor",
+            actor_1 = Create_Or_Get_Actor_WF({"imdb-id" : "ACTOR_IMDB_ID_1",
+                                              "full-name" : "John Actor",
                                               "birth-date" : date(1964,3,7),
                                               "nick-name" : "Actor One",
                                               "death-date" : None}, None).work()["actor-model"]
-            actor_2 = Create_Or_Get_Actor_WF({"first-name" : "John",
-                                              "last-name" : "Actress",
+            actor_2 = Create_Or_Get_Actor_WF({"imdb-id" : "ACTOR_IMDB_ID_2",
+                                              "full-name" : "John Actress",
                                               "birth-date" : date(1975,5,10),
                                               "nick-name" : "Actor Two"}, None).work()["actor-model"]
             
-            writer_1 = Create_Or_Get_Writer_WF({"first-name" : "John",
-                                                "last-name" : "Writer",
+            writer_1 = Create_Or_Get_Writer_WF({"imdb-id" : "WRITER_IMDB_ID_1",
+                                                "full-name" : "John Writer",
                                                 "birth-date" : date(1974,2,10),
                                                 "nick-name" : "Writer One",
                                                 "death-date" : None}, None).work()["writer-model"]       
-            writer_2 = Create_Or_Get_Writer_WF({"first-name" : "John",
-                                                "last-name" : "Writress",
+            writer_2 = Create_Or_Get_Writer_WF({"imdb-id" : "WRITER_IMDB_ID_2",
+                                                "full-name" : "John Writress",
                                                 "birth-date" : date(1974,1,10),
                                                 "nick-name" : "Writer Two",
                                                 "death-date" : None}, None).work()["writer-model"]
-                                                   
-            director_1 = Create_Or_Get_Director_WF({"first-name" : "John",
-                                                    "last-name" : "Director",
+                                                
+            director_1 = Create_Or_Get_Director_WF({"imdb-id" : "DIRECTOR_IMDB_ID_1",
+                                                    "full-name" : "John Director",
                                                     "birth-date" : date(1954,2,10),
                                                     "nick-name" : "Director One",
                                                     "death-date" : None}, None).work()["director-model"]
-            director_2 = Create_Or_Get_Director_WF({"first-name" : "John",
-                                                    "last-name" : "Directress",
+            director_2 = Create_Or_Get_Director_WF({"imdb-id" : "DIRECTOR_IMDB_ID_2",
+                                                    "full-name" : "John Directress",
                                                     "birth-date" : date(1978,2,10),
                                                     "death-date" : None}, None).work()["director-model"]
             
@@ -811,11 +807,13 @@ class Create_Fake_Movie_WF(Base_Workflow):
             genre_1 = Create_Or_Get_Genre_WF({"genre-name" : "action"}, None).work()["genre-model"]
             genre_2 = Create_Or_Get_Genre_WF({"genre-name" : "romance"}, None).work()["genre-model"]
             
-            character_1 = Create_Or_Get_Character_WF({"character-name" : "Godzilla",
+            character_1 = Create_Or_Get_Character_WF({"imdb-id" : "CHARACTER_IMDB_ID_1",
+                                                      "character-name" : "Godzilla",
                                                       "related-actor" : actor_1,
                                                       "related-movie" : movie_model},
                                                       None).work()["character-model"]
-            character_2 = Create_Or_Get_Character_WF({"character-name" : "Pocahontas",
+            character_2 = Create_Or_Get_Character_WF({"imdb-id" : "CHARACTER_IMDB_ID_2",
+                                                      "character-name" : "Pocahontas",
                                                       "related-actor" : actor_2,
                                                       "related-movie" : movie_model},
                                                       None).work()["character-model"]
@@ -870,13 +868,17 @@ class Create_Fake_Movie_WF(Base_Workflow):
                                             "writer-model" : None},
                                             None).work()
             
-            complete_movie_model = Complete_Movie_Model_WF({"movie-model" : movie_model,
-                                                            "original-countries" : [country_1, country_2, country_3, country_4, country_5],
-                                                            "actors" : [actor_1, actor_2],
-                                                            "writers" : [writer_1, writer_2],
-                                                            "directors" : [director_1, director_2],
-                                                            "genres" : [genre_1, genre_2]},
-                                                            None).work()["movie-model"]
+            complete_movie_model = Complete_Movie_Model_WF({
+                                            "runtime" : "2:24",
+                                            "user-rating" : "8.6",
+                                            "thumbnail-url" : "http://www.t-site.com/my_favourite_movie/thumbnail.png",
+                                            "movie-model" : movie_model,
+                                            "original-countries" : [country_1, country_2, country_3, country_4, country_5],
+                                            "actors" : [actor_1, actor_2],
+                                            "writers" : [writer_1, writer_2],
+                                            "directors" : [director_1, director_2],
+                                            "genres" : [genre_1, genre_2]},
+                                            None).work()["movie-model"]
         
         self.add_to_response("status", "ok")
         self.add_to_response("movie-model", movie_model)
