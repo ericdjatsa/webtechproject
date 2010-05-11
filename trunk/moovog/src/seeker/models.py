@@ -153,39 +153,45 @@ class Genre_Model(models.Model):
             return True
         
 class Actor_Model(models.Model):
-    first_name = models.CharField(max_length = 127)
-    last_name = models.CharField(max_length = 127)
+    full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
     birth_date = models.DateField()
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
+    imdb_id = models.CharField(max_length = 63)
     
     @classmethod
     def kind(cls):
         return "Actor_Model"
     
-    @staticmethod
-    def add_actor_model(first_name, last_name, birth_date, death_date = None, nick_name = None):
-        actor_model = Actor_Model(first_name = first_name, last_name = last_name, nick_name = nick_name,
-                                  birth_date = birth_date, death_date = death_date)
-        actor_model.save()
-        return actor_model
-
-    @staticmethod
-    def get_actor_model(first_name, last_name, birth_date):
-        try:
-            query = Actor_Model.objects.filter(first_name = first_name, last_name = last_name,
-                                               birth_date = birth_date)
-        except Exception: return None
-        if len(query) != 0: return query[0]
-        else: return None
+    def get_infos_for_model(self):
+        infos = []
+        infos.append(self.full_name)
+        infos.append(self.nick_name)
+        infos.append(self.birth_date)
+        infos.append(self.death_date)
+        return infos
     
     @staticmethod
-    def get_actor_model_by_id(actor_id):
+    def add_actor_model(imdb_id, full_name, birth_date, death_date = None, nick_name = None):
+        model = Actor_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
+                            birth_date = birth_date, death_date = death_date)
+        model.save()
+        return model
+    
+    @staticmethod
+    def get_actor_model_by_id(id):
         try:
-            actor_model = Actor_Model.objects.get(id = actor_id)
+            model = Actor_Model.objects.get(id = id)
         except Exception: return None
-        return actor_model
+        return model
+    
+    @staticmethod
+    def get_actor_model_by_imdb_id(id):
+        try:
+            model = Actor_Model.objects.get(imdb_id = id)
+        except Exception: return None
+        return model
     
     @staticmethod
     def delete_actor_model(actor_id):
@@ -196,39 +202,45 @@ class Actor_Model(models.Model):
             return True
 
 class Writer_Model(models.Model):
-    first_name = models.CharField(max_length = 127)
-    last_name = models.CharField(max_length = 127)
+    full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
     birth_date = models.DateField()
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
+    imdb_id = models.CharField(max_length = 63)
     
     @classmethod
     def kind(cls):
         return "Writer_Model"
     
-    @staticmethod
-    def add_writer_model(first_name, last_name, birth_date, death_date = None, nick_name = None):
-        writer_model = Writer_Model(first_name = first_name, last_name = last_name, nick_name = nick_name,
-                                    birth_date = birth_date, death_date = death_date)
-        writer_model.save()
-        return writer_model
-
-    @staticmethod
-    def get_writer_model(first_name, last_name, birth_date):
-        try:
-            query = Writer_Model.objects.filter(first_name = first_name, last_name = last_name,
-                                                birth_date = birth_date)
-        except Exception: return None
-        if len(query) != 0: return query[0]
-        else: return None
+    def get_infos_for_model(self):
+        infos = []
+        infos.append(self.full_name)
+        infos.append(self.nick_name)
+        infos.append(self.birth_date)
+        infos.append(self.death_date)
+        return infos
     
     @staticmethod
-    def get_writer_model_by_id(writer_id):
+    def add_writer_model(imdb_id, full_name, birth_date, death_date = None, nick_name = None):
+        model = Writer_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
+                             birth_date = birth_date, death_date = death_date)
+        model.save()
+        return model
+    
+    @staticmethod
+    def get_writer_model_by_id(id):
         try:
-            writer_model = Writer_Model.objects.get(id = writer_id)
+            model = Writer_Model.objects.get(id = id)
         except Exception: return None
-        return writer_model
+        return model
+    
+    @staticmethod
+    def get_writer_model_by_imdb_id(id):
+        try:
+            model = Writer_Model.objects.get(imdb_id = id)
+        except Exception: return None
+        return model
     
     @staticmethod
     def delete_writer_model(writer_id):
@@ -239,39 +251,45 @@ class Writer_Model(models.Model):
             return True
     
 class Director_Model(models.Model):
-    first_name = models.CharField(max_length = 127)
-    last_name = models.CharField(max_length = 127)
+    full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
     birth_date = models.DateField()
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
+    imdb_id = models.CharField(max_length = 63)
     
     @classmethod
     def kind(cls):
         return "Director_Model"
     
-    @staticmethod
-    def add_director_model(first_name, last_name, birth_date, death_date = None, nick_name = None, awards = None):
-        director_model = Director_Model(first_name = first_name, last_name = last_name, nick_name = nick_name,
-                                        birth_date = birth_date, death_date = death_date)
-        director_model.save()
-        return director_model
-
-    @staticmethod
-    def get_director_model(first_name, last_name, birth_date):
-        try:
-            query = Director_Model.objects.filter(first_name = first_name, last_name = last_name,
-                                                  birth_date = birth_date)
-        except Exception: return None
-        if len(query) != 0: return query[0]
-        else: return None
+    def get_infos_for_model(self):
+        infos = []
+        infos.append(self.full_name)
+        infos.append(self.nick_name)
+        infos.append(self.birth_date)
+        infos.append(self.death_date)
+        return infos
     
     @staticmethod
-    def get_director_model_by_id(director_id):
+    def add_director_model(imdb_id, full_name, birth_date, death_date = None, nick_name = None):
+        model = Director_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
+                               birth_date = birth_date, death_date = death_date)
+        model.save()
+        return model
+    
+    @staticmethod
+    def get_director_model_by_id(id):
         try:
-            director_model = Director_Model.objects.get(id = director_id)
+            model = Director_Model.objects.get(id = id)
         except Exception: return None
-        return director_model
+        return model
+    
+    @staticmethod
+    def get_director_model_by_imdb_id(id):
+        try:
+            model = Director_Model.objects.get(imdb_id = id)
+        except Exception: return None
+        return model
     
     @staticmethod
     def delete_director_model(director_id):
@@ -296,32 +314,42 @@ class Movie_Model(models.Model):
     # directors of the movie
     genres = models.ManyToManyField(Genre_Model)
     # action, thriller, love romance, ...
-    runtime = models.TimeField()
+    runtime = models.CharField(max_length = 7, null = True)
     # time duration of the movie
-    user_rating = models.FloatField()
+    user_rating = models.CharField(max_length = 7, null = True)
     # user rating of the movie
+    imdb_id = models.CharField(max_length = 63)
+    # id of the movie on imdb - useful to decide whether a movie
+    # is already or not in our database
     
-    thumbnail_url = models.CharField(max_length=255)
+    thumbnail_url = models.CharField(max_length = 255, null = True)
     # url of the thumbnail of the movie
-    filename = models.CharField(max_length=255)
+    filename = models.CharField(max_length = 255)
     # name of movie on local disk
-    extension = models.CharField(max_length=31)
+    extension = models.CharField(max_length = 31)
     # .avi, .mkv, .mpeg, ...
-    path = models.CharField(max_length=255)
+    path = models.CharField(max_length = 255)
     # path to movie on disk
-    hash_code = models.CharField(max_length=31)
+    hash_code = models.CharField(max_length = 31)
     # hashcode of the movie
     
     @classmethod
     def kind(cls):
         return "Movie_Model"
+    
+    def get_infos_for_model(self):
+        infos = []
+        infos.append(str(self.id))
+        infos.append(self.original_title)
+        infos.append(self.runtime)
+        infos.append(self.user_rating)
+        infos.append(self.thumbnail_url)
+        return infos
 
     @staticmethod
-    def add_movie_model(original_title, duration, user_rating, thumbnail_url, filename, extension, path_on_disk, hash_code):
-        movie_model = Movie_Model(original_title = original_title,
-                                  runtime = duration,
-                                  user_rating = user_rating,
-                                  thumbnail_url = thumbnail_url,
+    def add_movie_model(imdb_id, original_title, filename, extension, path_on_disk, hash_code):
+        movie_model = Movie_Model(imdb_id = imdb_id,
+                                  original_title = original_title,
                                   filename = filename,
                                   extension = extension,
                                   path = path_on_disk,
@@ -329,20 +357,25 @@ class Movie_Model(models.Model):
         movie_model.save()
         return movie_model
     
-    @staticmethod
-    def get_movie_model(filename, extension, path, hash_code):
-        try:
-            query = Movie_Model.objects.filter(filename = filename,extension = extension, path = path, hash_code = hash_code)
-        except Exception: return None
-        if len(query) != 0: return query[0]
-        else: return None
+    def add_some_more_infos(self, runtime, user_rating, thumbnail_url):
+        self.runtime = runtime
+        self.user_rating = user_rating
+        self.thumbnail_url = thumbnail_url
+        self.save()
     
     @staticmethod
-    def get_movie_model_by_id(movie_id):
+    def get_movie_model_by_id(id):
         try:
-            movie_model = Movie_Model.objects.get(id = movie_id)
+            model = Movie_Model.objects.get(id = id)
         except Exception: return None
-        return movie_model
+        return model
+    
+    @staticmethod
+    def get_movie_model_by_imdb_id(id):
+        try:
+            model = Movie_Model.objects.get(imdb_id = id)
+        except Exception: return None
+        return model
     
     @staticmethod
     def delete_movie_model(movie_id):
@@ -410,17 +443,18 @@ class Character_Model(models.Model):
     character_name = models.CharField(max_length = 127)
     related_actor = models.ForeignKey(Actor_Model)
     related_movie = models.ForeignKey(Movie_Model)
+    imdb_id = models.CharField(max_length = 127)
     
     @classmethod
     def kind(cls):
         return "Character_Model"
     
     @staticmethod
-    def add_character_model(character_name, related_actor, related_movie):
-        character_model = Character_Model(character_name = character_name, related_actor = related_actor,
-                                          related_movie = related_movie)
-        character_model.save()
-        return character_model
+    def add_character_model(imdb_id, character_name, related_actor, related_movie):
+        model = Character_Model(imdb_id = imdb_id, character_name = character_name,
+                                          related_actor = related_actor, related_movie = related_movie)
+        model.save()
+        return model
     
     @staticmethod
     def get_character_model(character_name):
@@ -436,6 +470,13 @@ class Character_Model(models.Model):
             character_model = Character_Model.objects.get(id = character_id)
         except Exception: return None
         return character_model
+    
+    @staticmethod
+    def get_character_model_by_imdb_id(id):
+        try:
+            model = Movie_Model.objects.get(imdb_id = id)
+        except Exception: return None
+        return model
     
     @staticmethod
     def delete_character_model(character_id):

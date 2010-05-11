@@ -113,11 +113,9 @@ class Repository:
             OUTPUT :
                 actor-models : a list of Actor_Model
         """
-        query_first_name = Actor_Model.objects.filter(first_name__contains = string_to_search)
-        query_last_name = Actor_Model.objects.filter(last_name__contains = string_to_search)
+        query = Actor_Model.objects.filter(full_name__contains = string_to_search)
         result = []
-        for model_id in query_first_name: result.append(Actor_Model.get_actor_model_by_id(model_id))
-        for model_id in query_last_name: result.append(Actor_Model.get_actor_model_by_id(model_id))
+        for model in query: result.append(model)
         return {"actor-models" : result}
     
     @staticmethod
@@ -129,11 +127,9 @@ class Repository:
             OUTPUT :
                 director-models : a list of Director_Model
         """
-        query_first_name = Director_Model.objects.filter(first_name__contains = string_to_search)
-        query_last_name = Director_Model.objects.filter(last_name__contains = string_to_search)
+        query = Director_Model.objects.filter(full_name__contains = string_to_search)
         result = []
-        for model_id in query_first_name: result.append(Director_Model.get_director_model_by_id(model_id))
-        for model_id in query_last_name: result.append(Director_Model.get_director_model_by_id(model_id))
+        for model in query: result.append(model)
         return {"director-models" : result}
     
     @staticmethod
@@ -145,11 +141,9 @@ class Repository:
             OUTPUT :
                 writer-models : a list of Writer_Model
         """
-        query_first_name = Writer_Model.objects.filter(first_name__contains = string_to_search)
-        query_last_name = Writer_Model.objects.filter(last_name__contains = string_to_search)
+        query = Writer_Model.objects.filter(full_name__contains = string_to_search)
         result = []
-        for model_id in query_first_name: result.append(Writer_Model.get_writer_model_by_id(model_id))
-        for model_id in query_last_name: result.append(Writer_Model.get_writer_model_by_id(model_id))
+        for model in query: result.append(model)
         return {"writer-models" : result}
     
     @staticmethod
@@ -177,7 +171,7 @@ class Repository:
         """
         query = Aka_Model.objects.filter(aka_name__contains = string_to_search)
         result = []
-        for model_id in query: result.append(Aka_Model.get_aka_model_by_id(model_id).related_movie)
+        for model in query: result.append(model)
         return {"movie-models" : result}
     
     @staticmethod
@@ -191,8 +185,8 @@ class Repository:
         """
         query = Genre_Model.objects.filter(genre_name__contains = string_to_search)
         result = []
-        for model_id in query:
-            for movie_model in Genre_Model.get_genre_model_by_id(model_id).movie_model_set.all():
+        for genre_model in query:
+            for movie_model in genre_model.movie_model_set.all():
                 result.append(movie_model)
         return {"movie-models" : result}
     
@@ -209,8 +203,7 @@ class Repository:
         query = Character_Model.objects.filter(character_name__contains = string_to_search)
         result_actors = []
         result_movies = []
-        for model_id in query:
-            character_model = Character_Model.get_character_model_by_id(model_id)
+        for character_model in query:
             result_actors.append(character_model.related_actor)
             result_movies.append(character_model.related_movie)
         return {"actor-models" : result_actors, "movie-models" : result_movies}
@@ -233,9 +226,7 @@ class Repository:
         result_directors = []
         result_writers = []
         if query is not None:
-            for model_id in query:
-#                award_model = Award_Model.get_award_model_by_id(model_id)
-                award_model = model_id
+            for award_model in query:
                 movie_set = award_model.movie_model_set.all()
                 actor_set = award_model.actor_model_set.all()
                 director_set = award_model.director_model_set.all()
@@ -254,3 +245,15 @@ class Repository:
                         result_writers.append(writer_model)
         return {"actor-models" : result_actors, "movie-models" : result_movies,
                 "director-models" : result_directors, "writer-models" : result_writers}
+        
+    @staticmethod
+    def search_award_category(string_to_search):
+        """
+            Searches into award_category_name of all
+            Award_Category_Model instances
+            
+            OUTPUT :
+                award-models
+                actors-models
+        """
+        pass
