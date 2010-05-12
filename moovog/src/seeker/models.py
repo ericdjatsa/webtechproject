@@ -41,6 +41,7 @@ class Award_Model(models.Model):
     date_of_awarding = models.DateField()
     award_categories = models.ManyToManyField(Award_Category_Model, through = "Award_Matcher_Model")
     award_status = models.CharField(max_length = 31)
+    imdb_id = models.CharField(max_length = 63)
     
     STATUSES = ["Won", "Nominated"]
     
@@ -49,21 +50,12 @@ class Award_Model(models.Model):
         return "Award_Model"
     
     @staticmethod
-    def add_award_model(award_name, date_of_awarding, award_status):
+    def add_award_model(imdb_id, award_name, date_of_awarding, award_status):
         if award_status not in Award_Model.STATUSES: award_status = None
-        award_model = Award_Model(award_name = award_name, date_of_awarding = date_of_awarding,
-                                  award_status = award_status)
+        award_model = Award_Model(imdb_id = imdb_id, award_name = award_name,
+                                  date_of_awarding = date_of_awarding, award_status = award_status)
         award_model.save()
         return award_model
-
-    @staticmethod
-    def get_award_model(award_name, date_of_awarding):
-        try:
-            query = Award_Model.objects.filter(award_name = award_name,
-                                               date_of_awarding = date_of_awarding)
-        except Exception: return None
-        if len(query) != 0: return query[0]
-        else: return None
     
     @staticmethod
     def get_award_model_by_id(award_id):
@@ -71,6 +63,13 @@ class Award_Model(models.Model):
             award_model = Award_Model.objects.get(id = award_id)
         except Exception: return None
         return award_model
+    
+    @staticmethod
+    def get_award_model_by_imdb_id(id):
+        try:
+            model = Award_Model.objects.get(imdb_id = id)
+        except Exception: return None
+        return model
     
     @staticmethod
     def delete_award_model(award_id):
@@ -159,6 +158,10 @@ class Actor_Model(models.Model):
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
+    mini_story = models.TextField(null = True)
+    thumbnail_url = models.CharField(max_length = 255, null = True)
+#    place_of_birth = models.CharField(max_length = 127)
+#    place_of_death = models.CharField(max_length = 127)
     
     @classmethod
     def kind(cls):
@@ -170,12 +173,16 @@ class Actor_Model(models.Model):
         infos.append(self.nick_name)
         infos.append(self.birth_date)
         infos.append(self.death_date)
+        infos.append(self.mini_story)
+        infos.append(self.thumbnail_url)
         return infos
     
     @staticmethod
-    def add_actor_model(imdb_id, full_name, birth_date, death_date = None, nick_name = None):
+    def add_actor_model(imdb_id, full_name, birth_date, death_date = None,
+                        nick_name = None, mini_story = None, thumbnail_url = None):
         model = Actor_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
-                            birth_date = birth_date, death_date = death_date)
+                            birth_date = birth_date, death_date = death_date,
+                            mini_story = mini_story, thumbnail_url = thumbnail_url)
         model.save()
         return model
     
@@ -208,6 +215,8 @@ class Writer_Model(models.Model):
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
+    mini_story = models.TextField(null = True)
+    thumbnail_url = models.CharField(max_length = 255, null = True)
     
     @classmethod
     def kind(cls):
@@ -219,12 +228,16 @@ class Writer_Model(models.Model):
         infos.append(self.nick_name)
         infos.append(self.birth_date)
         infos.append(self.death_date)
+        infos.append(self.mini_story)
+        infos.append(self.thumbnail_url)
         return infos
     
     @staticmethod
-    def add_writer_model(imdb_id, full_name, birth_date, death_date = None, nick_name = None):
+    def add_writer_model(imdb_id, full_name, birth_date, death_date = None,
+                        nick_name = None, mini_story = None, thumbnail_url = None):
         model = Writer_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
-                             birth_date = birth_date, death_date = death_date)
+                             birth_date = birth_date, death_date = death_date,
+                             mini_story = mini_story, thumbnail_url = thumbnail_url)
         model.save()
         return model
     
@@ -257,6 +270,8 @@ class Director_Model(models.Model):
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
+    mini_story = models.TextField(null = True)
+    thumbnail_url = models.CharField(max_length = 255, null = True)
     
     @classmethod
     def kind(cls):
@@ -268,12 +283,16 @@ class Director_Model(models.Model):
         infos.append(self.nick_name)
         infos.append(self.birth_date)
         infos.append(self.death_date)
+        infos.append(self.mini_story)
+        infos.append(self.thumbnail_url)
         return infos
     
     @staticmethod
-    def add_director_model(imdb_id, full_name, birth_date, death_date = None, nick_name = None):
-        model = Director_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
-                               birth_date = birth_date, death_date = death_date)
+    def add_director_model(imdb_id, full_name, birth_date, death_date = None,
+                           nick_name = None, mini_story = None, thumbnail_url = None):
+        model =Director_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
+                              birth_date = birth_date, death_date = death_date,
+                              mini_story = mini_story, thumbnail_url = thumbnail_url)
         model.save()
         return model
     
