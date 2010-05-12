@@ -236,6 +236,8 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
             birth-date
             nick-name (optional)
             death-date (optional)
+            mini-story (optional)
+            thumbnail-url (optional)
         OUTPUT:
             status = "ok"
             actor-model (an Actor_Model)
@@ -261,12 +263,16 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
             self.string_cleaner("nick-name")
             nick_name = self.request()["nick-name"]
         else: nick_name = None
+        if self.validate_string_field_not_empty("mini-story"): mini_story = self.request()["mini-story"]
+        else: mini_story = None
+        if self.validate_string_field_not_empty("thumbnail-url"): thumbnail_url = self.request()["thumbnail-url"]
+        else: thumbnail_url = None
         
         query = Actor_Model.get_actor_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            actor_model = Actor_Model.add_actor_model(imdb_id, full_name,
-                                                      birth_date, death_date, nick_name)
+            actor_model = Actor_Model.add_actor_model(imdb_id, full_name, birth_date, death_date,
+                                                      nick_name, mini_story, thumbnail_url)
         else:
             already_existed = True
             actor_model = query
@@ -308,12 +314,16 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
             self.string_cleaner("nick-name")
             nick_name = self.request()["nick-name"]
         else: nick_name = None
+        if self.validate_string_field_not_empty("mini-story"): mini_story = self.request()["mini-story"]
+        else: mini_story = None
+        if self.validate_string_field_not_empty("thumbnail-url"): thumbnail_url = self.request()["thumbnail-url"]
+        else: thumbnail_url = None
         
         query = Writer_Model.get_writer_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            writer_model = Writer_Model.add_writer_model(imdb_id, full_name, birth_date,
-                                                         death_date, nick_name)
+            writer_model = Writer_Model.add_writer_model(imdb_id, full_name, birth_date, death_date,
+                                                         nick_name, mini_story, thumbnail_url)
         else:
             already_existed = True
             writer_model = query
@@ -355,12 +365,16 @@ class Create_Or_Get_Director_WF(Base_Workflow):
             self.string_cleaner("nick-name")
             nick_name = self.request()["nick-name"]
         else: nick_name = None
+        if self.validate_string_field_not_empty("mini-story"): mini_story = self.request()["mini-story"]
+        else: mini_story = None
+        if self.validate_string_field_not_empty("thumbnail-url"): thumbnail_url = self.request()["thumbnail-url"]
+        else: thumbnail_url = None
         
         query = Director_Model.get_director_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            director_model = Director_Model.add_director_model(imdb_id, full_name,
-                                                               birth_date, death_date, nick_name)
+            director_model = Director_Model.add_director_model(imdb_id, full_name, birth_date, death_date,
+                                                               nick_name, mini_story, thumbnail_url)
         else:
             already_existed = True
             director_model = query
@@ -435,6 +449,7 @@ class Create_Or_Get_Award_WF(Base_Workflow):
     """
         INPUT : 
             DIRECT INPUT:
+                imdb-id
                 award-name
                 date-of-awarding
                 award-status (see Award_Model.STATUSES)
@@ -447,6 +462,8 @@ class Create_Or_Get_Award_WF(Base_Workflow):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
+        self.validate_string_field_not_empty("imdb-id")
+        self.string_cleaner("imdb-id")
         self.validate_string_field_not_empty("award-name")
         self.string_cleaner("award-name")
         self.validate_string_field_not_empty("award-status")
@@ -454,17 +471,17 @@ class Create_Or_Get_Award_WF(Base_Workflow):
         self.validate_date_field("date-of-awarding")
     
     def process(self):
+        imdb_id = self.request()["imdb-id"]
         award_name = self.request()["award-name"]
         date_of_awarding = self.request()["date-of-awarding"]
         award_status = self.request()["award-status"]
         if self.validate_list_field_not_empty("award-categories"): award_categories = self.request()["award-categories"]
         else: award_categories = None
         
-        query = Award_Model.get_award_model(award_name, date_of_awarding)
+        query = Award_Model.get_award_model_by_imdb_id(imdb_id)
         if query is None:
             already_existed = False
-            award_model = Award_Model.add_award_model(award_name, date_of_awarding, award_status)
-#            award_model = self.repository().add_award_categories(award_model, award_categories)
+            award_model = Award_Model.add_award_model(imdb_id, award_name, date_of_awarding, award_status)
         else:
             already_existed = True
             award_model = query
@@ -745,7 +762,8 @@ class Create_Fake_Movie_WF(Base_Workflow):
         from datetime import time, date, datetime
         start = datetime.now()
         
-        result = Create_Or_Get_Movie_WF({"imdb-id" : "MOVIE_IMDB_ID",
+        movie_imdb_id = "MOVIE_IMDB_ID"
+        result = Create_Or_Get_Movie_WF({"imdb-id" : movie_imdb_id,
                                          "original-title" : "My Favourite Movie",
                                          "filename" : "My Favourite Movie.avi",
                                          "extension" : ".avi",
@@ -755,36 +773,68 @@ class Create_Fake_Movie_WF(Base_Workflow):
         movie_model = result["movie-model"]
         
         if not result["already-existed"]:
-            actor_1 = Create_Or_Get_Actor_WF({"imdb-id" : "ACTOR_IMDB_ID_1",
-                                              "full-name" : "John Actor",
-                                              "birth-date" : date(1964,3,7),
-                                              "nick-name" : "Actor One",
-                                              "death-date" : None}, None).work()["actor-model"]
-            actor_2 = Create_Or_Get_Actor_WF({"imdb-id" : "ACTOR_IMDB_ID_2",
-                                              "full-name" : "John Actress",
-                                              "birth-date" : date(1975,5,10),
-                                              "nick-name" : "Actor Two"}, None).work()["actor-model"]
+            actor_imdb_id_1 = "ACTOR_IMDB_ID_1"
+            if Actor_Model.get_actor_model_by_imdb_id(actor_imdb_id_1) is None:
+                actor_1 = Create_Or_Get_Actor_WF({"imdb-id" : actor_imdb_id_1,
+                                                  "full-name" : "John Actor",
+                                                  "birth-date" : date(1964,3,7),
+                                                  "nick-name" : "Actor One",
+                                                  "death-date" : None,
+                                                  "mini-story" : "blabla",
+                                                  "thumbnail-url" : "http://image.com"
+                                                  }, None).work()["actor-model"]
+            actor_imdb_id_2 = "ACTOR_IMDB_ID_2"
+            if Actor_Model.get_actor_model_by_imdb_id(actor_imdb_id_2) is None:
+                actor_2 = Create_Or_Get_Actor_WF({"imdb-id" : actor_imdb_id_2,
+                                                  "full-name" : "John Actress",
+                                                  "birth-date" : date(1975,5,10),
+                                                  "nick-name" : "Actor Two",
+                                                  "mini-story" : "blabla",
+                                                  "thumbnail-url" : "http://image.com"
+                                                  }, None).work()["actor-model"]
             
-            writer_1 = Create_Or_Get_Writer_WF({"imdb-id" : "WRITER_IMDB_ID_1",
-                                                "full-name" : "John Writer",
-                                                "birth-date" : date(1974,2,10),
-                                                "nick-name" : "Writer One",
-                                                "death-date" : None}, None).work()["writer-model"]       
-            writer_2 = Create_Or_Get_Writer_WF({"imdb-id" : "WRITER_IMDB_ID_2",
-                                                "full-name" : "John Writress",
-                                                "birth-date" : date(1974,1,10),
-                                                "nick-name" : "Writer Two",
-                                                "death-date" : None}, None).work()["writer-model"]
-                                                
-            director_1 = Create_Or_Get_Director_WF({"imdb-id" : "DIRECTOR_IMDB_ID_1",
-                                                    "full-name" : "John Director",
-                                                    "birth-date" : date(1954,2,10),
-                                                    "nick-name" : "Director One",
-                                                    "death-date" : None}, None).work()["director-model"]
-            director_2 = Create_Or_Get_Director_WF({"imdb-id" : "DIRECTOR_IMDB_ID_2",
-                                                    "full-name" : "John Directress",
-                                                    "birth-date" : date(1978,2,10),
-                                                    "death-date" : None}, None).work()["director-model"]
+            writer_imdb_id_1 = "WRITER_IMDB_ID_1"
+            if Writer_Model.get_writer_model_by_imdb_id(writer_imdb_id_1) is None:
+                writer_1 = Create_Or_Get_Writer_WF({"imdb-id" : writer_imdb_id_1,
+                                                    "full-name" : "John Writer",
+                                                    "birth-date" : date(1974,2,10),
+                                                    "nick-name" : "Writer One",
+                                                    "death-date" : None,
+                                                    "mini-story" : "blabla",
+                                                    "thumbnail-url" : "http://image.com"
+                                                    }, None).work()["writer-model"]
+
+            writer_imdb_id_2 = "WRITER_IMDB_ID_2"
+            if Writer_Model.get_writer_model_by_imdb_id(writer_imdb_id_2) is None:
+                writer_2 = Create_Or_Get_Writer_WF({"imdb-id" : writer_imdb_id_2,
+                                                    "full-name" : "John Writress",
+                                                    "birth-date" : date(1974,1,10),
+                                                    "nick-name" : "Writer Two",
+                                                    "death-date" : None,
+                                                    "mini-story" : "blabla",
+                                                    "thumbnail-url" : "http://image.com"
+                                                    }, None).work()["writer-model"]
+            
+            director_imdb_id_1 = "DIRECTOR_IMDB_ID_1"
+            if Director_Model.get_director_model_by_imdb_id(director_imdb_id_1) is None:                               
+                director_1 = Create_Or_Get_Director_WF({"imdb-id" : director_imdb_id_1,
+                                                        "full-name" : "John Director",
+                                                        "birth-date" : date(1954,2,10),
+                                                        "nick-name" : "Director One",
+                                                        "death-date" : None,
+                                                        "mini-story" : "blabla",
+                                                        "thumbnail-url" : "http://image.com"
+                                                        }, None).work()["director-model"]
+                                     
+            director_imdb_id_2 = "DIRECTOR_IMDB_ID_2"
+            if Director_Model.get_director_model_by_imdb_id(id) is None:
+                director_2 = Create_Or_Get_Director_WF({"imdb-id" : director_imdb_id_2,
+                                                        "full-name" : "John Directress",
+                                                        "birth-date" : date(1978,2,10),
+                                                        "death-date" : None,
+                                                        "mini-story" : "blabla",
+                                                        "thumbnail-url" : "http://image.com"
+                                                        }, None).work()["director-model"]
             
             country_1 = Create_Or_Get_Country_WF({"country-name" : "France"}, None).work()["country-model"]
             country_2 = Create_Or_Get_Country_WF({"country-name" : "Germany"}, None).work()["country-model"]
@@ -797,26 +847,37 @@ class Create_Fake_Movie_WF(Base_Workflow):
             award_category_2 = Create_Or_Get_Award_Category_WF({"award-category-name" : "Best Failure Ever"},
                                                                None).work()["award-category-model"]
     
-            award_1 = Create_Or_Get_Award_WF({"award-name" : "Bafta",
-                                              "date-of-awarding" : date(2005,6,3),
-                                              "award-status" : "Won"}, None).work()["award-model"]
-            award_2 = Create_Or_Get_Award_WF({"award-name" : "Oscar",
-                                              "date-of-awarding" : date(2005,6,3),
-                                              "award-status" : "Nominated"}, None).work()["award-model"]
+            award_imdb_id_1 = "AWARD_IMDB_ID_1"
+            if Award_Model.get_award_model_by_imdb_id(award_imdb_id_1) is None:
+                award_1 = Create_Or_Get_Award_WF({"imdb-id" : actor_imdb_id_1,
+                                                  "award-name" : "Bafta",
+                                                  "date-of-awarding" : date(2005,6,3),
+                                                  "award-status" : "Won"}, None).work()["award-model"]
+
+            award_imdb_id_2 = "AWARD_IMDB_ID_2"
+            if Award_Model.get_award_model_by_imdb_id(award_imdb_id_2) is None:
+                award_2 = Create_Or_Get_Award_WF({"imdb-id" : actor_imdb_id_2,
+                                                  "award-name" : "Oscar",
+                                                  "date-of-awarding" : date(2005,6,3),
+                                                  "award-status" : "Nominated"}, None).work()["award-model"]
             
             genre_1 = Create_Or_Get_Genre_WF({"genre-name" : "action"}, None).work()["genre-model"]
             genre_2 = Create_Or_Get_Genre_WF({"genre-name" : "romance"}, None).work()["genre-model"]
             
-            character_1 = Create_Or_Get_Character_WF({"imdb-id" : "CHARACTER_IMDB_ID_1",
-                                                      "character-name" : "Godzilla",
-                                                      "related-actor" : actor_1,
-                                                      "related-movie" : movie_model},
-                                                      None).work()["character-model"]
-            character_2 = Create_Or_Get_Character_WF({"imdb-id" : "CHARACTER_IMDB_ID_2",
-                                                      "character-name" : "Pocahontas",
-                                                      "related-actor" : actor_2,
-                                                      "related-movie" : movie_model},
-                                                      None).work()["character-model"]
+            character_imdb_id_1 = "CHARACTER_IMDB_ID_1"
+            if Character_Model.get_character_model_by_imdb_id(character_imdb_id_1) is None:
+                character_1 = Create_Or_Get_Character_WF({"imdb-id" : character_imdb_id_1,
+                                                          "character-name" : "Godzilla",
+                                                          "related-actor" : actor_1,
+                                                          "related-movie" : movie_model},
+                                                          None).work()["character-model"]  
+            character_imdb_id_2 = "CHARACTER_IMDB_ID_2"
+            if Character_Model.get_character_model_by_imdb_id(character_imdb_id_2) is None:
+                character_2 = Create_Or_Get_Character_WF({"imdb-id" : character_imdb_id_2,
+                                                          "character-name" : "Pocahontas",
+                                                          "related-actor" : actor_2,
+                                                          "related-movie" : movie_model},
+                                                          None).work()["character-model"]
                                                       
             synopsis_1 = Create_Or_Get_Synopsis_WF({"plain-text" : "First synopsis of this crazy movie!",
                                                     "movie-model" : movie_model,
