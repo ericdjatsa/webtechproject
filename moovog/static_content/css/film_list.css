@@ -1,0 +1,48 @@
+.film_thumbnail
+{
+	float:	left;
+	height: 240px; 
+	width: 180px;
+	margin: 4px;
+	text-align: center;
+	border: 1px solid black;
+}
+
+.thumbnail_image
+{
+	height: 60%;
+}	
+
+td.center
+{
+	text-align: center; 
+}
+
+p
+{
+	margin: 2px;
+}
+
+.bordered
+{
+	border: 	1px solid black;
+}
+
+.film_tooltip
+{
+	display:		none;
+	height:		240px;
+	width:		320px;
+	background:	#555555; 
+	color:		#000000;
+}
+
+#searchbox
+{
+	float: right;
+}
+
+#film_list
+{
+	clear: both;
+}
