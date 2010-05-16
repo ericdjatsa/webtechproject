@@ -4,3 +4,19 @@ body
 	background-repeat: no-repeat;
 	background-color: #0B0F12;
 }
+
+#page_header
+{
+	clear: both;
+}
+
+#page_nav_content
+{
+	clear: both;
+}
+
+#page_footer
+{
+	clear: both;
+}
+
