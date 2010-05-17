@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>Mum's Moovog : Tonight, you start to really appreciate watching moovies...</title>
+	<meta name="keywords" content="Moovog movie IMDB" />
+	<meta name="description" content="Moovog movie IMDB" />
+	
+    <!--title>_PPTV</title>
+    <link href="http://static1.pplive.cn/ikan3/091230/favicon.ico" type="image/x-icon" rel="shortcut icon" /--><!--show web logo-->
+    <link rel="stylesheet" type="text/css" href="http://static1.pplive.cn/passport/100415/images/loginCenter.css?20100426_2" />
+    <link rel="stylesheet" type="text/css" href="http://static1.pplive.cn/passport/100415/images/userCenter.css?20100426_2" />
+</head>
+<body>
+<!--StartL the Mini Navigation -->
+
+    <div class="l_miniMenu miniMenuSkin_1">
+        <div class="miniMenu c_b">
+            <div class="leftMenu c_b">
+                <ul class="c_b">
+                    <li><a href="../home.htm" title="home">Home</a></li>
+                    <li><a href="../home.htm" title="A">A</a></li>
+                    <li><a href="../home.htm" title="B">B</a></li>
+                    <li><a href="../home.htm" title="C">C</a></li>
+                    <li><a href="../home.htm" title="D">D</a></li>
+                    <li><a href="../home.htm" title="E">E</a></li>
+                    <li><a href="../home.htm" title="F">F</a></li>
+                </ul>
+            </div>
+
+            <!--div class="miniSearch c_b">
+                <input type="text" class="searchTxt" />
+                <input type="button" class="searchBtn" value="Search" />
+            </div-->
+            
+            <div class="miniUserInfo">
+                <a href="../home.htm" target="_blank" id="btn_uname" style="display: none;">
+                    name</a>
+                    <a href="login.htm" id="btn_logout" style="display: none;">Logout</a>
+                    <tt id="btn_login"><a href="login.htm" title="login" target="_self">Login</a>
+                    </tt>|<a href="newregister.htm" title="register" target="_blank" id="btn_register">Register</a>
+            </div>
+
+        </div>
+    </div>
+    <!--End: Mini navigation-->   
+      
+ 
+    <!--Start: the top logo-->
+    <div class="la_topInfo c_b">
+         <!--a href="../home.htm" title="PP个人中心" class="logo logo_userCenter"></a-->
+         <a href="../home.htm" title="logo" class="sp">
+            <img src="12.gif" alt="logo" style="width: 834px; height: 82px" /></a>
+    </div>
+    <!--End: the top logo-->
+
+
+    <!--Start: The upper side menu-->
+    <div class="la_topMenu c_b">
+
+        <span class="bg_left"></span>
+        <div class="bg_menu c_b">
+             
+            <ul class="menu c_b">
+                <!--li><a href="http://passport.pptv.com" title="个人中心" class="now"><strong>个人中心</strong></a></li-->
+                <li><a href="userinfodisplay.htm" title="usercenter" class=""><strong>UserCenter</strong></a></li>
+                <li><a href="userinfomodify.htm" title="userinfo" class=""><strong>UserInfo</strong></a></li>
+                <!--li><a href="http://help.pptv.com/faq" title="用户帮助"><strong>用户帮助</strong></a></li-->
+            </ul> 
+            
+        </div>
+        <span class="bg_right"></span>
+    </div>
+    <!--End: the Upper Side Menu-->
+
+
+
+<!--Start :Body-->
+<!--script type="text/javascript" src="upload_image.js"></script--><!--Used for uploading personal photo as logo-->
+<script type="text/javascript" src="change_region.js"></script>
+    <div class="la_userCenter c_b">
+        <!--Start: the right side of the page-->
+
+        <div class="la_userMain c_b">
+
+            <p class="bg_top c_b">
+                <span class="bg_1"></span><span class="bg_2"></span>
+            </p>
+            <div class="userMain c_b">
+                <!--start: switch "basic info" and "upload photo"-->
+                <div class="tabMenu c_b">
+                    <a href="/userinfo.aspx?tab=info" title="basicinfo" class="now">Basic Personal Information</a> <!--why here 'href=/userinfo.aspx?tab=info'???????-->
+                    <!--a href="/userinfo.aspx?tab=pic" title="upload photo" class="">Upload Your Photo</a-->
+
+                </div>
+                <!--End: switch "basic info" and "upload photo"-->
+                
+                <!--Start: upload photo-->
+                <!--div class="upLoadFace c_b" style="display:none">
+                    <div class="userInfo c_b" style="display:block">
+                    
+                        </div>
+                    <form id="form1" name="form1" enctype="multipart/form-data"  method="post" action="/userheaddo.aspx">
+                    <strong class="point"><span class="ico_3"></span>备注：您上传的头像需要通过审核后才能正常显示，如有延迟敬请谅解！</strong>
+
+                    <div class="c_b">
+                        <div class="showImg c_b">
+
+                            <div class="img">
+                                <div class="big">
+                                    请上传图片</div>
+                                <div class="mbox" style="display: none;">
+                                </div>
+                            </div>
+
+                            <div class="size c_b">
+                                <a href="javascript:;" title="重置" class="btn_reset" id="iue_btn_reset">重置</a>
+
+                                <p id="iue_slide_bar">
+                                    <span title="拖动缩放"></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="editImg c_b">
+
+                            <div class="img">
+                                最终效果
+                            </div>
+                            <img class="sizeimg mic_img2" style="position: absolute; left: -10000px;" />
+                            <dl>
+                                <dt>第一步：</dt>
+                                <dd class="c_b">
+                                    <p>
+                                        从电脑中选择一张图片作为头像</p>
+
+                                    <input name="file" type="file" class="upLoadImg" size="1" />
+                                    <a href="#" title="选择图片" class="upLoadImg2 btn_1">选择图片</a>
+
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>第二步：</dt>
+                                <dd>
+
+                                    <p>
+                                        选择合适的区域</p>
+                                </dd>
+
+                            </dl>
+                            <dl>
+                                <dt>第三步：</dt>
+                                <dd>
+
+                                    <input type="hidden" name="width" />
+                                    <input type="hidden" name="height" />
+                                    <input type="hidden" name="x" />
+                                    <input type="hidden" name="y" />
+
+                                    <input name="save" type="submit" class="btn_2" value="保存头像" />
+                                </dd>
+                            </dl>
+                        </div>
+
+                    </div>
+                    </form>
+                </div>
+
+
+                <script type="text/javascript">
+                    (function() {
+                        var ImageUploadEdit = {
+                            isLoadImg: false, bw: 346, bh: 346, sw: 120, sh: 120, bigX: 0, bigY: 0, downXY: null, downX: null, mbxX: 0, mbxY: 0,
+
+                            init: function() {
+                                this.btn_reset = $('#iue_btn_reset');
+                                this.slide_bar = $('#iue_slide_bar');
+                                this.slide_btn = $('#iue_slide_bar span')[0];
+                                this.file = $('#form1 input[name=file]')[0];
+                                this.btn_save = $('#form1 input[name=save]')[0];
+
+                                this.sizeimg = $('#form1 .sizeimg')[0];
+
+                                this.hd_width = $('#form1 input[name=width]')[0];
+                                this.hd_height = $('#form1 input[name=height]')[0];
+                                this.hd_x = $('#form1 input[name=x]')[0];
+                                this.hd_y = $('#form1 input[name=y]')[0];
+
+                                this.slide_width = this.slide_bar.offsetWidth;
+                                this.slide_btn_width = this.slide_btn.offsetWidth;
+
+                                this.showimg = $('#form1 .editImg .img')[0];
+
+                                this.edit_img = $('#form1 .showImg .img')[0];
+                                this.edit_bigimg = $('#form1 .showImg .img .big')[0];
+                                this.edit_mbox = $('#form1 .showImg .img .mbox')[0];
+
+                                this.file.addEvent('change', this.chooseFile, this);
+                                this.btn_save.addEvent('click', function(ev) { if (!this.isLoadImg) { alert('请选择图片'); ev.stop(); } }, this);
+                                this.btn_reset.addEvent('click', function() { if (this.isLoadImg) { this.reset(); } }, this);
+                                this.edit_mbox.addEvent('mousedown', this.__ddmousedown, this);
+                                this.slide_btn.addEvent('mousedown', this.__sdmousedown, this);
+                            },
+
+                            setSlideBarPos: function(bf) {
+                                this.slide_btn.css('margin-left', (this.slide_width - this.slide_btn_width) / 100 * bf);
+                            },
+
+                            __sdmousedown: function(ev) {
+                                if (!this.isLoadImg) { return; }
+                                ev.stop();
+                                this.downX = ev.page.x - this.slide_btn.position().x;
+                                $(document).addEvent('mousemove', this.__sdmousemove, this);
+                                $(document).addEvent('mouseup', this.__sdmouseup, this);
+                            },
+                            __sdmousemove: function(ev) {
+                                ev.stop();
+                                var x = ev.page.x - this.slide_bar.position().x - this.downX;
+                                if (x < 0) { x = 0; }
+                                if (x + this.slide_btn_width > this.slide_width) { x = this.slide_width - this.slide_btn_width; }
+                                this.slide_btn.css('margin-left', x);
+                                var bf = Math.round(x / ((this.slide_width - this.slide_btn_width) / 100));
+                                var w = this.bf.w * bf + this.bf.rw;
+                                var h = this.bf.h * bf + this.bf.rh;
+                                this.setSize(w, h);
+                                this.setBigXY((this.bw - w) / 2, (this.bh - h) / 2);
+                                this.setMboxXY(this.mbxX, this.mbxY);
+                            },
+                            __sdmouseup: function(ev) {
+                                $(document).removeEvent('mousemove', this.__sdmousemove);
+                                $(document).removeEvent('mouseup', this.__sdmouseup);
+                            },
+
+                            chooseFile: function(ev) {
+                                if (!this.file.value.match(/(.jpg|.gif|.png|.bmp)$/i)) {
+                                    alert('请上传.jpg|.gif|.png|.bmp类型的图片');
+                                    return;
+                                }
+
+                                this.isLoadImg = true;
+                                this.btn_save.className = 'btn_1';
+                                this.edit_bigimg.css('text-align', 'left');
+                                this.showimg.css('text-align', 'left');
+
+                                if (this.sizeimg.filters) {
+                                    this.showimg.html('<div class="mic_img" style="overflow:hidden;"></div>');
+                                    this.edit_bigimg.html('<div class="mic_img3" style="overflow:hidden;"></div>');
+                                    this.edit_mbox.html('<div class="mic_img" style="overflow:hidden;"></div>');
+                                    this.showimg_img = this.showimg.getElement('div');
+                                    this.edit_bigimg_img = this.edit_bigimg.getElement('div');
+                                    this.edit_mbox_img = this.edit_mbox.getElement('div');
+                                } else {
+                                    this.showimg.html('<img />'); this.edit_bigimg.html('<img />'); this.edit_mbox.html('<img />');
+                                    this.showimg_img = this.showimg.getElement('img');
+                                    this.edit_bigimg_img = this.edit_bigimg.getElement('img');
+                                    this.edit_mbox_img = this.edit_mbox.getElement('img');
+
+                                    this.showimg_img.addEvent('load', function() {
+                                        this.iw = this.showimg_img.width;
+                                        this.ih = this.showimg_img.height;
+                                        this.reset();
+                                    }, this);
+                                }
+
+                                if (this.file.files && this.file.files[0]) {
+                                    var dd = this.file.files[0].getAsDataURL();
+                                    this.showimg_img.src = dd; this.edit_bigimg_img.src = dd; this.edit_mbox_img.src = dd;
+                                } else if (this.sizeimg.filters) {
+                                    this.file.select();
+                                    var imgSrc = document.selection.createRange().text;
+
+                                    this.sizeimg.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = imgSrc;
+
+                                    this.showimg_img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = imgSrc;
+                                    this.edit_bigimg_img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = imgSrc;
+                                    this.edit_mbox_img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = imgSrc;
+
+                                    this.iw = this.sizeimg.offsetWidth;
+                                    this.ih = this.sizeimg.offsetHeight;
+                                    this.reset();
+                                }
+                            },
+
+                            __ddmousedown: function(ev) {
+                                ev.stop();
+                                var xy = this.edit_mbox.position();
+                                this.downXY = { x: ev.page.x - xy.x, y: ev.page.y - xy.y };
+                                $(document).addEvent('mousemove', this.__ddmousemove, this);
+                                $(document).addEvent('mouseup', this.__ddmouseup, this);
+                            },
+                            __ddmousemove: function(ev) {
+                                ev.stop();
+                                var xy = this.edit_img.position();
+                                var x = ev.page.x - xy.x - this.downXY.x;
+                                var y = ev.page.y - xy.y - this.downXY.y;
+                                if (x < 0) { x = 0; }
+                                if (y < 0) { y = 0 }
+                                if (x + this.sw > this.bw) { x = this.bw - this.sw; }
+                                if (y + this.sh > this.bh) { y = this.bh - this.sh; }
+                                this.setMboxXY(x, y);
+                            },
+                            __ddmouseup: function(ev) {
+                                $(document).removeEvent('mousemove', this.__ddmousemove);
+                                $(document).removeEvent('mouseup', this.__ddmouseup);
+                            },
+
+                            setSize: function(w, h) {
+                                this.showimg_img.style.width = w + 'px';
+                                this.showimg_img.style.height = h + 'px';
+
+                                this.edit_bigimg_img.style.width = w + 'px';
+                                this.edit_bigimg_img.style.height = h + 'px';
+
+                                this.edit_mbox_img.style.width = w + 'px';
+                                this.edit_mbox_img.style.height = h + 'px';
+
+                                this.hd_width.value = Math.round(w);
+                                this.hd_height.value = Math.round(h);
+                            },
+
+                            setBigXY: function(x, y) {
+                                this.bigX = x, this.bigY = y;
+                                this.edit_bigimg_img.css({ 'margin-left': x, 'margin-top': y });
+                            },
+
+                            setMboxXY: function(x, y) {
+                                this.mbxX = x;
+                                this.mbxY = y;
+                                this.edit_mbox.css({ 'left': x, 'top': y });
+                                var x1 = this.bigX - x;
+                                var y1 = this.bigY - y;
+
+                                this.edit_mbox_img.css({ 'margin-left': x1, 'margin-top': y1 });
+                                this.showimg_img.css({ 'margin-left': x1, 'margin-top': y1 });
+
+                                this.edit_mbox.css('display', '');
+                                this.hd_x.value = Math.round(-x1);
+                                this.hd_y.value = Math.round(-y1);
+                            },
+
+                            reset: function() {
+                                var w = 0, h = 0;
+                                this.bf = { w: 0, h: 0, rw: 0, rh: 0 };
+
+                                if (this.iw >= this.sw && this.ih >= this.sh && this.iw <= this.bw && this.ih <= this.bh) {
+                                    w = this.iw, h = this.ih;
+                                    this.bf = { w: (this.bw - this.sw) / 100, h: (this.bh - this.sh) / 100, rw: this.sw, rh: this.sh };
+                                }
+                                if (this.iw >= this.bw || this.ih >= this.bh) {
+                                    if (this.iw == this.ih) {
+                                        w = this.bw, h = this.bh;
+                                        this.bf = { w: (this.bw - this.sw) / 100, h: (this.bh - this.sh) / 100, rw: this.sw, rh: this.sh };
+                                    } else if (this.iw > this.ih) {
+                                        w = this.bw, h = (this.ih * this.bw) / this.iw;
+                                        var rw = (w * this.sh) / h;
+                                        this.bf = { w: (this.bw - rw) / 100, h: (h - this.sh) / 100, rw: rw, rh: this.sh };
+                                    } else {
+                                        w = (this.iw * this.bh) / this.ih, h = this.bh;
+                                        var rh = (h * this.sw) / w;
+                                        this.bf = { w: (w - this.sw) / 100, h: (this.bh - rh) / 100, rw: this.sw, rh: rh };
+                                    }
+                                }
+                                if (this.iw <= this.sw || this.ih <= this.sh) {
+                                    if (this.iw == this.ih) {
+                                        w = this.sw, h = this.sh;
+                                        this.bf = { w: (this.bw - this.sw) / 100, h: (this.bh - this.sh) / 100, rw: this.sw, rh: this.sh };
+                                    } else if (this.iw > this.ih) {
+                                        w = (this.iw * this.sh) / this.ih, h = this.sh;
+                                        this.bf = { w: (this.bw - w) / 100, h: ((h * this.bw) / w - h) / 100, rw: w, rh: h };
+                                    } else {
+                                        w = this.sw, h = (this.ih * this.sw) / this.iw;
+                                        this.bf = { w: ((w * this.bh) / h - w) / 100, h: (this.bh - h) / 100, rw: w, rh: h };
+                                    }
+                                }
+
+                                w = Math.round(w); h = Math.round(h);
+                                this.setSize(w, h);
+                                this.setBigXY((this.bw - w) / 2, (this.bh - h) / 2);
+                                this.setMboxXY((this.bw - this.sw) / 2, (this.bh - this.sh) / 2);
+
+                                this.setSlideBarPos(Math.round((w - this.bf.rw) / this.bf.w));
+                            }
+                        };
+
+                        ImageUploadEdit.init();
+                    })();
+                </script-->
+
+                <!--End; upload photo-->
+                
+                <!--Start: basic personal info-->
+                <form id="UserInfoForm" name="UserInfoForm"  method="post" action="/userinfodo.aspx"  onsubmit="return submit_check();" >
+
+                <div class="userInfo c_b" style="display:block">
+                    
+                    <!--p class="resultTxt_3">
+                        <span class="ico_7"></span><tt>the info after successfully submiting </tt></p-->
+                    <dl class="c_b">
+                        <dt>User ID:</dt>
+                        <dd>
+                            <strong></strong></dd>
+                    </dl>
+
+                    <dl class="c_b">
+                        <dt>Real Name:</dt>
+                        <dd>
+                            <input name="name" type="text" class="inputBox" id="username" value="" />
+                            <p class="resultTxt_4" style="display: none;" id="username_error" >
+                                <span class="ico_9"></span><tt>Please input your real name</tt></p>
+							<p class="resultTxt_5" id="username_ok" style="display: none;">
+                                <span class="ico_10"></span></p>
+
+							<p class="resultTxt_6" style="display: none;" id="username_info">
+                                Name should be 2-16 letters
+                            </p>
+
+                        </dd>
+                    </dl>
+                    <dl class="c_b">
+                        <dt>Nickname:</dt>
+                        <dd>
+
+                            <input name="nickname" type="text" class="inputBox" id="nickname" maxlength="20" value="" />
+                            <p class="resultTxt_4" id="nickname_error" style="display: none;">
+                                <span class="ico_9"></span><tt>Nickname should not extend than 20 letters</tt></p>
+							<p class="resultTxt_5" id="nickname_ok" style="display: none;">
+                                <span class="ico_10"></span></p>
+							<p class="resultTxt_6" style="display: none;" id="nickname_info">
+                                Nickname should not extend than 20 letters
+                            </p>
+
+                        </dd>
+
+                    </dl>
+                    <dl class="c_b">
+                        <dt>Sex:</dt>
+                        <dd class="sex">
+                            <input name="sex" type="radio" value="1"  />
+                            <label>
+                                Male</label>
+
+                            <input name="sex" type="radio" value="2" value=""  />
+
+                            <label>
+                                Female</label>
+                            <input name="sex" type="radio" value="0" value="" checked />
+
+                            <label>
+                                Secret</label>
+                        </dd>
+
+                    </dl>
+                    <!--dl class="c_b">
+                        <dt>会员状态：</dt>
+                        <dd class="member">
+                            <strong>非会员</strong>
+                            
+                            <a href="http://vip.pptv.com/privilege" title="开通PP会员">开通PP会员</a>
+                            
+
+                        </dd>
+
+                    </dl-->
+                    <dl class="c_b">
+                        <dt>E-mail:</dt>
+                        <dd>
+                            <input name="" type="text" class="inputBox" id="email" value="" />
+							<p class="resultTxt_4" id="email_error" style="display: none;">
+                                <span class="ico_9"></span><tt>Incorrect E-mail format</tt></p>
+
+							<p class="resultTxt_5" id="email_ok" style="display: none;">
+                                <span class="ico_10"></span></p>
+                            <p class="resultTxt_6" style="display: none;" id="email_info">
+                                Very important,<span style="color: #f60;">Using for fetching your password if you forgot it</span>,please input it seriously.
+                            </p>
+                        </dd>
+                    </dl>
+                    <dl class="c_b">
+
+                        <dt>Mobile:</dt>
+                        <dd class="mobilePhone">
+                            <input name="mobile" type="text" class="inputBox"  id="mobile" value="" />
+                            <!--p style="display: none;">
+                                <span class="ico_8"></span>已绑定</p>
+
+                            <p style="display: none;">
+                                <a href="#" title="未绑定">未绑定</a></p-->
+
+							<!--p class="resultTxt_4" id="mobile_error" style="display: none;">
+                                <span class="ico_9"></span><tt>手机格式不正确</tt></p>
+							<p class="resultTxt_5" id="mobile_ok" style="display: none;">
+                                <span class="ico_10"></span></p-->
+                            <!--p class="resultTxt_6" style="display: none; color: #999;" id="mobile_info">
+
+                                手机号码为11为数字
+                            </p-->
+                        </dd>
+                    </dl>
+
+                    <dl class="c_b">
+                        <dt>Country:</dt>
+                        <dd class="city">
+                            <select name="province" id="province" onchange="change_province(this);change_region(document.getElementById('city'),document.getElementById('HiddenProvince').value )">
+
+                                <option value="America" >America</option>
+                                <option value="China" >China</option> 
+                                <option value="Canada" >Canada</option>                              
+                                <option value="French" >French</option> 
+                                <option value="Germany" >Germany</option> 
+                                <option value="Italy" >Italy</option> 
+                                <option value="India" >India</option>                               
+                                <option value="Morocco" >Morocco</option> 
+                                <option value="Russia" >Russia</option> 
+                                <option value="UK" selected>UK</option> 
+                            </select>
+                            <!--select name="city" id="city" onchange="change_city(this);">
+                                <option>City:</option>
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                                <option value="China" >China</option> 
+                            </select-->
+                            <input id="HiddenProvince" type="hidden" style="width: 16px" />
+                        </dd>
+                    </dl>
+
+                    <!--dl class="c_b">
+                        <dt>地址：</dt>
+                        <dd class="address">
+                            <input name="address" type="text" class="inputBox" value="" /></dd>
+
+                    </dl-->
+                    <!--dl class="c_b">
+                        <dt>邮编：</dt>
+
+                        <dd>
+                            <input name="postcode" type="text" class="inputBox" id="postcode" value="" />
+							<p class="resultTxt_4" id="postcode_error" style="display: none;">
+                                <span class="ico_9"></span><tt>邮编格式不正确</tt></p>
+							<p class="resultTxt_5" id="postcode_ok" style="display: none;">
+
+                                <span class="ico_10"></span></p>
+							<p class="resultTxt_6" id="postcode_info" style="display: none;">
+                                邮编格式为6位数字
+							</p>
+
+							</dd>
+                    </dl-->
+                    <dl class="c_b">
+                        <dt>Birthday:</dt>
+                        
+                        <dd class="birthday">
+
+                            <select name="year">
+                                
+                               <option value="1900" >1900 </option>
+
+                                    
+                               <option value="1901" >1901 </option>
+                                    
+                               <option value="1902" >1902 </option>
+                                    
+                               <option value="1903" >1903 </option>
+                                    
+                               <option value="1904" >1904 </option>
+                                    
+                               <option value="1905" >1905 </option>
+                                    
+                               <option value="1906" >1906 </option>
+
+                                    
+                               <option value="1907" >1907 </option>
+                                    
+                               <option value="1908" >1908 </option>
+                                    
+                               <option value="1909" >1909 </option>
+                                    
+                               <option value="1910" >1910 </option>
+                                    
+                               <option value="1911" >1911 </option>
+                                    
+                               <option value="1912" >1912 </option>
+
+                                    
+                               <option value="1913" >1913 </option>
+                                    
+                               <option value="1914" >1914 </option>
+                                    
+                               <option value="1915" >1915 </option>
+                                    
+                               <option value="1916" >1916 </option>
+                                    
+                               <option value="1917" >1917 </option>
+                                    
+                               <option value="1918" >1918 </option>
+
+                                    
+                               <option value="1919" >1919 </option>
+                                    
+                               <option value="1920" >1920 </option>
+                                    
+                               <option value="1921" >1921 </option>
+                                    
+                               <option value="1922" >1922 </option>
+                                    
+                               <option value="1923" >1923 </option>
+                                    
+                               <option value="1924" >1924 </option>
+
+                                    
+                               <option value="1925" >1925 </option>
+                                    
+                               <option value="1926" >1926 </option>
+                                    
+                               <option value="1927" >1927 </option>
+                                    
+                               <option value="1928" >1928 </option>
+                                    
+                               <option value="1929" >1929 </option>
+                                    
+                               <option value="1930" >1930 </option>
+
+                                    
+                               <option value="1931" >1931 </option>
+                                    
+                               <option value="1932" >1932 </option>
+                                    
+                               <option value="1933" >1933 </option>
+                                    
+                               <option value="1934" >1934 </option>
+                                    
+                               <option value="1935" >1935 </option>
+                                    
+                               <option value="1936" >1936 </option>
+
+                                    
+                               <option value="1937" >1937 </option>
+                                    
+                               <option value="1938" >1938 </option>
+                                    
+                               <option value="1939" >1939 </option>
+                                    
+                               <option value="1940" >1940 </option>
+                                    
+                               <option value="1941" >1941 </option>
+                                    
+                               <option value="1942" >1942 </option>
+
+                                    
+                               <option value="1943" >1943 </option>
+                                    
+                               <option value="1944" >1944 </option>
+                                    
+                               <option value="1945" >1945 </option>
+                                    
+                               <option value="1946" >1946 </option>
+                                    
+                               <option value="1947" >1947 </option>
+                                    
+                               <option value="1948" >1948 </option>
+
+                                    
+                               <option value="1949" >1949 </option>
+                                    
+                               <option value="1950" >1950 </option>
+                                    
+                               <option value="1951" >1951 </option>
+                                    
+                               <option value="1952" >1952 </option>
+                                    
+                               <option value="1953" >1953 </option>
+                                    
+                               <option value="1954" >1954 </option>
+
+                                    
+                               <option value="1955" >1955 </option>
+                                    
+                               <option value="1956" >1956 </option>
+                                    
+                               <option value="1957" >1957 </option>
+                                    
+                               <option value="1958" >1958 </option>
+                                    
+                               <option value="1959" >1959 </option>
+                                    
+                               <option value="1960" >1960 </option>
+
+                                    
+                               <option value="1961" >1961 </option>
+                                    
+                               <option value="1962" >1962 </option>
+                                    
+                               <option value="1963" >1963 </option>
+                                    
+                               <option value="1964" >1964 </option>
+                                    
+                               <option value="1965" >1965 </option>
+                                    
+                               <option value="1966" >1966 </option>
+
+                                    
+                               <option value="1967" >1967 </option>
+                                    
+                               <option value="1968" >1968 </option>
+                                    
+                               <option value="1969" >1969 </option>
+                                    
+                               <option value="1970" >1970 </option>
+                                    
+                               <option value="1971" >1971 </option>
+                                    
+                               <option value="1972" >1972 </option>
+
+                                    
+                               <option value="1973" >1973 </option>
+                                    
+                               <option value="1974" >1974 </option>
+                                    
+                               <option value="1975" >1975 </option>
+                                    
+                               <option value="1976" >1976 </option>
+                                    
+                               <option value="1977" >1977 </option>
+                                    
+                               <option value="1978" >1978 </option>
+
+                                    
+                               <option value="1979" >1979 </option>
+                                    
+                               <option value="1980" >1980 </option>
+                                    
+                               <option value="1981" >1981 </option>
+                                    
+                               <option value="1982" >1982 </option>
+                                    
+                               <option value="1983" >1983 </option>
+                                    
+                               <option value="1984" >1984 </option>
+
+                                    
+                               <option value="1985" >1985 </option>
+                                    
+                               <option value="1986" >1986 </option>
+                                    
+                               <option value="1987" >1987 </option>
+                                    
+                               <option value="1988" >1988 </option>
+                                    
+                               <option value="1989" >1989 </option>
+                                    
+                               <option value="1990" >1990 </option>
+
+                                    
+                               <option value="1991" >1991 </option>
+                                    
+                               <option value="1992" >1992 </option>
+                                    
+                               <option value="1993" >1993 </option>
+                                    
+                               <option value="1994" >1994 </option>
+                                    
+                               <option value="1995" >1995 </option>
+                                    
+                               <option value="1996" >1996 </option>
+
+                                    
+                               <option value="1997" >1997 </option>
+                                    
+                               <option value="1998" >1998 </option>
+                                    
+                               <option value="1999" selected>1999 </option>
+                                    
+                               <option value="2000" >2000 </option>
+                                    
+                               <option value="2001" >2001 </option>
+                                    
+                               <option value="2002" >2002 </option>
+
+                                    
+                               <option value="2003" >2003 </option>
+                                    
+                               <option value="2004" >2004 </option>
+                                    
+                               <option value="2005" >2005 </option>
+                                    
+                               <option value="2006" >2006 </option>
+                                    
+                               <option value="2007" >2007 </option>
+                                    
+                               <option value="2008" >2008 </option>
+
+                                    
+                               <option value="2009" >2009 </option>
+                                    
+                               <option value="2010" >2010 </option>
+                                    
+                               <option value="2011" >2011 </option>
+                                    
+                               <option value="2012" >2012 </option>
+                                    
+                               <option value="2013" >2013 </option>
+                                    
+                               <option value="2014" >2014 </option>
+
+                                    
+                               <option value="2015" >2015 </option>
+                                    
+                               <option value="2016" >2016 </option>
+                                    
+                               <option value="2017" >2017 </option>
+                                    
+                               <option value="2018" >2018 </option>
+                                    
+                               <option value="2019" >2019 </option>
+                                    
+                               <option value="2020" >2020 </option>
+
+                                    
+                            </select>
+                            <label>
+                                Year</label>
+                                
+                            <select name="month">                             
+                               <option value="1" >01</option>
+                                    
+                               <option value="2" >02</option>
+                                    
+                               <option value="3" selected>03</option>
+
+                                    
+                               <option value="4" >04</option>
+                                    
+                               <option value="5" >05</option>
+                                    
+                               <option value="6" >06</option>
+                                    
+                               <option value="7" >07</option>
+                                    
+                               <option value="8" >08</option>
+                                    
+                               <option value="9" >09</option>
+
+                                    
+                               <option value="10" >10</option>
+                                    
+                               <option value="11" >11</option>
+                                    
+                               <option value="12" >12</option>
+                                    
+
+                            </select>
+                            <label>
+                                Month</label>
+                                
+                            <select name="day">
+                                
+                          <option value="1" >01 </option>
+                               
+                          <option value="2" >02 </option>
+                               
+                          <option value="3" >03 </option>
+                               
+                          <option value="4" >04 </option>
+                               
+                          <option value="5" >05 </option>
+                               
+                          <option value="6" >06 </option>
+
+                               
+                          <option value="7" >07 </option>
+                               
+                          <option value="8" >08 </option>
+                               
+                          <option value="9" >09 </option>
+                               
+                          <option value="10" >10 </option>
+                               
+                          <option value="11" >11 </option>
+                               
+                          <option value="12" >12 </option>
+
+                               
+                          <option value="13" >13 </option>
+                               
+                          <option value="14" >14 </option>
+                               
+                          <option value="15" >15 </option>
+                               
+                          <option value="16" >16 </option>
+                               
+                          <option value="17" >17 </option>
+                               
+                          <option value="18" >18 </option>
+
+                               
+                          <option value="19" >19 </option>
+                               
+                          <option value="20" selected>20 </option>
+                               
+                          <option value="21" >21 </option>
+                               
+                          <option value="22" >22 </option>
+                               
+                          <option value="23" >23 </option>
+                               
+                          <option value="24" >24 </option>
+
+                               
+                          <option value="25" >25 </option>
+                               
+                          <option value="26" >26 </option>
+                               
+                          <option value="27" >27 </option>
+                               
+                          <option value="28" >28 </option>
+                               
+                          <option value="29" >29 </option>
+                               
+                          <option value="30" >30 </option>
+
+                               
+                          <option value="31" >31 </option>
+                               
+
+                            </select>
+                            <label>
+                                Day</label>
+
+                        </dd>
+                    </dl>
+                    <!--dl class="c_b">
+
+                        <dt>个性签名：
+						<span>50个汉字&nbsp;&nbsp;</span></dt>
+                        <dd>
+                            <textarea name="personalText" cols="" rows="" id="doc" ></textarea>
+							<p class="resultTxt_4" id="doc_error" style="display: none;">
+                                <span class="ico_9"></span><tt>个性签名字数不要超过50个汉字</tt></p>
+							</dd>
+
+                    </dl-->
+
+                    <p class="submit">
+                        <input name="" class="btn_1" type="submit" value="Save" />
+                        <input name="" class="btn_2" type="reset" value="Cancel" onclick="location.href='userinfodisplay.htm'" />
+                    </p>
+                </div>
+                    </form>
+                <!--End: Basic personal info-->
+                
+                
+            </div>
+            <p class="bg_bottom c_b">
+
+                <span class="bg_1"></span><span class="bg_2"></span>
+            </p>
+        </div>
+
+        <!--End: the right side of the page-->
+        
+        
+        
+
+        <!--Start: the left side of the page-->
+         
+<div class="la_userOth">
+            <span class="bg_top"></span>
+            <div class="userOth c_b">
+                 <div class="la_info">
+                         <dl class="info c_b">
+
+                    <dt>
+                        <img src="13.jpg" width="50" height="50" alt="#" /></dt>
+                    <dd>
+
+                        <p class="welcom">
+                            Welcome to Mum's Moovog!
+                        </p>
+                        <p class="grade c_b">
+                             <span class="ico_17"></span> </p><!--VIP Ico-->
+                        <p class="link c_b">
+                            <a href="login.htm" onclick="$.IKan.User2.logout()" title="logout" id="_logout">Logout</a>
+                        </p>
+                    </dd>
+                </dl>
+                   </div>
+
+                
+                <div class="vipIntro">
+                    <p class="intro">
+                        Advertisement</p>
+                    <p class="reap c_b">
+                        <span class="ico_1"></span><strong>Ads One</strong> <tt>Ads one introduction</tt>
+                    </p>
+                    <p class="reap c_b">
+                        <span class="ico_2"></span><strong>Ads Two</strong> <tt>Ads Two Introduction</tt>
+                    </p>
+                    <p class="btn c_b">
+                    <a href="http://www.google.com" title="Ads One">Take a look Ads One</a>
+                    <a href="http://www.baidu.com" title="Ads Two">Take a look Ads Two</a>
+                    </p>
+                </div>
+                
+            </div>
+
+            <span class="bg_bottom"></span>
+
+        </div>
+        <!--End: the left side of the page-->
+        
+    </div>
+    <script type="text/javascript">
+        log = function(s) {
+        // console.log(s);
+        }
+        check_username = false;
+        check_nickname = true;
+        check_email = true;
+        check_mobile = false;
+        check_postcode = false;
+        check_doc = false;
+
+        var submit_check = function() {
+            
+            log(check_nickname);
+            log(check_email);
+            log(check_postcode);
+            log(check_doc);
+
+
+            $("#username").focus();
+
+            $("#postcode").focus();
+            $("#mobile").focus();
+            $("#doc").focus();
+            
+
+             if (/^[\u4e00-\u9fa5]{2,4}$/.test($("#username").value) || $("#username").value.length == 0) {
+
+                 check_username = true;
+                   
+                }
+
+
+
+
+            if ($("#doc").value.length <=50) {
+                                     check_doc = true;
+                }
+
+             if (/^\d{6}$/.test($("#postcode").value) || $("#postcode").value.length == 0) {
+                    check_postcode = true;
+                    
+                }
+            if (/^\d{11}$/.test($("#mobile").value) || $("#mobile").value.length == 0) {
+                    check_mobile = true;
+                    
+                }
+
+            
+            if (check_username && check_email && check_mobile && check_postcode && check_doc) {
+               
+                return true;
+            }
+
+            return false;
+        };
+        (function() {
+            var hideInfos = function() {
+                $("#username_info").css("display", "none");
+                $("#nickname_info").css("display", "none");
+                $("#email_info").css("display", "none");
+                $("#mobile_info").css("display", "none");
+                $("#postcode_info").css("display", "none");
+            };
+            var $username = $("#username").addEvent("focus", function() {
+                hideInfos();
+                if (!$username.attr("info")) {
+                    $("#username_info").css("display", "block");
+                    $username.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                $("#username_info").css("display", "none");
+                $("#username_error").css("display", "none");
+                $("#username_ok").css("display", "none");
+                check_username = false;
+                var v = $username.value;
+                if (!/^[\u4e00-\u9fa5]{2,4}$/.test(v) && v.length > 0) {
+                    $("#username_error").css("display", "block");
+                    return;
+                }
+                $("#username_ok").css("display", "block");
+
+                check_username = true;
+                
+            });
+            var $nickname = $("#nickname").addEvent("focus", function() {
+                hideInfos();
+                if (!$nickname.attr("info")) {
+                    $("#nickname_info").css("display", "block");
+                    $nickname.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                $("#nickname_info").css("display", "none");
+                $("#nickname_error").css("display", "none");
+                $("#nickname_ok").css("display", "none");
+                check_nickname = false;
+
+                var v = $nickname.value;
+                if (v.length > 20) {
+                    $("#nickname_error").css("display", "block");
+                    return;
+                }
+                $("#nickname_ok").css("display", "block");
+                check_nickname = true;
+
+            });
+            var $email = $("#email").addEvent("focus", function() {
+              //  hideInfos();
+              //if (!$email.attr("info")) {
+              //      $("#email_info").css("display", "block");
+              //      $email.attr("info", true);
+              //  }
+            }).addEvent("blur", function() {
+//                $("#email_info").css("display", "none");
+//                $("#email_error").css("display", "none");
+//                $("#email_ok").css("display", "none");
+//                check_email = false;
+//
+//                var v = $email.value;
+//                if (v.length < 6 || v.length > 50 || !/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/.test(v)) {
+//                    $("#email_error").css("display", "block");
+//                    return;
+//                }
+//                $("#email_ok").css("display", "block");
+                check_email = true;
+
+            });
+
+            var $mobile = $("#mobile").addEvent("focus", function() {
+                hideInfos();
+                if (!$mobile.attr("info")) {
+                    $("#mobile_info").css("display", "block");
+                    $mobile.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                $("#mobile_info").css("display", "none");
+                $("#mobile_error").css("display", "none");
+                $("#mobile_ok").css("display", "none");
+                check_mobile = false;
+
+                var v = $mobile.value;
+                if (!/^\d{11}$/.test(v) && v.length > 0) {
+                    $("#mobile_error").css("display", "block");
+                    return;
+                }
+                $("#mobile_ok").css("display", "block");
+                check_mobile = true;
+
+            });
+
+            var $postcode = $("#postcode").addEvent("focus", function() {
+                hideInfos();
+                if (!$postcode.attr("info")) {
+                    $("#postcode_info").css("display", "block");
+                    $postcode.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                $("#postcode_info").css("display", "none");
+                $("#postcode_error").css("display", "none");
+                $("#postcode_ok").css("display", "none");
+                var v = $postcode.value;
+                check_postcode = false;
+
+                if (!/^\d{6}$/.test(v) && v.length > 0) {
+                    $("#postcode_error").css("display", "block");
+                    return;
+                }
+                $("#postcode_ok").css("display", "block");
+                check_postcode = true;
+
+            });
+            var $doc = $("#doc").addEvent("blur", function() {
+                $("#doc_error").css("display", "none");
+                check_doc = false;
+                var v = $doc.value;
+                if (v.length > 50) {
+                    $("#doc_error").css("display", "block");
+                    return;
+                }
+                check_doc = true;
+            });
+        })();
+         
+  //      set_select_options(document.getElementById("province"), 'China', 'ShangHai', '1');
+ //       set_select_options(document.getElementById("city"), document.getElementById("HiddenProvince").value, '浦东新区', '2');
+    </script>
+    <!--End: Body-->
+
+<!--Start: foot info-->
+
+<div class="l_foot footColor1">
+
+    <div class="foot c_b">
+        <div class="info">
+            <p style="font-size: small; color: #808080"> Copyright &copy;  Mum's Moovog Team, Eurecom, France  &nbsp&nbsp&nbsp&nbsp&nbsp  Note:Don't use it for business!</p>
+        </div>
+    </div>
+
+</div>
+<!--End: foot info-->
+
+    <script type="text/javascript">
+        (function() {
+            var input = $('div.miniSearch input.searchTxt')[0];
+            var btn = $('div.miniSearch input.searchBtn')[0];
+            new $.IKan.SearchTips(input, btn, { tipBoxWidth: '140px', strLength: 20 });
+        })();
+
+        (function() {
+            var userName = $('#btn_uname');
+            var btnLogout = $('#btn_logout');
+            var btnLogin = $('#btn_login');
+
+            btnLogout.addEvent('click', function() { $.IKan.User2.logout(); });
+
+            $.IKan.User2.onLogined.subscribe(function(name, args) {
+                userName.html(args[0].UserName);
+                userName.css('display', '');
+                btnLogout.css('display', '');
+                btnLogin.css('display', 'none');
+            });
+            $.IKan.User2.onlogouted.subscribe(function(name, args) {
+                userName.css('display', 'none');
+                btnLogout.css('display', 'none');
+                btnLogin.css('display', '');
+            });
+            $.IKan.User2.tryReadUserInfo();
+        })();
+    </script>
+</body>
+
+</html>
