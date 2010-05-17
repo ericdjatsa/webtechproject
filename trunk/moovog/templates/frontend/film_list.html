@@ -2,66 +2,26 @@
 {% load custom_filters %}
 
 {% block head %}
-<script src="http://cdn.jquerytools.org/1.1.2/jquery.tools.min.js"></script>
-<script type="text/javascript">
-$(document).ready(
-	function() 
-	{	 
-		// enable tooltip for "download" element. use the "slide" effect 
-		$(".film_thumbnail").tooltip({ 
-			effect: "toggle",
-			position: "bottom center",
-			offset: [-100, 0],
-			predelay: 1000,
-			delay: 1000,});  
-	});
-</script>
+<script src="http://cdn.jquerytools.org/1.1.2/jquery.tools.min.js" />
+<link rel="stylesheet" type="text/css" href="/static/css/film_list.css" />
+<script src="/static/script/film_list.js" />
 {% endblock %}
-
-{% block style %}
-.film_thumbnail
-{
-	float:	left;
-	height: 240px; 
-	width: 180px;
-	margin: 4px;
-	text-align: center;
-	border: 1px solid black;
-}
-
-.thumbnail_image
-{
-	height: 60%;
-}	
-
-td.center
-{
-	text-align: center; 
-}
-
-p
-{
-	margin: 2px;
-}
-
-.bordered
-{
-	border: 	1px solid black;
-}
-
-.film_tooltip
-{
-	display:		none;
-	height:		240px;
-	width:		320px;
-	background:	#555555; 
-	color:		#000000;
-}
-{% endblock style %}
 
 {% block page_header %}
 	<!-- page header -->
-	<a href="{% url src.frontend.views.add_to_db %}">add film</a> 
+
+ <!--		<a href="{% url src.frontend.views.add_to_db %}">add film</a> --> 
+		<div class="header">
+		<div class="title">
+			<span id="moovog_m">M</span>
+			<span id="moovog_o1">O</span>
+			<span id="moovog_o2">O</span>
+			<span id="moovog_v">V</span>
+			<span id="moovog_o3">O</span>
+			<span id="moovog_g">G</span>
+		</h1>
+		<div id="searchbox">	{% include "seeker/search_bar.html" %} </div>
+		</div>
 {% endblock page_header %}
 {% block page_nav %}
    <!-- navigation -->
@@ -70,25 +30,29 @@ p
    <!-- page content -->
    <!-- pagination links -->
    <!-- film list -->
-<p>
-  {% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
+	<p id="film_list">
+	<p>
+		{% if object_list %}
+		{% for film in object_list %}
+			<div class="film_thumbnail">
+				<a class="film_thumbnail" href="{% url django.views.generic.list_detail.object_detail film.id %}">
+					<div class="left"><img src="{{ film.image }}" class="thumbnail_image"/></div>
+					<div class="right">
+						<p>{{ film.title }}</p>
+						<p>{{ film.release_date.year }}</p>
+					</div>
+				</a>
+			</div>
+			<div class="film_tooltip">
+				<embed src="{{ film.getID|internet_movie_archive_player }}" width="320" height="260" autostart="true" mute="true" controlbar="none" />
+			</div>
+			{% endfor %}
+	{% endif %}
+	</p>
+	<p>
+  		{% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
+	</p>
 </p>
-{% if object_list %}
-{% for film in object_list %}
-	<div class="film_thumbnail">
-		<a href="{% url django.views.generic.list_detail.object_detail film.id %}">
-			<p class="center"><img src="{{ film.image }}" class="thumbnail_image"/></p>
-			<p>{{ film.title }}</p>
-			<p class="center">{{ film.release_date.year }}</p>
-		</a>
-	</div>
-	<div class="film_tooltip">
-{% autoescape off %} 
-		{{ film.title|trailer_addict_embedded_player:320 }}
-{% endautoescape %} 
-	</div>
-   {% endfor %}
-   {% endif %}
 
 
 

@@ -4,17 +4,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml"> 
  <head> 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" href="style_base.css" />
+  <link rel="stylesheet" href="/static/css/base.css" />
   <style type="text/css"> {% block style %} {% endblock %} </style>
   <title> {% block title %}default title{% endblock %} </title>
 {% block head %} {% endblock %}
  </head>
  <body>
-  <p><div id="page_header"> {% block page_header %} {% endblock %} </div></p>
-  <p>
+  <p id="page_header"> {% block page_header %} {% endblock %} </p>
+  <p id="page_nav_content">
    <div id="page_nav"> {% block page_nav %} {% endblock %} </div>
    <div id="page_content"> {% block page_content %} {% endblock %} </div>
   </p>
-  <p><div id="page_footer"> {% block page_footer %} {% endblock %} </div></p>
+  <p id="page_footer"> {% block page_footer %} {% endblock %} </p>
  </body>
 </html>

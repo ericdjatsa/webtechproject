@@ -1,41 +1,31 @@
-<div class="contentMain" style="width: 500px;">
-	<h1 style="color: rgb(56, 149, 19); text-transform: uppercase;">moovog</h1>
+<div class="contentMain" >
+	<!-- <h1 style="color: rgb(56, 149, 19); text-transform: uppercase;">moovog</h1> -->
 	<div class="headerContent"><strong><label>Search Bar</label></strong></div>
 	<form action="/seeker/search/" method="POST">
-		<tr>
-	        <td>
-	            <input name="search-string" type="text" size="30" style="margin-top:10px; margin-right:5px"/>
-	        </td>
-        
-        <!--
-        <input type="radio" name="group1" value="actor"> an actor ?<br>
-		<input type="radio" name="group1" value="movie"> a movie ?<br>
-		<input type="radio" name="group1" value="release-date"> a release date ?<br>
-		<input type="radio" name="group1" value="" checked> don't know...<br>
-		-->
-			
-			<!--
-			<td>Give me a hint !</td>
-			-->
-			
-			<td>
+		<p>
+	        <input name="search-string" type="text" size="30" style="margin-top:10px; margin-right:5px"/>
+	   </p>
+		<p>
+			<div>
+				<input type="submit" value="Let's Go" />
 				<select name="search-option">
-					<option value="unknown">No hints to help you ...</option>
-					<option value="movie-original-title">It is a movie (original title)</option>
-					<option value="movie-aka-title">It is a movie ("also known as" title)</option>
-					<option value="actor">It is an actor</option>
+					<option value="unknown">everything</option>
+					<option value="movie-original-title">movies</option>
+					<!--<option value="movie-aka-title">It is a movie ("also known as" title)</option> -->
+					<option value="person">persons</option>
+			<!--		<option value="actor">It is an actor</option>
 					<option value="director">It is a movie director</option>
 					<option value="writer">It is a movie screenplay writer</option>
 					<option value="genre">It is a movie genre</option>
-					<option value="character">It is a movie character</option>
-					<option value="award">It is a movie award</option>
+					<option value="character">It is a movie character</option> -->
+					<option value="award">awards</option>
 				</select>
-			</td>
-		</tr>
+			</div>
+		</p>
 		
-        <p>
+<!--        <p>
             <input type="submit" value="Let's Go" />
-        </p>
+        </p> -->
 		
 		
     </form
