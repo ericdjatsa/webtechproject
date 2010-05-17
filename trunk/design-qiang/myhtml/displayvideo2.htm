@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta http-equiv="keywords" content="Moovog movie IMDB" />
+<meta http-equiv="description" content="Mum's Moovog : tonight, you start to really appreciate watching moovies... " />
+<title>Mum's Moovog : Tonight, you start to really appreciate watching moovies... </title>
+<link href="http://static1.pplive.cn/ikan3/091230/images/play.css?v=05112333" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jui.js"></script>
+<script type="text/javascript" src="js/play.js"></script>
+<script type="text/javascript">
+	document.domain = 'pptv.com';
+    function closeErrBox() {
+        $('#bug_post_box').css('display', 'none');
+    }
+
+    function showErrBox() {
+        var url = '/api/error_report/?url=%2Fp%2F950478%2F&type=movie&other=OS';
+        var boxel = $('#bug_post_box');
+        boxel.css('display', '');
+        var w = document.documentElement.clientWidth;
+        var h = document.documentElement.scrollTop;
+        var ch = document.documentElement.clientHeight;
+        var bw = boxel.offsetWidth;
+        var bh = boxel.offsetHeight;
+        boxel.css({ 'left': Math.max(0, (w - bw) / 2), 'top': Math.max(0, h + (ch - bh) / 2) });
+        var ifm = boxel.getElement('iframe');
+        ifm.src = url;
+    }
+</script>
+</head>
+
+
+<body class="play">
+
+<!--Start: Error report-->
+<div style="position:absolute;display:none;" class="err_feedback" id="bug_post_box">
+	<div class="title c_b">
+		<h3> Error report</h3>
+		<a href="javascript:;" onclick="closeErrBox();return false;">[Close!]</a>
+	</div>
+	<iframe width="450" height="250" frameborder="0"></iframe>
+
+</div>
+<!--End: Error report-->
+
+
+<!--Start: Upper Labels-->
+<div class="la_miniTopNav">
+	<div class="miniTopNav c_b">
+
+		<div class="search c_b">
+			<div class="show">
+
+				<input type="text" class="txt" />
+				<input type="button" class="btn" value="submit" />
+			</div>
+		</div>
+		<div class="login">
+			<span style="display:none;"> <a href="home.htm" target="_blank" title="username">User Name</a><a href="javascript:;" title="logout">Logout</a>| </span> 
+			 <span><a href="login/login.htm" title="login">Login</a>|<a target="_blank" href="login/newregister.htm" title="register">Rgister</a>| </span> 
+
+		</div>
+	</div>
+	<div class="miniTopNav2 c_b">
+		<div class="left">
+			<a target="_blank" href="home.htm" title="home" class="first">Home</a> 
+            <a href="A" title="A"><strong>A</strong></a>
+            <a href="B" class="B" title="B"><strong>B</strong></a>
+            <a href="C" class="C" title="C"><strong>C</strong></a>
+            <a href="D" class="D" title="D"><strong>D</strong></a>
+            <a href="E" class="E" title="E"><strong>E</strong></a>
+            <a href="F" title="F"><strong>F</strong></a>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    (function () {
+        var input = $('div.la_miniTopNav input.txt')[0];
+        var btn = $('div.la_miniTopNav input.btn')[0];
+        new $.IKan.SearchTips(input, btn, { tipBoxWidth: '160px', strLength: 24 });
+    })();
+
+    (function () {
+        var btn = $('div.la_miniTopNav .more')[0];
+        var box = $('#menu_more_box');
+
+        box.addEvent('mouseout', function (ev) {
+            var pos = box.position();
+            var x = pos.x;
+            var y = pos.y;
+            var w = box.offsetWidth;
+            var h = box.offsetHeight;
+
+            if (ev.page.x <= x || ev.page.x >= x + w || ev.page.y <= y || ev.page.y >= y + h) {
+                box.css('display', 'none');
+            }
+        });
+        btn.addEvent('mouseover', function (ev) {
+            box.css('display', '');
+            var pos = btn.position();
+            var x = (pos.x + btn.offsetWidth) - box.offsetWidth;
+            var y = pos.y;
+            box.css({ 'left': x, 'top': y });
+        });
+    })();
+
+    (function () {
+        var sps = $('div.la_miniTopNav .login span');
+        var userName = sps[0].getElements('a')[0];
+        var btnLogout = sps[0].getElements('a')[1];
+
+        btnLogout.addEvent('click', function () { $.IKan.User2.logout(); });
+
+        $.IKan.User2.onLogined.subscribe(function (name, args) {
+            userName.html(args[0].UserName);
+            sps[0].css('display', '');
+            sps[1].css('display', 'none');
+        });
+        $.IKan.User2.onlogouted.subscribe(function (name, args) {
+            sps[0].css('display', 'none');
+            sps[1].css('display', '');
+        });
+    })();
+</script>
+<!--End: Upper Labels-->
+
+
+<!--Start: Body of play page-->
+<div class="la_playMain c_b" style="background-image:url(pic/play_bg.jpg)">
+	<div id="sp_home_1" class="playTopcollaborate"></div>
+	<div class="playMain">
+		<div class="collaborate">
+			<iframe src="about:blank" scrolling="no" frameborder="0" allowtransparency="true" width="100%" height="420"></iframe>
+
+		</div>
+		<div class="playBox">
+			<div class="show">
+			</div>			
+		</div>
+	</div>
+</div>
+<!--End: body of play page-->
+
+
+<!--Start:Movie Pop-up Display Window-->
+<table border="0" cellspacing="0" cellpadding="0" class="popupPlayBox" id="popupPlayBox">
+	<tr style="display:none;">
+
+		<td class="bg_1"></td>
+		<td class="bg_5"><a href="javascript:;" title="close" class="clear">Close!</a></td>
+		<td class="bg_3">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="bg_7" style="display:none;"></td>
+		<td><div class="inbox">
+				<div class="gg">
+
+					<div class="ggifm"><iframe src="about:blank" scrolling="no" noresize="noresize" frameborder="0"></iframe></div>
+					<div class="tl">
+						<span class="title"></span> <span class="djs"></span>
+					</div>
+										<div class="plugin" style="width:1px;height:1px;overflow:hidden;"></div>
+				</div>
+				<div class="pp"></div>
+			</div></td>
+
+		<td class="bg_7" style="display:none;"></td>
+	</tr>
+	<tr style="display:none;">
+		<td class="bg_2"></td>
+
+		<td class="bg_6"></td>
+		<td class="bg_4"><span title="Drag the size"></span></td>
+	</tr>
+</table>
+<div id="popupPlayBox_bg"></div>
+<!--End:Movie Pop-up Display Window-->
+
+
+<!--Start: Relative movies recommendation-->
+<div class="la_playListInfo">
+	<span class="topBorder"></span>
+	<div class="playListInfo">
+		<div class="varietyType c_b" >
+			<h3>Related Movies:</h3>
+			<div class="list c_b">
+				<a href="#0" onclick="IkanPlayer.play(0);" title="Film A">Film A</a>
+                <a href="#1" onclick="IkanPlayer.play(1);" title="Film B">Film B</a>
+                <a href="#2" onclick="IkanPlayer.play(2);" title="Film C">Film C</a>
+                <a href="#3" onclick="IkanPlayer.play(3);" title="Film D">Film D</a>
+                <a href="#4" onclick="IkanPlayer.play(4);" title="Film E">Film E</a>
+                <a href="#5" onclick="IkanPlayer.play(5);" title="Film F">Film F</a>
+                <a href="#6" onclick="IkanPlayer.play(6);" title="Film G">Film G</a>
+                <a href="#7" onclick="IkanPlayer.play(7);" title="Film H">Film H</a>
+			</div>
+			<!--a href="javascript:;" class="btn_showAll">Show All</a-->
+		</div>		
+	</div>
+	<span class="bottomBorder"></span>
+</div>
+<script type="text/javascript">
+    (function() {
+        function showAll(el, btn) {
+            var maxHeight = 21 * 5;
+            var h = el.offsetHeight;
+            if (h > maxHeight) {
+                btn.attr('jsvalue', '1');
+                el.css({ 'overflow': 'hidden', 'height': maxHeight });
+
+                btn.addEvent('click', function() {
+                    if (btn.attr('jsvalue') == '1') {
+                        btn.html('foldall');
+                        btn.attr('jsvalue', 0);
+                        el.css({ 'overflow': '', 'height': '' });
+                    } else {
+                        btn.html('showlayall');
+                        btn.attr('jsvalue', 1);
+                        el.css({ 'overflow': 'hidden', 'height': maxHeight });
+                    }
+                });
+
+            } else {
+                btn.css('display', 'none');
+            }
+        }
+        showAll($('div.tvType .list')[0], $('div.tvType .btn_showAll')[0]);
+        showAll($('div.varietyType .list')[0], $('div.varietyType .btn_showAll')[0]);
+
+        var as1 = $('div.tvType .list a');
+        var as2 = $('div.varietyType .list a');
+
+        var aels = as1.length > 0 ? as1 : null;
+        if (aels == null) {
+            aels = as2.length > 0 ? as2 : null;
+        }
+        if (aels != null) {
+            var selectedel = null;
+            function playChange(name, args) {
+                var vol = args[0];
+                if (selectedel != null) {
+                    selectedel.className = '';
+                }
+                selectedel = aels[vol];
+                selectedel.className = 'now';
+            }
+            IkanPlayer.onPlayChange.subscribe(playChange);
+        }
+    })();
+
+    (function() {
+        var btnleft = $('div.movieType .gotoLeft')[0];
+        var btnright = $('div.movieType .gotoRight')[0];
+
+        var ps = new $.PhotoSlide($('div.movieType')[0], 618, 110, { autoSwitchTime: 10000 });
+        if (ps.pageCount < 2) {
+            return;
+        }
+        btnright.className = 'gotoRightClick';
+
+        function updateBtnStyle() {
+            if (ps.selectedPageNum == 0) {
+                btnleft.className = 'gotoLeft';
+            } else {
+                btnleft.className = 'gotoLeftClick';
+            }
+            if (ps.selectedPageNum == ps.pageCount - 1) {
+                btnright.className = 'gotoRight';
+            } else {
+                btnright.className = 'gotoRightClick';
+            }
+        }
+
+        btnleft.addEvent('click', function() {
+            if (ps.selectedPageNum > 0) {
+                ps.changePage(ps.selectedPageNum - 1);
+            }
+            updateBtnStyle();
+        });
+        btnright.addEvent('click', function() {
+            if (ps.selectedPageNum < ps.pageCount - 1) {
+                ps.changePage(ps.selectedPageNum + 1);
+            }
+            updateBtnStyle();
+        });
+    })();
+</script>
+<!-- End:Relative movies recommendation-->
+
+
+ <!--Start: Movie Display Window-->
+<img width="0" height="0" id="stat_va_vv" />
+<img width="0" height="0" id="stat_va_try" />
+<script type="text/javascript">
+    IkanPlayer.onPlayChange.subscribe(function(name, args) {
+        var hasva = args[2];
+        if (!hasva) {
+            $('#stat_va_try').src = 'http://ikan.pptv.com/stat/ikan_va_try.html?v=' + Math.round(Math.random()*100);
+        } else {
+            $('#stat_va_vv').src = 'http://ikan.pptv.com/stat/ikan_va_vv.html?v=' + Math.round(Math.random()*100);
+        }
+    });
+
+    try {
+        IkanPlayer.onVaChange.subscribe(function(name, args) {
+            var n = args[0];
+            if (n == 'hasva') {
+                $('#notva').css('display', 'none');
+            }
+            if (n == 'notva') {
+                $('#notva').css('display', 'block');
+            }
+        });
+    } catch (e) { }
+    
+    var playList = [{"id":"5Z2a5by655qE5b+DLm1wNA==","title":"\u5b89\u5409\u4e3d\u5a1c\u00b7\u6731\u8389\u7535\u5f71\u5408\u96c6 \u575a\u5f3a\u7684\u5fc3","link":"1d7c1WCcaMih2c7j4a5aeaeYsJqUqGlaeaqYrZ6UqGZae5SYrp2d0qJpd6SzpJ6fmWlt","maxNo":4},{"id":"5Lqa5Y6G5bGx5aSn5aSn5bidLm1wNA==","title":"\u5b89\u5409\u4e3d\u5a1c\u00b7\u6731\u8389\u7535\u5f71\u5408\u96c6 \u4e9a\u5386\u5c71\u5927\u5927\u5e1d","link":"1d7c1WCcaMih2c7j4a5ae5WYrqCUqGJafaWYrqKUp3ZaeZiYsZyUp2ZafZeYrZ6UqXRjpNSnq6mvnmdla5ur","maxNo":4}];    
+	
+    (function() {
+        var el = $('div.la_playMain .playMain')[0];
+        IkanPlayer.setPlayList(playList);
+        IkanPlayer.init({ top: function() { return el.position().y + 20; }, ggUrl: 'http://ikan.pptv.com/res/igg/bf_420.htm' });
+    })();
+    
+    (function() {
+        var type = 'movie';
+        var id = 42554;
+
+        var btn_like = $('#play_btn_like');
+        var btn_favor = $('#play_btn_favor');
+
+        function setBtnLikeStyle(fg) { if (fg) { btn_like.className = 'btn_1 btn_1_select'; btn_like.html('I like it!'); } else { btn_like.className = 'btn_1'; btn_like.html('喜欢'); } }
+
+        function setBtnFavorStyle(fg) { if (fg) { btn_favor.className = 'btn_2 btn_2_select'; btn_favor.html('Bookmark it!'); } else { btn_favor.className = 'btn_2'; btn_favor.html('收藏'); } }
+
+        $.IKan.User2.onLogined.subscribe(function(name, args) {
+            $.IKan.User2.like('check', type, id, 1, function(d) { setBtnLikeStyle(d.Status == 1 ? true : false); });
+            $.IKan.User2.favor('check', type, id, function(d) { setBtnFavorStyle(d.Status == 1 ? true : false); });
+        });
+
+        $.IKan.User2.onlogouted.subscribe(function(name, args) { setBtnLikeStyle(false); setBtnFavorStyle(false); });
+
+        btn_like.addEvent('click', function(ev) {
+            ev.stop();
+            if (!$.IKan.User2.checkLogined()) {
+                $.IKan.User2.showLoginBox(this.position());
+                return;
+            }
+            if (btn_like.className != 'btn_1') {
+                return;
+            }
+            $.IKan.User2.like('add', type, id, 1, function(d) { setBtnLikeStyle(d.Status == 1 ? true : false); });
+        });
+
+        btn_favor.addEvent('click', function(ev) {
+            ev.stop();
+            if (!$.IKan.User2.checkLogined()) {
+                $.IKan.User2.showLoginBox(this.position());
+                return;
+            }
+            if (btn_favor.className != 'btn_2') {
+                return;
+            }
+            $.IKan.User2.favor('add', type, id, function(d) { setBtnFavorStyle(d.Status == 1 ? true : false); });
+        });
+    })();
+
+    $.IKan.User2.tryReadUserInfo();
+    
+	(function(){
+		if(document.cookie.match('(?:^|;)\\s*silverlight=([^;]*)')){
+			return;
+		}
+		var control = null, version = 0, count = 4;
+		if(navigator.plugins["Silverlight Plug-In"]) {
+			container = document.createElement('div');
+			document.body.appendChild(container);
+			container.innerHTML= '<embed type="application/x-silverlight" />';
+			control = container.childNodes[0];
+		} 
+		else {
+		    try {
+		    	control = new ActiveXObject('AgControl.AgControl');
+		    }catch(e){}
+		}
+		if (control) {
+			while(count){
+				if(control.IsVersionSupported(count + '.0.0.0')){
+					version = count;
+					break;
+				}
+				count--;
+			}
+		}
+		new Image().src = 'http://poll.pplive.com/poll.aspx?SubjectID=298&answers=' + (2122 + version) + '&cb=yun.dojson&jsonId=yun101';
+		control = null; 
+		var date = new Date();
+        date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
+		document.cookie = 'silverlight=1; domain=ikan.pptv.com; path=/p/; expires=' + date.toString();
+	})();
+</script>
+<!--End: Movie Display Window-->
+
+
+<div id="sp_b1" style="text-align:center; margin:10px auto; width:970px; height:93px; overflow:hidden;"></div>
+
+
+<!--Start:CopyRight-->
+    <div class="foot c_b">
+		<div class="info">
+			<p align="center"> Copyright &copy;  Mum's Moovog Team, Eurecom, France  &nbsp&nbsp&nbsp&nbsp&nbsp  Note:Don't use it for business!</p>
+		</div>
+	</div>
+<!--End:Cpoyright-->
+
+</body>
+</html>

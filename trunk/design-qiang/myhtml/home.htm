@@ -1,0 +1,769 @@
+﻿<!DOCTYPE html>
+<html xmlns>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta http-equiv="keywords" content="Moovog movie IMDB" />
+<meta http-equiv="description" content="Mum's Moovog : tonight, you start to really appreciate watching moovies... " />
+<title>Mum's Moovog : Tonight, you start to really appreciate watching moovies... </title>
+
+<link href="http://static1.pplive.cn/ikan3/091230/images/style.css?v=05112333" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="js/jui.js"></script>
+<script type="text/javascript" src="js/channel.js"></script>
+<script type="text/javascript">window.name = '_list';</script>
+
+</head>
+<body class="pageMovie">
+
+
+
+
+<!--Start: Upper logo and Menu -->
+<div class="pptv_pageTopMoreShow" style="display:none; z-index:20; position:absolute;" id="pptvmorebox">
+       	</div>
+       	      	
+     <!--Upper PPTV logo-->       	
+<div class="pptv_pageTop c_b">
+	<div class="pptv_pageTopNav c_b">
+        <a href="home.htm" title="PPLive" class="pptv_logo" id="pptv_logo"></a>
+
+        <div class="pptv_topLogin c_b">
+        	<span></span>
+            <div class="show">
+            	<ul class="c_b">
+                	<li style="display:none;">Hi,<a href="home.htm" target="_blank" title="User"></a>(<a href="home.htm" title="Logout">Logout</a>)</li>
+                    <li><a href="login/login.htm" title="Login">Login</a></li>
+                    <li><a href="login/newregister.htm" title="Register">Register</a></li>
+                </ul>                
+            </div>
+            <span></span>
+        </div>
+    </div>
+    <div class="pptv_topMain c_b">
+    	<div class="pptv_menuLink c_b">
+        	<a href="home.htm" title="Home"><strong>Home</strong></a>
+
+            <a href="A" title="A"><strong>A</strong></a>
+            <a href="B" class="B" title="B"><strong>B</strong></a>
+            <a href="C" class="C" title="C"><strong>C</strong></a>
+            <a href="D" class="D" title="D"><strong>D</strong></a>
+            <a href="E" class="E" title="E"><strong>E</strong></a>
+            <a href="F" title="F"><strong>F</strong></a>
+        </div>
+        <div class="pptv_specialLink c_b"> </div>
+        <div class="pptv_search c_b">
+        	<input class="txt" type="text" value="-- Please input the keyword --" id="_j_dom_SearchInput" />
+            <input class="btn" type="button" value="Submit" id="j_dom_searchsubmit" />
+        </div>
+    </div>
+</div>
+<!--End : The upper side-->
+
+
+
+<script type="text/javascript">
+    (function () {
+        var input = $('#_j_dom_SearchInput');
+        var btn = $('#j_dom_searchsubmit');
+        new $.IKan.SearchTips(input, btn, { tipBoxWidth: '164px', strLength: 24 });
+    })();
+
+    (function() {
+        var lis = $('div.pptv_topLogin .show li');
+        var aels = lis[0].getElements('a');
+        aels[1].addEvent('click', function(ev) { ev.stop(); $.IKan.User2.logout(); });
+        $.IKan.User2.onLogined.subscribe(function(name, args) {
+            aels[0].innerHTML = args[0].UserName;
+            lis[0].css('display', '');
+            lis[1].css('display', 'none');
+            lis[2].css('display', 'none');
+        });
+        $.IKan.User2.onlogouted.subscribe(function(name, args) {
+            lis[0].css('display', 'none');
+            lis[1].css('display', '');
+            lis[2].css('display', '');
+        });
+        $.IKan.User2.tryReadUserInfo();
+    })();
+
+    (function() {
+        var btns = $('div.pptv_topLogin .show .more');
+        var panels = $('div.pptv_topLogin .show .moreLi');
+        for (var i = 0, len = btns.length; i < len; i++) { btns[i].attr('jsvalue', i); }
+        var pt1, pt2, rt, el;
+        $(document).addEvent('mousemove', function(ev) {
+            pt1 = ev.page;
+            for (var i = 0, len = panels.length; i < len; i++) {
+                el = panels[i];
+                if (el.css('display') != 'none') {
+                    pt2 = el.position();
+                    rt = { w: el.offsetWidth, h: el.offsetHeight + 24, x: pt2.x, y: pt2.y - 24 };
+                    if (pt1.x < rt.x || pt1.x > rt.x + rt.w || pt1.y < rt.y || pt1.y > rt.y + rt.h) {
+                        el.css('display', 'none');
+                    }
+                }
+            }
+        });
+        btns.addEvent('mouseover', function() { var ix = parseInt(this.attr('jsvalue')); panels.css('display', 'none'); panels[ix].css('display', 'block'); });
+    })();
+</script>
+<!--End: the Upper Side Menu and Logo-->
+
+
+
+
+    <div class="la_page c_b">
+        <div class="la_bgBorderTop c_b"><span></span></div>
+
+<!--Start :The Right Side of the Page-->
+
+        <div class="la_main">
+        
+        	<!--Start:the top recommendation-->
+            <div class="re_topRecommend c_b">
+	    <div class="album w_570">
+            	    <div class="pics">
+            	        <div>                	        
+            	        <div><a href="displayvideo2.htm" title="Comment of Recommendation A" target="_ikanp"><span>Play</span><img src="pic/5.gif" width="570" height="250" /></a></div>                	        
+            	        <div><a href="displayvideo2.htm" title="Comment of Recommendation B" target="_ikanp"><span>Play</span><img src="pic/5.gif" width="570" height="250" /></a></div>                	        
+            	        <div><a href="displayvideo2.htm" title="Comment of Recommendation C" target="_ikanp"><span>Play</span><img src="pic/5.gif" width="570" height="250" /></a></div>                	        
+            	        <div><a href="displayvideo2.htm" title="Comment of Recommendation D" target="_ikanp"><span>Play</span><img src="pic/5.gif" width="570" height="250" /></a></div>                	    
+            	        </div>
+
+                	</div>
+                    <div class="info">
+                    	<strong><a href="#" class="title">No Title</a></strong>
+                        <span class="btns"></span>
+                    </div>
+		            <script type="text/javascript">
+		                (function() {
+		                    new $.PhotoSlide($('div.re_topRecommend .album')[0], 570, 250);
+		                })();
+		            </script>
+                </div>    <div class="publicize w_135" id="sp_channel_f1"></div>
+
+             </div>            
+             <!--END:the top recommendation-->
+
+
+            <!--Start:Trailer:Considering whether this block is useful? -->
+            <!--div class="re_videoBox hdHerald">
+            	<div class="title c_b">
+                	<h3>Trailer</h3>
+                    <a href="trailer.htm" title="More" class="ico_more" target="_blank">More</a>
+                </div>
+                <ul class="photoHdList4 c_b">
+
+                	<li>
+                    	<a href="displayvideo.htm" title="A" class="videoImg" target="_ikanp"><span class="btn_play150x80">Play</span><img src="pic/7.jpg" width="150" height="80" alt="A" /></a>
+                        <a href="displayvideo.htm" title="A" class="videoIntro" target="_ikanp">A</a>
+                    </li>
+                    <li>
+                    	<a href="displayvideo.htm" title="B" class="videoImg" target="_ikanp"><span class="btn_play150x80">Play</span><img src="pic/7.jpg" width="150" height="80" alt="B" /></a>
+                        <a href="displayvideo.htm" title="B" class="videoIntro" target="_ikanp">B</a>
+
+                    </li>
+                    <li>
+                    	<a href="displayvideo.htm" title="C" class="videoImg" target="_ikanp"><span class="btn_play150x80">Play</span><img src="pic/7.jpg" width="150" height="80" alt="C" /></a>
+                        <a href="displayvideo.htm" title="C" class="videoIntro" target="_ikanp">C</a>
+
+                    </li>                    
+                    <li>
+                    	<a href="displayvideo.htm" title="D" class="videoImg" target="_ikanp"><span class="btn_play150x80">Play</span><img src="pic/7.jpg" width="150" height="80" alt="D" /></a>
+                        <a href="displayvideo.htm" title="D" class="videoIntro" target="_ikanp">D</a>
+
+                    </li>
+                                    </ul>
+            </div-->            
+            <!--End:Trailer-->
+                       
+            
+            <!--Start: Classic Recommendation-->
+            <div class="re_videoBox hdClassics">
+            	<div class="title c_b">
+                	<h3>Classic Recommendation</h3>
+                	 <a href="hotsearch.htm" title="More" class="ico_more" target="_blank">More</a>
+                </div>
+                <ul class="photoList5 c_b">
+                	<li>
+                    <a href="displayvideo2.htm" title="A" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">High Quality</span>	                    	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: A</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="A" /></a>
+                        <a href="displayvideo2.htm" title="A" class="videoTitle" target="_ikanp">A</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	
+                    <li>
+                    <a href="displayvideo2.htm" title="B" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">DVD</span>	                    	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: B</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="B" /></a>
+                        <a href="displayvideo2.htm" title="B" class="videoTitle" target="_ikanp">B</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	
+                    <li>                    	
+                    <a href="displayvideo2.htm" title="C" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">High Quality</span>	                    	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: C</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="C" /></a>
+                        <a href="displayvideo2.htm" title="C" class="videoTitle" target="_ikanp">C</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	
+                    <li>                    	
+                    <a href="displayvideo2.htm" title="D" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">Common Quality</span>	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: D</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="D" /></a>
+                        <a href="displayvideo2.htm" title="D" class="videoTitle" target="_ikanp">D</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	
+                    <li>                    	
+                    <a href="displayvideo2.htm" title="E" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">DVD</span>	                    	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: E</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="E" /></a>
+                        <a href="displayvideo2.htm" title="E" class="videoTitle" target="_ikanp">E</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	               
+                    </ul>            </div>
+
+            <script type="text/javascript">
+                (function() {
+                    var url = '/api/channel/movie250/?';
+
+                    var ids = ['610','146','605','150','508'];
+                    var boxel = $('div.re_videoBox .photoList5')[0];
+                    var btnels = [$('div.re_videoBox .title .btn_random'), $('div.re_videoBox .title .btn_random2')];
+
+                    function ref() {
+                        boxel.innerHTML = '<li><div class="loading">加载中...</div></li>';
+                        btnels[0].css('display', 'none');
+                        btnels[1].css('display', '');
+                        new $.Loader({ url: url + 'ids=' + ids.join(','), type: 'js', callback: function(d) {
+                            btnels[0].css('display', '');
+                            btnels[1].css('display', 'none');
+                            boxel.innerHTML = d.html;
+                            ids = d.ids;
+                        }, param: true, cache: true
+                        }).load();
+                    }
+
+                    btnels[0].addEvent('click', function() {
+                        ref();
+                    });
+
+                    //ref();
+                })();
+            </script>            
+            <!--End: Classic Recommendation-->
+            
+   
+            <!--Start:New Uploaded -->
+            <div class="re_videoBox newRollout">
+            	<div class="title c_b">
+                	<h3>New Uploaded</h3>
+                </div>
+                <ul class="photoList5 c_b">
+                                	<li>
+                    <a href="displayvideo2.htm" title="A" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">High Quality</span>	                    	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: A</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="A" /></a>
+                        <a href="displayvideo2.htm" title="A" class="videoTitle" target="_ikanp">A</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	
+                    <li>
+                    <a href="displayvideo2.htm" title="B" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">DVD</span>	                    	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: B</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="B" /></a>
+                        <a href="displayvideo2.htm" title="B" class="videoTitle" target="_ikanp">B</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	
+                    <li>                    	
+                    <a href="displayvideo2.htm" title="C" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">High Quality</span>	                    	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: C</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="C" /></a>
+                        <a href="displayvideo2.htm" title="C" class="videoTitle" target="_ikanp">C</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	
+                    <li>                    	
+                    <a href="displayvideo2.htm" title="D" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">Common Quality</span>	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: D</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="D" /></a>
+                        <a href="displayvideo2.htm" title="D" class="videoTitle" target="_ikanp">D</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>                	
+                    <li>                    	
+                    <a href="displayvideo2.htm" title="E" class="videoImg" target="_ikanp"><span class="btn_play96x128">Play</span><span class="title">DVD</span>	                    	
+                    <p class="natantVideoInfo videoInfoRight">
+								<span class="bg_border"></span>
+                                <span class="short">
+									<b>Movie Name: E</b><br />
+									<i>Type: Comedy </i><br />
+									<i>Leading roles: aa</i>
+								</span>
+								<span>Introduction：Once upon a time...</span>
+	                        </p>
+	                    <img src="pic/9.jpg" width="96" height="128" alt="E" /></a>
+                        <a href="displayvideo2.htm" title="E" class="videoTitle" target="_ikanp">E</a>
+                        <a href="displayvideo2.htm" title="biref sum-up" class="videoIntro" target="_ikanp">brief sum-up</a>
+                    </li>  
+                	</ul>            
+                	</div>    
+            <!--End:New Uploaded-->   	
+  
+            
+            <!--Start: Directors-->
+            <div class="re_videoBox starMovie">
+            	<div class="title c_b">
+                	<h3>Directors</h3>
+                    <div class="prompt">
+                    	                    	<a href="searchreslutlist.htm/?kw=David Leo Fincher" title="David Leo Fincher">David Leo Fincher</a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Michael Bay" title="Michael Bay">Michael Bay</a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Peter Jackson" title="Peter Jackson">Peter Jackson</a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Steven Spielberg" title="Steven Spielberg">Steven Spielberg</a>                    
+                    	                    	</div>
+                </div>
+                <div class="showContent c_b">
+                	 <dl>
+                    	<dt>
+                        	<a href="pic/people/9.jpg" title="James Francis Cameron" class="starImg" target="_ikanp"><img src="pic/people/9.jpg" width="190" height="115" alt="James Francis Cameron" /></a>
+                       		<a href="displayvideo2.htm" title="James Francis Cameron" class="starName" target="_ikanp">James Francis Cameron</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchreslutlist.htm/?kw=James Francis Cameron" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl> 
+                                    	 <dl>
+                    	<dt>
+                        	<a href="pic/people/8.jpg" title="Luc Besson" class="starImg" target="_ikanp"><img src="pic/people/8.jpg" width="190" height="115" alt="Luc Besson" /></a>
+                       		<a href="displayvideo2.htm" title="Luc Besson" class="starName" target="_ikanp">Luc Besson</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchreslutlist.htm/?kw=Luc Besson" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl>                 	 <dl>
+                    	<dt>
+                        	<a href="pic/people/7.jpg" title="LI An" class="starImg" target="_ikanp"><img src="pic/people/7.jpg" width="190" height="115" alt="LI An" /></a>
+                       		<a href="displayvideo2.htm" title="LI An" class="starName" target="_ikanp">LI An</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchresultlist.htm/?kw=LI An" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl>                 </div>    
+            </div>            
+            <!--End:Directors-->
+
+            <!--Start:Actors-->
+            <div class="re_videoBox starMovie">
+            	<div class="title c_b">
+                	<h3>Actors</h3>
+                    <div class="prompt">
+                    	                    	<a href="searchreslutlist.htm/?kw=Marlon Brando" title="Marlon Brando">Marlon Brando</a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Tom Cruise" title="Tom Cruise">Tom Cruise</a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Paul Newman" title="Sean Penn">Sean Penn </a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Robert De Niro" title="Robert De Niro">Robert De Niro</a>                    
+                    	                    	</div>
+                </div>
+                <div class="showContent c_b">
+                	 <dl>
+                    	<dt>
+                        	<a href="pic/people/3.jpg" title="Johnny Depp" class="starImg" target="_ikanp"><img src="pic/people/3.jpg" width="190" height="115" alt="Johnny Depp" /></a>
+                       		<a href="displayvideo2.htm" title="Johnny Depp" class="starName" target="_ikanp">Johnny Depp</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchreslutlist.htm/?kw=Johnny Depp" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl> 
+                                    	 <dl>
+                    	<dt>
+                        	<a href="pic/poeple/4.jpg" title="Matt Damon" class="starImg" target="_ikanp"><img src="pic/people/4.jpg" width="190" height="115" alt="Matt Damon" /></a>
+                       		<a href="displayvideo2.htm" title="Matt Damon" class="starName" target="_ikanp">Matt Damon</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchreslutlist.htm/?kw=Matt Damon" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl>                 	 <dl>
+                    	<dt>
+                        	<a href="pic/people/5.jpg" title="George Clooney" class="starImg" target="_ikanp"><img src="pic/people/5.jpg" width="190" height="115" alt="George Clooney" /></a>
+                       		<a href="displayvideo2.htm" title="George Clooney" class="starName" target="_ikanp">George Clooney</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchreslutlist.htm/?kw=George Clooney" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl>                 </div>    
+            </div>            
+            <!--End:Actors-->            
+            
+            
+            <!--Start:Actresses-->
+            <div class="re_videoBox starMovie">
+            	<div class="title c_b">
+                	<h3>Actresses</h3>
+                    <div class="prompt">
+                    	                    	<a href="searchreslutlist.htm/?kw=Marlon Brando" title="Anne Hathaway">Anne Hathaway</a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Tom Cruise" title="Jennifer Aniston">Jennifer Aniston</a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Paul Newman" title="Nicole Kidman">Nicole Kidman</a>                    	
+                    	                    	<a href="searchreslutlist.htm/?kw=Robert De Niro" title="Cameron Diaz">Cameron Diaz</a>                    
+                    	                    	</div>
+                </div>
+                <div class="showContent c_b">
+                	 <dl>
+                    	<dt>
+                        	<a href="pic/people/6.jpg" title="Juliette Binoche" class="starImg" target="_ikanp"><img src="pic/people/6.jpg" width="190" height="115" alt="Juliette Binoche" /></a>
+                       		<a href="displayvideo2.htm" title="Juliette Binoche" class="starName" target="_ikanp">Juliette Binoche</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchreslutlist.htm/?kw=Juliette Binoche" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl> 
+                                    	 <dl>
+                    	<dt>
+                        	<a href="pic/poeple/2.jpg" title="Angelina Jolie" class="starImg" target="_ikanp"><img src="pic/people/2.jpg" width="190" height="115" alt="Angelina Jolie" /></a>
+                       		<a href="displayvideo2.htm" title="Angelina Jolie" class="starName" target="_ikanp">Angelina Jolie</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchreslutlist.htm/?kw=Angelina Jolie" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl>                 	 <dl>
+                    	<dt>
+                        	<a href="pic/people/1.jpg" title="Julia Roberts" class="starImg" target="_ikanp"><img src="pic/people/1.jpg" width="190" height="115" alt="Julia Roberts" /></a>
+                       		<a href="displayvideo2.htm" title="Julia Roberts" class="starName" target="_ikanp">Julia Roberts</a>
+                        </dt>
+
+                        <dd>
+                        	<div class="movieName">
+                            <a href="displayvideo2.htm" title="A" target="_ikanp">A</a>                                
+                            <a href="displayvideo2.htm" title="B" target="_ikanp">B</a>                      
+                            <a href="displayvideo2.htm" title="C" target="_ikanp">C</a>                            
+                            </div>
+                            <a href="searchresultlist.htm/?kw=Julia Roberts" title="More" class="more" target="_ikanp">More</a>
+                        </dd>
+                    </dl>                 </div>    
+            </div>            
+            <!--End:Actresses-->
+            
+            
+            <div class="re_cooperationBox" id="sp_channel_m2"></div>
+        </div>        
+<!--End: The Right Side of the Page-->
+        
+ 
+        
+<!--Start: The left Side of the Page-->
+        
+        <div class="la_oth">
+        
+        	<!--Start: List of subtypes-->
+
+            <div class="re_channelNav movieNav c_b">
+            	<div class="nav c_b">
+                    <div class="title c_b">
+                        <h2>Movie</h2>
+                        <a href="#" class="setFavorite" title="Bookmark" onclick="javascript:window.external.AddFavorite(location.href, document.title); return false;">Bookmark</a>
+                    </div>
+
+                    <div class="navList c_b">
+                    	<a href="searchresultlist.htm/?kw=All" title="All" target="_blank">All</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Action" target="_blank">Action</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Thriller" target="_blank">Thriller</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Comedy" target="_blank">Comedy</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Science Fiction" target="_blank">Science Fiction</a>
+                    	<a href="searchresultlist.htm/?kw=" title="War" target="_blank">War</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Disaster" target="_blank">Disaster</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Magic" target="_blank">Magic</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Animation" target="_blank">Animation</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Story" target="_blank">Story</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Crime" target="_blank">Crime</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Suspense<" target="_blank">Suspense</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Adventure" target="_blank">Adventure</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Youth" target="_blank">Youth</a>
+                    	<a href="searchresultlist.htm/?kw=" title="Love" target="_blank">Love</a>
+                    	<a href="searchresultlist.htm/?kw=" title="New Uploaded" target="_blank">New Uploaded</a>               
+                    	</div>
+
+                </div>
+                <strong>Key Word</strong>
+                <div class="keyWord c_b">
+                                        <a href="searchresultlist.htm/?kw=" title="Avator" target="_ikanp">Avator</a>                    
+                                        <a href="searchresultlist.htm/?kw=" title="Dragon" target="_ikanp">Dragon</a>                    
+                                        <a href="searchresultlist.htm/?kw=" title="George" target="_ikanp">George</a>                
+                                        </div>                <span class="bg_bottom"></span>
+            </div>
+            <!--End: List of subtypes-->
+            
+            <!--Start: Classic Actor's lines-->
+            <div class="classicLines">
+            	<h4>Classic Actor's lines</h4>
+                <dl>
+                	<dt>《Gone With the Wind》</dt>
+                    <dd>
+                    	<p>"...Tara!...Home. I'll go home, and I'll think of some way to get him back! After all, tomorrow is another day!"</p>
+
+                        <a href="searchresultlist.htm/?kw=" title="play" target="_ikanp" class="play"><span class="ico_play"></span>Play</a>
+                    </dd>
+                </dl>                <dl>
+                	<dt>《007》</dt>
+                    <dd>
+                    	<p>"Bond. James Bond."</p>
+
+                        <a href="searchresultlist.htm/?kw=" title="play" target="_ikanp" class="play"><span class="ico_play"></span>Play</a>
+                    </dd>
+                </dl>                <dl>
+                	<dt>《The Terminator》</dt>
+                    <dd>
+                    	<p>"I'll be back!"</p>
+
+                        <a href="searchresultlist.htm/?kw=" title="play" target="_ikanp" class="play"><span class="ico_play"></span>Play</a>
+                    </dd>
+                </dl>                <dl>
+                	<dt>《Forrest Gump》</dt>
+                    <dd>
+                    	<p>Momma always said: "Life is like a box of chocolates, Forrest. You never know what you're gonna get."</p>
+
+                        <a href="searchresultlist.htm/?kw=" title="play" target="_ikanp" class="play"><span class="ico_play"></span>Play</a>
+                    </dd>
+                </dl>                <dl>
+                	<dt>《Braveheart》</dt>
+                    <dd>
+                    	<p>"Freedom!"</p>
+
+                        <a href="searchresultlist.htm/?kw=" title="play" target="_ikanp" class="play"><span class="ico_play"></span>Play</a>
+                    </dd>
+                </dl>
+            </div>            
+            <!--End: Classic Actor's lines-->
+            
+            <!--Start: HotSearchList-->
+
+            <div class="re_rankingList hotList">
+            	<div class="title">
+                	<h4><span style="color: #3399FF">Hot</span> Search List</h4>
+                </div>
+                <div class="showList" style="display:;">
+                	<dl class="topFirst c_b">
+                    	<dt><a href="displayvideo2.htm" title="How to Train Your Dragon" target="_ikanp"><img src="pic/movie/2.jpg" width="60" height="80" alt="How to Train Your Dragon" /></a></dt>
+                        <dd>
+
+                        	<strong><a href="displayvideo2.htm" title="How to Train Your Dragon" target="_ikanp">How to Train Your Dragon</a></strong>
+                            <p><a href="displayvideo2.htm" title="The Total Number of Searches">Search(234)</a></p>
+                        </dd>
+                    </dl>
+                    <ul class="topList c_b">
+						                    	<li>
+                        	<a href="displayvideo2.htm" title="B" target="_ikanp">B</a>
+                            <span class="num">189</span>
+                        </li>                    	<li>
+                        	<a href="displayvideo2.htm" title="C" target="_ikanp">C</a>
+                            <span class="num">176</span>
+                        </li>                    	<li>
+
+                        	<a href="displayvideo2.htm" title="D" target="_ikanp">D</a>
+                            <span class="num">163</span>
+                        </li>                    	<li>
+                        	<a href="displayvideo2.htm" title="E" target="_ikanp">E</a>
+                            <span class="num">106</span>
+                        </li>                    	<li>
+
+                        	<a href="displayvideo2.htm" title="F" target="_ikanp">F</a>
+                            <span class="num">97</span>
+                        </li>                    	<li>
+                        	<a href="displayvideo2.htm" title="G target="_ikanp">G</a>
+                            <span class="num">72</span>
+                        </li>                    	<li>
+
+                        	<a href="displayvideo2.htm" title="H" target="_ikanp">H</a>
+                            <span class="num">67</span>
+                        </li>                    	<li>
+                        	<a href="displayvideo2.htm" title="I" target="_ikanp">I</a>
+                            <span class="num">58</span>
+                        </li>                    	<li>
+
+                        	<a href="displayvideo2.htm" title="J" target="_ikanp">J</a>
+                            <span class="num">21</span>
+                        </li>                    </ul>                </div>            </div>            
+            <!--End:HotSearchList-->
+                        
+            
+            <!--Start: North American box office list-->
+            <div class="re_rankingList americaTicketList">
+            	<div class="title">
+                	<h4><span>North American box</span> office list</h4>
+
+                </div>
+                <div class="showList">
+                	<dl class="topFirst c_b">
+                    	<dt><a href="searchreslutlist.htm/?kw=Iron Man 2" title="Iron Man 2" target="_ikanp"><img src="pic/movie/1.jpg" width="60" height="80" alt="Iron Man 2" /></a></dt>
+                        <dd>
+                        	<strong><a href="displayvideo2.htm" title="Iron Man 2" target="_ikanp">Iron Man 2</a></strong>
+                            <p>Action, science fiction, adventure</p>
+                            <p>TOTAL $128.112M</p>
+                        </dd>
+                    </dl>
+                    <ul class="topList c_b">
+						                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=A Nightmare on Elm Street" target="_ikanp" title="	A Nightmare on Elm Street (2010)">	A Nightmare on Elm Street (2010)</a>
+                            <span class="num">$9.119M </span>
+
+                        </li>                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=How to Train Your Dragon" target="_ikanp" title="How to Train Your Dragon">How to Train Your Dragon</a>
+                            <span class="num">$6.680M </span>
+                        </li>                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=Date Night" target="_ikanp" title="Date Night">Date Night</a>
+                            <span class="num">$5.448M </span>
+
+                        </li>                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=The Back-Up Plan" target="_ikanp" title="The Back-Up Plan">The Back-Up Plan</a>
+                            <span class="num">$5.033M </span>
+                        </li>                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=Furry Vengeance" target="_ikanp" title="Furry Vengeance">Furry Vengeance</a>
+                            <span class="num">$4.478M </span>
+
+                        </li>                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=Clash of the Titans" target="_ikanp" title="Clash of the Titans">Clash of the Titans</a>
+                            <span class="num">$2.503M </span>
+                        </li>                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=Death at a Funeral" target="_ikanp" title="Death at a Funeral">Death at a Funeral</a>
+                            <span class="num">$2.308M </span>
+
+                        </li>                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=Babies" target="_ikanp" title="Babies">Babies</a>
+                            <span class="num">$2.160M </span>
+                        </li>                    	<li>
+                        	<a href="searchreslutlist.htm/?kw=The Losers" target="_ikanp" title="The Losers">The Losers</a>
+                            <span class="num">$1.847M </span>
+
+                        </li>                    </ul>                </div>
+            </div>           
+             <!--End:North American box office list-->
+     
+            
+        </div>        
+    </div>
+<!--End: The Left Side of the Page-->
+
+
+<!--Start:CopyRight-->
+    <div class="foot c_b">
+		<div class="info">
+			<p > Copyright &copy;  Mum's Moovog Team, Eurecom, France  &nbsp&nbsp&nbsp&nbsp&nbsp  Note:Don't use it for business!</p>
+		</div>
+	</div>
+<!--End:Cpoyright-->
+</body>
+</html>
