@@ -41,6 +41,7 @@ def add_to_db(request):
 
 
 	for result in diskScanResult:
+		print "Searching movie %s" % (result.filename)
 		imdbResultSet = imdb.search_movie(result.filename)[:5]
 		imdbMatches[result.filename] = []
 		firstResult = 1
@@ -50,6 +51,7 @@ def add_to_db(request):
 #				firstResult = 0
 			imdb.update(imdbResult)
 			imdbMatches[result.filename].append(imdbResult)
+			print "Found movie %s" % (imdbResult["title"])
 		try: 
 			title = imdbResultSet[0]['title'] 
 		except: 
