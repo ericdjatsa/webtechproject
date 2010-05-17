@@ -1,4 +1,3 @@
-
 from django.conf.urls.defaults import *
 from src.frontend.models import Film
 

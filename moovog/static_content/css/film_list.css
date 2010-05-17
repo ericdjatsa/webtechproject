@@ -1,8 +1,8 @@
 .film_thumbnail
 {
 	float:	left;
-	height: 240px; 
-	width: 180px;
+	height: 200px; 
+	width: 400px;
 	margin: 4px;
 	text-align: center;
 	border: 1px solid black;
@@ -10,7 +10,7 @@
 
 .thumbnail_image
 {
-	height: 60%;
+	height: 90%;
 }	
 
 td.center
@@ -43,6 +43,8 @@ p
 	right: 10px;
 	top: 10px; */
 	float: right; 
+	border: 1px solid black;
+	text-align: left;
 }
 
 #film_list
@@ -59,26 +61,84 @@ p
 	height: 74px;
 }
 
-a:link 
+a.film_thumbnail:link 
 {
 	color:#FFFFFF;
 	text-decoration:none;
 }
 
-a:visited 
+a.film_thumbnail:visited 
 {
 	color:#DDDDDD;
 	text-decoration:none;
 }
 
-a:hover 
+a.film_thumbnail:hover 
 {
 	color:#EEEEEE;
 	text-decoration:none;
 }
 
-a:active 
+a.film_thumbnail:active 
 {
 	color:#FFFFFF;
 	text-decoration:none;
+}
+
+#header_table
+{
+	size: 90%;
+}
+
+td.right_align
+{
+	text-align: right;
+	padding-right: 10px;
+	padding-top: 10px;
+}
+
+h1.title
+{
+float: left; 
+position: absolute;
+left: 30%;
+color: #FFFFFF;
+/* margin-left: auto;
+margin-right: auto;
+text-align: center; */
+}
+
+div.header
+{
+text-align: center;
+}
+
+#moovog_m, #moovog_o1, #moovog_o2, #moovog_v, #moovog_o3, #moovog_g
+{
+	font-size: 32pt;
+	font-style: bold;
+}
+
+#moovog_m  {color: #FF0000;}
+#moovog_o1 {color: #00FF00;}
+#moovog_o2 {color: #0000FF;}
+#moovog_v {color: #FF0000;}
+#moovog_o3 {color: #0000FF;}
+#moovog_g {color: #00FF00;}
+
+div.pager
+{
+clear: both;
+color: #00FF00;
+}
+
+div.left
+{
+float: left;
+}
+
+div.right
+{
+	padding-left: 20px;
+	float: left;
 }
