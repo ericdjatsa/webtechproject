@@ -61,6 +61,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+     
 )
 
 ROOT_URLCONF = 'playground.urls'
@@ -69,7 +70,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'/home/zaddach/projects/webtech/svn/trunk/playground/templates'
+	'/home/zaddach/projects/webtech/svn/trunk/playground/templates',
+      '/home/rachid/Bureau/Proet_Django/svn/trunk/playground/templates',
 )
 
 INSTALLED_APPS = (
@@ -80,4 +82,5 @@ INSTALLED_APPS = (
     'playground.sandbox', 
     'playground.film', 
     'playground.utils',
+    'django.contrib.admin',
 )
