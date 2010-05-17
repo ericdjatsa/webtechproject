@@ -71,6 +71,7 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     r'C:\xampplite\svn\moovog\templates',
     r'/home/zaddach/projects/webtech/svn/trunk/moovog/templates',
+    r'/home/rachid/Bureau/Proet_Django/svn/trunk/moovog/templates',
 )
 
 INSTALLED_APPS = (
@@ -83,4 +84,5 @@ INSTALLED_APPS = (
     'moovog.src.frontend',
     'moovog.src.utils',
 	'moovog.src.crawler',
+    'moovog.src.storage', 
 )

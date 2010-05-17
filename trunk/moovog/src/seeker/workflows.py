@@ -178,12 +178,7 @@ class Complete_Movie_Model_WF(Base_Workflow):
         self.validate_list_field_not_empty("genres")
     
     def process(self):
-        movie_model = self.request()["movie-model"]
-        movie_model.add_some_more_infos(self.request()["runtime"],
-                                        self.request()["user-rating"],
-                                        self.request()["thumbnail-url"])
-        
-        if self.validate_field_not_null("original-countries"):
+        movie_model = self.request()["movie-model"]                if self.validate_field_not_null("original-countries"):
             original_countries = self.request()["original-countries"]
         else: original_countries = None
         if self.validate_field_not_null("actors"):
@@ -224,6 +219,10 @@ class Complete_Movie_Model_WF(Base_Workflow):
             for genre in genres:
                 if genre not in movie_genres:
                     movie_model.genres.add(genre)
+
+        movie_model.add_some_more_infos(self.request()["runtime"],
+                                        self.request()["user-rating"],
+                                        self.request()["thumbnail-url"])
         
         self.add_to_response("status", "ok")
         self.add_to_response("movie-model", movie_model)
