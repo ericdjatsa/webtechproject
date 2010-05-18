@@ -86,3 +86,5 @@ INSTALLED_APPS = (
 	'moovog.src.crawler',
     'moovog.src.storage', 
 )
+
+STATIC_DOC_ROOT = '/home/zaddach/projects/webtech/svn/trunk/moovog/static_content'

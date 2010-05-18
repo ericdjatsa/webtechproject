@@ -183,7 +183,10 @@ class Actor_Model(models.Model):
         model = Actor_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
                             birth_date = birth_date, death_date = death_date,
                             mini_story = mini_story, thumbnail_url = thumbnail_url)
+#        try:
         model.save()
+#        except:
+#           print "Error: imdb_id=%s, full_name=%s, nickname=%s, birthdate=%s, deathdate=%s, ministory=%s, thumbnail=%s" % (imdb_id, full_name, birth_date, death_date, nick_name, mini_story, thumbnail_url)
         return model
     
     @staticmethod
@@ -238,7 +241,10 @@ class Writer_Model(models.Model):
         model = Writer_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
                              birth_date = birth_date, death_date = death_date,
                              mini_story = mini_story, thumbnail_url = thumbnail_url)
-        model.save()
+        try:
+           model.save()
+        except:
+           print "Error: imdb_id=%s, full_name=%s, nickname=%s, birthdate=%s, deathdate=%s, ministory=%s, thumbnail=%s" % (imdb_id, full_name, birth_date, death_date, nick_name, mini_story, thumbnail_url)
         return model
     
     @staticmethod
@@ -293,7 +299,10 @@ class Director_Model(models.Model):
         model =Director_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
                               birth_date = birth_date, death_date = death_date,
                               mini_story = mini_story, thumbnail_url = thumbnail_url)
-        model.save()
+        try:
+           model.save()
+        except:
+           print "Error: imdb_id=%s, full_name=%s, nickname=%s, birthdate=%s, deathdate=%s, ministory=%s, thumbnail=%s" % (imdb_id, full_name, birth_date, death_date, nick_name, mini_story, thumbnail_url)
         return model
     
     @staticmethod

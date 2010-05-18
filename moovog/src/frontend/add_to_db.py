@@ -1,0 +1,66 @@
+from src.crawler.models import File
+from src.utils.imdb_cache import imdbSearchMovie
+from imdb import IMDb
+from src.frontend.models import Film
+from src.frontend.models import IgnoreTable
+from datetime import datetime
+
+imdb = IMDb(accessSystem='http', adultSearch=0)
+imdb.set_proxy('')
+
+#get all files which are not in the ignore table or in the movie table from the crawler table. This query
+#uses raw sql because django is stupid and not capable of doing this query (as opposed to rubyOnRails),
+#and might easily be broken by changing table names, so please do not do this!!!!
+def getNewCrawledFiles():
+	return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.md5 = crawler_file.hash_code) and not exists (select * from seeker_movie_model where seeker_movie_model.hash_code = crawler_file.hash_code and seeker_movie_model.filename = crawler_file.filename))"])
+
+#def imdbSearch(filmName):
+#	imdbResultSet = imdb.search_movie(filmName)[:5]
+#	imdbMatches = []
+#	firstResult = 1
+#	for imdbResult in imdbResultSet:
+#		#update only first of found movies to contain all data, as data retrieval takes a long time
+#		imdb.update(imdbResult)
+#		imdbMatches.append(imdbResult)
+#		print "Found movie %s" % (imdbResult["title"])
+#	return imdbResultSet
+
+def queryImdbWithCrawledFiles():
+	diskScanResult  = getNewCrawledFiles()
+	imdbMatches = {}
+	for file in File.objects.all():
+		imdbMatches[file.id] = imdbSearchMovie(file.filename)
+	return (diskScanResult, imdbMatches)
+
+def dictGet(dict, key, defaultValue = u""):
+	if dict.has_key(key):
+		return dict[key]
+	else:
+		return defaultValue
+
+def getImdbMovie(imdbMovies, imdbId):
+	for m in imdbMovies:
+		if m.getID() == imdbId:
+			return m
+	raise Exception ("movie not found") 
+
+def addFilmsToDb(diskScanResult, imdbMatches, association):
+	for d in diskScanResult:
+		try:
+			assoc = association["%d" % (d.id)]
+			if assoc == 'ignore':
+				print "putting file %s in ignore table" % (d.path)
+				IgnoreTable(filename = d.filename, md5 = d.hash_code, extension = d.extension, path = d.path).save()
+			else:
+				#TODO: Add movie to database (query christophe about that)
+				#search imdb movie for this id
+				imdbMovie = getImdbMovie(imdbMatches[d.id], assoc)
+				print "putting file %s as film %s in film table" % (d.path, dictGet(imdbMovie, 'title'))
+				Film(title = dictGet(imdbMovie, 'title'), image = dictGet(imdbMovie, 'cover url'), release_date = datetime(year = dictGet(imdbMovie, 'year'), month = 1, day = 1)).save()
+		except Exception as ex:
+			print ex
+
+
+
+		
+	

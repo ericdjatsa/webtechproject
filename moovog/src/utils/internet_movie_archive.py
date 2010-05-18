@@ -18,7 +18,7 @@ def getText(nodes):
 	return text
 
 def get_trailer_embed(imdb_id):
-	url = u"http://api.internetvideoarchive.com/Video/PinPoint.aspx?DeveloperId=%s&IdType=%d&SearchTerm=%s" % (developer_id, id_type, imdb_id)
+	url = u"http://api.internetvideoarchive.com/Video/PinPoint.aspx?DeveloperId=%s&IdType=%d&SearchTerm=tt%s" % (developer_id, id_type, imdb_id)
 	print "getting internet movie archive url: %s" % (url)
 	request = urllib2.Request(url, None, headers)
 	sock = urllib2.urlopen(request)
