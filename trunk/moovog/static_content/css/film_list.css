@@ -61,27 +61,8 @@ p
 	height: 74px;
 }
 
-a.film_thumbnail:link 
+a.film_thumbnail:link, a.film_thumbnail:visited, a.film_thumbnail:hover, a.film_thumbnail:active 
 {
-	color:#FFFFFF;
-	text-decoration:none;
-}
-
-a.film_thumbnail:visited 
-{
-	color:#DDDDDD;
-	text-decoration:none;
-}
-
-a.film_thumbnail:hover 
-{
-	color:#EEEEEE;
-	text-decoration:none;
-}
-
-a.film_thumbnail:active 
-{
-	color:#FFFFFF;
 	text-decoration:none;
 }
 
@@ -141,4 +122,9 @@ div.right
 {
 	padding-left: 20px;
 	float: left;
+}
+
+#settings_link
+{
+  float: left;
 }
