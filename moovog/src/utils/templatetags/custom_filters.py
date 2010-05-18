@@ -1,7 +1,7 @@
+# -*- coding: utf-8 -*-
 from django import template
-from src.utils.trailer_addict import getTrailerAddictEmbeddedPlayer
-from src.utils.internet_movie_archive import get_trailer_embed
 from src.utils.get_image import getOrCacheImage
+from src.frontend.models import Trailer
 
 register = template.Library()
 @register.filter("key")
@@ -14,14 +14,12 @@ def key(h, key):
 	except:
 		return u''
 
-@register.filter("trailer_addict_embedded_player")
-def trailer_addict_embedded_player(film, playerSize):
-	return getTrailerAddictEmbeddedPlayer(film, playerSize)
-
 @register.filter("internet_movie_archive_player")
 def internet_movie_archive_player(imdb_id):
-	print "IMDB id: %s" % (imdb_id)
-	return get_trailer_embed(u"tt%s" % (imdb_id))
+	try:
+		return Trailer.objects.filter(imdb_id = imdb_id)[0].trailer_url
+	except:
+		return u""
 
 @register.filter("get_cover_image")
 def get_cover_image(imdb_url):

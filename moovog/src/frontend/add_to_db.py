@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 from src.crawler.models import File
 from src.utils.imdb_cache import imdbSearchMovie
 from imdb import IMDb
 from src.frontend.models import Film
 from src.frontend.models import IgnoreTable
-from datetime import datetime
+from src.frontend.models import Trailer
+from src.utils.internet_movie_archive import get_trailer_embed
 
 imdb = IMDb(accessSystem='http', adultSearch=0)
 imdb.set_proxy('')
@@ -12,7 +14,8 @@ imdb.set_proxy('')
 #uses raw sql because django is stupid and not capable of doing this query (as opposed to rubyOnRails),
 #and might easily be broken by changing table names, so please do not do this!!!!
 def getNewCrawledFiles():
-	return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.md5 = crawler_file.hash_code) and not exists (select * from seeker_movie_model where seeker_movie_model.hash_code = crawler_file.hash_code and seeker_movie_model.filename = crawler_file.filename))"])
+#	return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.md5 = crawler_file.hash_code) and not exists (select * from seeker_movie_model where seeker_movie_model.hash_code = crawler_file.hash_code and seeker_movie_model.filename = crawler_file.filename))"])
+  return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.md5 = crawler_file.hash_code) and not exists (select * from frontend_film where frontend_film.hash_code = crawler_file.hash_code and frontend_film.filename = crawler_file.filename))"])
 
 #def imdbSearch(filmName):
 #	imdbResultSet = imdb.search_movie(filmName)[:5]
@@ -56,7 +59,10 @@ def addFilmsToDb(diskScanResult, imdbMatches, association):
 				#search imdb movie for this id
 				imdbMovie = getImdbMovie(imdbMatches[d.id], assoc)
 				print "putting file %s as film %s in film table" % (d.path, dictGet(imdbMovie, 'title'))
-				Film(title = dictGet(imdbMovie, 'title'), image = dictGet(imdbMovie, 'cover url'), release_date = datetime(year = dictGet(imdbMovie, 'year'), month = 1, day = 1)).save()
+				Film(title = dictGet(imdbMovie, 'title'), image = dictGet(imdbMovie, 'cover url'), 
+				  year = dictGet(imdbMovie, 'year'), filename = d.filename, extension = d.extension,
+				  hash_code = d.hash_code, path = d.path, imdb_id = imdbMovie.getID()).save()
+				Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
 		except Exception as ex:
 			print ex
 

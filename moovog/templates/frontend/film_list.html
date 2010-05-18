@@ -47,7 +47,7 @@
 				</a>
 			</div>
 			<div class="film_tooltip">
-				<embed src="{{ movie.getID|internet_movie_archive_player }}" width="320" height="260" autostart="true" mute="true" controlbar="none" />
+				<embed src="{{ movie.imdb_id|internet_movie_archive_player }}" width="320" height="260" autostart="true" mute="true" controlbar="none" />
 			</div>
 			{% endfor %}
 	{% endif %}
