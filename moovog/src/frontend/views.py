@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Create your views here.
 from django.template import Context, loader
 from django.http import HttpResponse, HttpResponseRedirect
@@ -38,3 +39,5 @@ def add_to_db(request, step):
 	else:
 		return HttpResponseRedirect(reverse('src.frontend.views.index'))		
 
+def preferences(request):
+	 return HttpResponse(loader.get_template('frontend/preferences.html').render(Context({})))

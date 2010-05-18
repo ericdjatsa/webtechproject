@@ -21,3 +21,22 @@ body
 	clear: both;
 }
 
+a:link 
+{
+	color:#FFFFFF;
+}
+
+a:visited 
+{
+	color:#DDDDDD;
+}
+
+a:hover 
+{
+	color:#EEEEEE;
+}
+
+a:active 
+{
+	color:#FFFFFF;
+}
