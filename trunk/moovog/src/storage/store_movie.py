@@ -35,6 +35,9 @@ class Thread_store_actor(threading.Thread):
             Input['birth-date']= convert_date(self.person.get('birth date').__str__())
             Input['mini-story']= self.person['biography']
             Input['death-date']= convert_date(self.person.get('death date'))
+            Input['thumbnail-url']= None
+            Input['nick-name']= None
+		#		Input['thumbnail-url']= None
             actor_creation = Create_Or_Get_Actor_WF(Input,None)
             actor_creation.process()
             a = actor_creation.response()['actor-model']
@@ -81,6 +84,8 @@ class Thread_store_director(threading.Thread):
             Input['birth-date']= convert_date(self.person.get('birth date').__str__())
             Input['mini-story']= self.person['biography']
             Input['death-date']= convert_date(self.person.get('death date'))
+            Input['thumbnail-url']= None
+            Input['nick-name']= None
             director_creation = Create_Or_Get_Director_WF(Input,None)
             director_creation.process()
             a = director_creation.response()['director-model']
@@ -110,6 +115,8 @@ class Thread_store_writer(threading.Thread):
             Input['birth-date']= convert_date(self.person.get('birth date').__str__())
             Input['mini-story']= self.person['biography']
             Input['death-date']= convert_date(self.person.get('death date'))
+            Input['thumbnail-url']= None
+            Input['nick-name']= None
             writer_creation = Create_Or_Get_Writer_WF(Input,None)
             writer_creation.process()
             a = writer_creation.response()['writer-model']

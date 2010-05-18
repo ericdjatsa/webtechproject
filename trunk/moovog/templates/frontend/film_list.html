@@ -10,7 +10,7 @@
 {% block page_header %}
 	<!-- page header -->
 
- <!--		<a href="{% url src.frontend.views.add_to_db %}">add film</a> --> 
+ <!--		<a href="{% url src.frontend.views.add_to_db 1 %}">add film</a> --> 
 		<div class="header">
 		<div class="title">
 			<span id="moovog_m">M</span>
@@ -32,19 +32,19 @@
    <!-- film list -->
 	<p id="film_list">
 	<p>
-		{% if object_list %}
-		{% for film in object_list %}
+		{% if movies %}
+		{% for movie in movies %}
 			<div class="film_thumbnail">
-				<a class="film_thumbnail" href="{% url django.views.generic.list_detail.object_detail film.id %}">
-					<div class="left"><img src="{{ film.image }}" class="thumbnail_image"/></div>
+				<a class="film_thumbnail" href="{% url django.views.generic.list_detail.object_detail movie.id %}">
+					<div class="left"><img src="{{ movie.image|get_cover_image }}" class="thumbnail_image"/></div>
 					<div class="right">
-						<p>{{ film.title }}</p>
-						<p>{{ film.release_date.year }}</p>
+						<p>{{ movie.title }}</p>
+						<p>{{ movie.release_date.year }}</p>
 					</div>
 				</a>
 			</div>
 			<div class="film_tooltip">
-				<embed src="{{ film.getID|internet_movie_archive_player }}" width="320" height="260" autostart="true" mute="true" controlbar="none" />
+				<embed src="{{ movie.getID|internet_movie_archive_player }}" width="320" height="260" autostart="true" mute="true" controlbar="none" />
 			</div>
 			{% endfor %}
 	{% endif %}

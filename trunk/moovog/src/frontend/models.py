@@ -13,4 +13,10 @@ class IgnoreTable(models.Model):
 	extension = models.CharField(max_length=32)
 	path = models.CharField(max_length=256)
 	md5 = models.CharField(max_length=64)
+
+class ImdbCache(models.Model):
+	imdb_id = models.CharField(max_length=12)
+	keyword = models.CharField(max_length=256)
+	result_index = models.IntegerField()
+	content = models.TextField()
 	
