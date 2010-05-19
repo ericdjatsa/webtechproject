@@ -82,5 +82,6 @@ INSTALLED_APPS = (
     'playground.sandbox', 
     'playground.film', 
     'playground.utils',
+	'playground.ranker',
     'django.contrib.admin',
 )
