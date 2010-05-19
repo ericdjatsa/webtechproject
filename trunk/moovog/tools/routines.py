@@ -68,7 +68,7 @@ def special_dictionary_merger(dict_a, dict_b):
     for k in dict_a.keys():
         if dict_b.has_key(k):
             try:
-                # simple tests to know if dict_a and dict_b are lists
+                # simple tests to know if dict_a[k] and dict_b[k] are lists
                 dict_a[k].reverse()
                 dict_b[k].reverse()
                 for thing in dict_a[k]:

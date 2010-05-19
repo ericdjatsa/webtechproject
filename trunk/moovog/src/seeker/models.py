@@ -7,6 +7,11 @@ class Award_Category_Model(models.Model):
     def kind(cls):
         return "Award_Category_Model"
     
+    def get_infos_for_model(self):
+        infos = []
+        infos.append(self.award_category_name)
+        return infos
+    
     @staticmethod
     def add_award_category_model(award_category_name):
         award_category_model = Award_Category_Model(award_category_name = award_category_name)
@@ -41,7 +46,6 @@ class Award_Model(models.Model):
     date_of_awarding = models.DateField()
     award_categories = models.ManyToManyField(Award_Category_Model, through = "Award_Matcher_Model")
     award_status = models.CharField(max_length = 31)
-    imdb_id = models.CharField(max_length = 63)
     
     STATUSES = ["Won", "Nominated"]
     
@@ -49,12 +53,28 @@ class Award_Model(models.Model):
     def kind(cls):
         return "Award_Model"
     
+    def get_infos_for_model(self):
+        infos = []
+        infos.append(self.award_name)
+        infos.append(self.date_of_awarding)
+        infos.append(self.award_status)
+        return infos
+    
     @staticmethod
-    def add_award_model(imdb_id, award_name, date_of_awarding, award_status):
+    def add_award_model(award_name, date_of_awarding, award_status):
         if award_status not in Award_Model.STATUSES: award_status = None
-        award_model = Award_Model(imdb_id = imdb_id, award_name = award_name,
-                                  date_of_awarding = date_of_awarding, award_status = award_status)
+        award_model = Award_Model(award_name = award_name, date_of_awarding = date_of_awarding,
+                                  award_status = award_status)
         award_model.save()
+        return award_model
+    
+    @staticmethod
+    def get_award_model(award_name, date_of_awarding, award_status):
+        try:
+            award_model = Award_Model.objects.get(award_name = award_name,
+                                                  date_of_awarding = date_of_awarding,
+                                                  award_status = award_status)
+        except Exception: return None
         return award_model
     
     @staticmethod
@@ -63,13 +83,6 @@ class Award_Model(models.Model):
             award_model = Award_Model.objects.get(id = award_id)
         except Exception: return None
         return award_model
-    
-    @staticmethod
-    def get_award_model_by_imdb_id(id):
-        try:
-            model = Award_Model.objects.get(imdb_id = id)
-        except Exception: return None
-        return model
     
     @staticmethod
     def delete_award_model(award_id):
@@ -160,8 +173,8 @@ class Actor_Model(models.Model):
     imdb_id = models.CharField(max_length = 63)
     mini_story = models.TextField(null = True)
     thumbnail_url = models.CharField(max_length = 255, null = True)
-#    place_of_birth = models.CharField(max_length = 127)
-#    place_of_death = models.CharField(max_length = 127)
+    place_of_birth = models.CharField(max_length = 127, null = True)
+    place_of_death = models.CharField(max_length = 127, null = True)
     
     @classmethod
     def kind(cls):
@@ -169,10 +182,13 @@ class Actor_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = []
+        infos.append(self.imdb_id)
         infos.append(self.full_name)
         infos.append(self.nick_name)
         infos.append(self.birth_date)
+        infos.append(self.place_of_birth)
         infos.append(self.death_date)
+        infos.append(self.place_of_death)
         infos.append(self.mini_story)
         infos.append(self.thumbnail_url)
         return infos
@@ -220,6 +236,8 @@ class Writer_Model(models.Model):
     imdb_id = models.CharField(max_length = 63)
     mini_story = models.TextField(null = True)
     thumbnail_url = models.CharField(max_length = 255, null = True)
+    place_of_birth = models.CharField(max_length = 127, null = True)
+    place_of_death = models.CharField(max_length = 127, null = True)
     
     @classmethod
     def kind(cls):
@@ -227,10 +245,13 @@ class Writer_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = []
+        infos.append(self.imdb_id)
         infos.append(self.full_name)
         infos.append(self.nick_name)
         infos.append(self.birth_date)
+        infos.append(self.place_of_birth)
         infos.append(self.death_date)
+        infos.append(self.place_of_death)
         infos.append(self.mini_story)
         infos.append(self.thumbnail_url)
         return infos
@@ -278,6 +299,8 @@ class Director_Model(models.Model):
     imdb_id = models.CharField(max_length = 63)
     mini_story = models.TextField(null = True)
     thumbnail_url = models.CharField(max_length = 255, null = True)
+    place_of_birth = models.CharField(max_length = 127, null = True)
+    place_of_death = models.CharField(max_length = 127, null = True)
     
     @classmethod
     def kind(cls):
@@ -285,10 +308,13 @@ class Director_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = []
+        infos.append(self.imdb_id)
         infos.append(self.full_name)
         infos.append(self.nick_name)
         infos.append(self.birth_date)
+        infos.append(self.place_of_birth)
         infos.append(self.death_date)
+        infos.append(self.place_of_death)
         infos.append(self.mini_story)
         infos.append(self.thumbnail_url)
         return infos
@@ -349,6 +375,10 @@ class Movie_Model(models.Model):
     imdb_id = models.CharField(max_length = 63)
     # id of the movie on imdb - useful to decide whether a movie
     # is already or not in our database
+    plot = models.TextField()
+    # plot of the movie
+    summary = models.TextField()
+    # summary of the movie
     
     thumbnail_url = models.CharField(max_length = 255, null = True)
     # url of the thumbnail of the movie
@@ -360,18 +390,83 @@ class Movie_Model(models.Model):
     # path to movie on disk
     hash_code = models.CharField(max_length = 31)
     # hashcode of the movie
+    movie_trailer_url = models.CharField(max_length = 255)
+    # link to the trailer of the movie
+    
+    first_created = models.DateTimeField(auto_now = True)
+    # datetime when movie was first created
+    last_modified = models.DateTimeField(auto_now_add = True)
+    # datetime when movie was last modified
+    
+    def __unicode__(self):
+        return self.original_title
     
     @classmethod
     def kind(cls):
         return "Movie_Model"
     
     def get_infos_for_model(self):
-        infos = []
-        infos.append(str(self.id))
-        infos.append(self.original_title)
-        infos.append(self.runtime)
-        infos.append(self.user_rating)
-        infos.append(self.thumbnail_url)
+        """
+            original-title
+            runtime
+            user-rating
+            thumbnail
+            plot
+            summary
+            release-date
+            genres
+            aka (international_title, ~3)
+            director (1)
+            actor (3~4)
+            oscars (won & nominated)
+        """
+        infos = {}
+        
+        # Easy-to-get infos
+        infos["original-title"] = self.original_title
+        infos["runtime"] = self.runtime
+        infos["user-rating"] = self.user_rating
+        infos["thumbnail-url"] = self.thumbnail_url
+        infos["plot"] = self.plot
+        infos["summary"] = self.summary
+        
+#        # Returns the release date either of the USA, UK, or International release
+#        for string in ["International", "UK", "USA"]:
+#            release_date_list = Release_Date_Model.objects.filter(related_movie = self
+#                                ).filter(countries__country_name__iexact = string)
+#            if release_date_list is not (None or []):
+#                infos["release-date"] = release_date_list[0].release_date
+#                break
+#        
+#        # Returns the list of the movie genres
+#        infos["genres"] = self.genres.all()
+#        
+#        # Returns the aka titles either of the USA, UK, or International release
+#        for string in ["International", "UK", "USA"]:
+#            aka_list = Aka_Model.objects.filter(related_movie = self
+#                       ).filter(countries__country_name__iexact = string)
+#            if aka_list is not (None or []):
+#                infos["akas"] = aka_list[0].aka_name
+
+        # Returns one of the movie film directors
+        infos["director"] = self.directors.all()[0].get_infos_for_model()
+        
+        # Returns x of the movie actors
+        x = 4
+        actors_query = Actor_Model.objects.filter(movie_model__in)
+#        >>> Publication.objects.filter(article__in=[1,2]).distinct()
+        actors_list = []
+        for actor in actors_query:
+            actors_list.append(actor.get_infos_for_model())
+        infos["actors"] = actors_list
+        
+        # Returns the oscars for the movie
+        oscars_list = []
+        oscar_award = Award_Model.objects.filter(award_name__iexact = "Oscar").get()
+        oscars_query = Award_Matcher_Model.objects.filter(award = oscar_award).filter(movie = self)
+        for match in oscars_query:
+            oscars_list.append(match.award.get_infos_for_model())
+        infos["oscars"] = oscars_list
         return infos
 
     @staticmethod
@@ -385,23 +480,26 @@ class Movie_Model(models.Model):
         movie_model.save()
         return movie_model
     
-    def add_some_more_infos(self, runtime, user_rating, thumbnail_url):
+    def add_some_more_infos(self, runtime, user_rating, thumbnail_url, plot, summary):
         self.runtime = runtime
         self.user_rating = user_rating
         self.thumbnail_url = thumbnail_url
+        self.plot = plot
+        self.summary = summary
         self.save()
+        return self
     
     @staticmethod
     def get_movie_model_by_id(id):
         try:
-            model = Movie_Model.objects.get(id = id)
+            model = Movie_Model.objects.filter(id = id)[0]
         except Exception: return None
         return model
     
     @staticmethod
     def get_movie_model_by_imdb_id(id):
         try:
-            model = Movie_Model.objects.get(imdb_id = id)
+            model = Movie_Model.objects.get(imdb_id = id)[0]
         except Exception: return None
         return model
     
@@ -591,30 +689,44 @@ class Release_Date_Model(models.Model):
         else:
             release_date_model.delete()
             return True
-
-class Synopsis_Model(models.Model):
-    plain_text = models.TextField()
-    countries = models.ManyToManyField(Country_Model)
-    related_movie = models.ForeignKey(Movie_Model)
+        
+class Imdb_Object_Model(models.Model):
+    object_serialization = models.TextField()
+    filename = models.CharField(max_length = 255)
+    extension = models.CharField(max_length = 7)
+    path = models.CharField(max_length = 255)
+    hashcode = models.CharField(max_length = 127)
+    trailer_url = models.CharField(max_length = 255)
+    trailer_width = models.CharField(max_length = 15)
+    trailer_height = models.CharField(max_length = 15)
+    
+    @classmethod
+    def kind(cls):
+        return "Imdb_Object_Model"
     
     @staticmethod
-    def add_synopsis_model(plain_text, related_movie_model):
-        synopsis_model = Synopsis_Model(plain_text = plain_text,
-                                        related_movie = related_movie_model)
-        synopsis_model.save()
-        return synopsis_model
+    def add_imdb_object_model(serialization, filename, extension, path,
+                              hashcode, trailer_url, width, height):
+        model = Imdb_Object_Model(object_serialization = serialization,
+                                  filename = filename, extension = extension,
+                                  path = path, hashcode = hashcode,
+                                  trailer_url = trailer_url, trailer_width = width,
+                                  trailer_height = height)
+        model.save()
+        return model
     
     @staticmethod
-    def get_synopsis_model_by_id(synopsis_id):
+    def get_imdb_object_model_by_id(id):
         try:
-            synopsis_model = Synopsis_Model.objects.get(id = synopsis_id)
-        except Exception: return None
-        return synopsis_model
-    
+            query = Imdb_Object_Model.objects.filter(id = id)
+        except Exception, x: return None
+        if len(query) != 0: return query[0]
+        else: return None
+        
     @staticmethod
-    def delete_synopsis_model(synopsis_id):
-        synopsis_model = Synopsis_Model.get_synopsis_model_by_id(synopsis_id)
-        if synopsis_model is None: return False
-        else:
-            synopsis_model.delete()
+    def delete_imdb_object_model(id):
+        if id is not None:
+            try:
+                Imdb_Object_Model.objects.filter(id = id).delete()
+            except Exception, x: return False
             return True
