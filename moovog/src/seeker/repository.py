@@ -9,27 +9,27 @@ from tools.routines import areListEqual, special_dictionary_merger
 
 class Repository:
     
-    @staticmethod
-    def get_synopsis_model(movie_model, country_models):
-        """
-            Searches for the movie's synopsis that is written in the same
-            languages (countries).
-            Returns that synopsis model if found, None if not.
-        """
-        country_names = []
-        for country_model in country_models:
-            country_names.append(country_model.country_name)
-        
-        movie_synopsis_models = movie_model.synopsis_model_set.all()
-        
-        for movie_synopsis_model in movie_synopsis_models:
-            movie_synopsis_countries = movie_synopsis_model.countries.all()
-            movie_synopsis_country_names = []
-            for movie_synopsis_country in movie_synopsis_countries:
-                movie_synopsis_country_names.append(movie_synopsis_country.country_name)
-            if areListEqual(movie_synopsis_country_names, country_names):
-                return movie_synopsis_model
-        return None
+#    @staticmethod
+#    def get_synopsis_model(movie_model, country_models):
+#        """
+#            Searches for the movie's synopsis that is written in the same
+#            languages (countries).
+#            Returns that synopsis model if found, None if not.
+#        """
+#        country_names = []
+#        for country_model in country_models:
+#            country_names.append(country_model.country_name)
+#        
+#        movie_synopsis_models = movie_model.synopsis_model_set.all()
+#        
+#        for movie_synopsis_model in movie_synopsis_models:
+#            movie_synopsis_countries = movie_synopsis_model.countries.all()
+#            movie_synopsis_country_names = []
+#            for movie_synopsis_country in movie_synopsis_countries:
+#                movie_synopsis_country_names.append(movie_synopsis_country.country_name)
+#            if areListEqual(movie_synopsis_country_names, country_names):
+#                return movie_synopsis_model
+#        return None
     
     @staticmethod
     def get_release_date_model(movie_model, country_models):
@@ -53,6 +53,16 @@ class Repository:
                 if areListEqual(country_names, compared_names_list):
                     return release_date_model
         return None
+    
+    @staticmethod
+    def get_movies_by_freshness(number_of_result = 0):
+        if number_of_result > 0:
+            return Movie_Model.objects.order_by("first_created")[:number_of_result]
+    
+    @staticmethod
+    def get_last_modified_movies(number_of_result = 0):
+        if number_of_result > 0:
+            return Movie_Model.objects.order_by("last_modified")[:number_of_result]
     
     @staticmethod
     def add_awards(target_model, awards_models):
@@ -107,13 +117,12 @@ class Repository:
     @staticmethod
     def search_actor(string_to_search):
         """
-            Searches into first_name and last_name of all
-            Actor_Model instances
+            Searches into full_name of all Actor_Model instances
             
             OUTPUT :
                 actor-models : a list of Actor_Model
         """
-        query = Actor_Model.objects.filter(full_name__contains = string_to_search)
+        query = Actor_Model.objects.filter(full_name__icontains = string_to_search)
         result = []
         for model in query: result.append(model)
         return {"actor-models" : result}
@@ -121,13 +130,12 @@ class Repository:
     @staticmethod
     def search_director(string_to_search):
         """
-            Searches into first_name and last_name of all
-            Director_Model instances
+            Searches into full_name of all Director_Model instances
             
             OUTPUT :
                 director-models : a list of Director_Model
         """
-        query = Director_Model.objects.filter(full_name__contains = string_to_search)
+        query = Director_Model.objects.filter(full_name__icontains = string_to_search)
         result = []
         for model in query: result.append(model)
         return {"director-models" : result}
@@ -135,13 +143,12 @@ class Repository:
     @staticmethod
     def search_writer(string_to_search):
         """
-            Searches into first_name and last_name of all
-            Writer_Model instances
+            Searches into full_name of all Writer_Model instances
             
             OUTPUT :
                 writer-models : a list of Writer_Model
         """
-        query = Writer_Model.objects.filter(full_name__contains = string_to_search)
+        query = Writer_Model.objects.filter(full_name__icontains = string_to_search)
         result = []
         for model in query: result.append(model)
         return {"writer-models" : result}
@@ -155,7 +162,7 @@ class Repository:
             OUTPUT :
                 movie-models : a list of Movie_Model
         """
-        query = Movie_Model.objects.filter(original_title__contains = string_to_search)
+        query = Movie_Model.objects.filter(original_title__icontains = string_to_search)
         result = []
         for model in query: result.append(model)
         return {"movie-models" : result}
@@ -169,7 +176,7 @@ class Repository:
             OUTPUT :
                 movie-models : a list of Movie_Model
         """
-        query = Aka_Model.objects.filter(aka_name__contains = string_to_search)
+        query = Aka_Model.objects.filter(aka_name__icontains = string_to_search)
         result = []
         for model in query: result.append(model)
         return {"movie-models" : result}
@@ -183,7 +190,7 @@ class Repository:
             OUTPUT :
                 movie-models : a list of Movie_Model
         """
-        query = Genre_Model.objects.filter(genre_name__contains = string_to_search)
+        query = Genre_Model.objects.filter(genre_name__icontains = string_to_search)
         result = []
         for genre_model in query:
             for movie_model in genre_model.movie_model_set.all():
@@ -197,10 +204,10 @@ class Repository:
             Character_Model instances
             
             OUTPUT :
-                movie-models : a list of Character_Model
+                movie-models : a list of Movie_Model
                 actor-models : a list of Actor_Model
         """
-        query = Character_Model.objects.filter(character_name__contains = string_to_search)
+        query = Character_Model.objects.filter(character_name__icontains = string_to_search)
         result_actors = []
         result_movies = []
         for character_model in query:
@@ -220,7 +227,7 @@ class Repository:
                 director-models : a list of Director_Model
                 writer-models : a list of Writer_Model
         """
-        query = Award_Model.objects.filter(award_name__contains = string_to_search)
+        query = Award_Model.objects.filter(award_name__icontains = string_to_search)
         result_actors = []
         result_movies = []
         result_directors = []
@@ -253,7 +260,21 @@ class Repository:
             Award_Category_Model instances
             
             OUTPUT :
-                award-models
-                actors-models
+                models : {"movie_model" : [actor_model_1, ...], ...}
         """
-        pass
+        query = Award_Category_Model.objects.filter(award_category_name__icontains = string_to_search)
+        result = {}
+        for award_category_model in query:
+            matcher_list = award_category_model.award_matcher_model_set.all()
+            if matcher_list is not None:
+                i = 0
+                for award_matcher_model in matcher_list:
+                    i += 1
+                    result["award-category-"+str(i)] = []
+                    result["award-category-"+str(i)].append(award_matcher_model.actor)
+                    result["award-category-"+str(i)].append(award_matcher_model.director)
+                    result["award-category-"+str(i)].append(award_matcher_model.writer)
+                    result["award-category-"+str(i)].append(award_matcher_model.movie)
+                    result["award-category-"+str(i)].append(award_matcher_model.award) 
+                    result["award-category-"+str(i)].append(award_matcher_model.award_category)
+        return result

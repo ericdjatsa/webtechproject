@@ -21,17 +21,25 @@ def search(request):
     """
     start = datetime.now()
     if request.method == "GET": HttpResponse("POST excepted")
-    wf = Search_WF(request.POST, None)
-    result = wf.work()
-    infos = {}
-    for item in result["search-result"].iteritems():
-        model_infos = []
-        for model in item[1]:
-            if model is not None: model_infos.append(model.get_infos_for_model())
-        infos[item[0]] = model_infos
+    search_wf = Search_WF(request.POST, None)
+    search_result = search_wf.work()
+    
+    if search_result["type-of-result"] is "homogeneous":
+        homogeneous_wf = Get_Infos_For_Homogeneous_Search_WF(search_result, None)
+        display_result = homogeneous_wf.work()
+    if search_result["type-of-result"] is "heterogeneous":
+        pass
+    
+#    infos = {}
+#    for item in result["search-result"].iteritems():
+#        model_infos = []
+#        for model in item[1]:
+#            if model is not None: model_infos.append(model.get_infos_for_model())
+#        infos[item[0]] = model_infos
        
 #    return render_to_response("template_targeted", result)
-    return HttpResponse(JSONEncoder().encode(" ".join([str(infos), str(datetime.now() - start + result["time-to-serve"])])))
+    return HttpResponse(JSONEncoder().encode(" ".join([str(infos),
+                                                       str(datetime.now() - start + result["time-to-serve"])])))
 
 def create_fake_complete_movie(request):
     """
@@ -45,6 +53,13 @@ def create_fake_complete_movie(request):
     return HttpResponse(JSONEncoder().encode(", ".join([result["status"],
                                                         str(result["already-existed"]),
                                                         str(result["time-to-serve"])])))
+
+def test_area(request):
+    """
+        playground fur mich ! ^^
+    """
+    movie = Movie_Model.get_movie_model_by_id(1)
+    return HttpResponse(str(movie.get_infos_for_model()))
 
 #def create_movie_completely(request):
 #    """

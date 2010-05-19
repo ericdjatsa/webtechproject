@@ -10,5 +10,5 @@ urlpatterns = patterns('',
                        (r'^$','src.seeker.views.index'),
                        (r'^__fake/complete-movie-creation/$','src.seeker.views.create_fake_complete_movie'),
                        (r'^search/$','src.seeker.views.search'),
-#                       (r'^create-movie-completely/$','src.seeker.views.create_movie_completely'),
+                       (r'^__test/$','src.seeker.views.test_area'),
 )

@@ -25,16 +25,14 @@ class Search_WF(Base_Workflow):
     
     SEARCH_OPTIONS = {u"unknown" : 'a', u"actor" : 'b', u"director" :'c', u"writer" : 'd',
                       u"movie-original-title" : 'e', u"movie-aka-title" : 'f', u"genre" : 'g',
-                      u"character" : 'h', u"award" : 'i', None : 'j'}
+                      u"character" : 'h', u"award" : 'i', u"award-category" : 'j', None : 'k'}
     
     def __init__(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
         self.validate_string_field_not_empty("search-string")
-#        self.string_cleaner("search-string")
         self.validate_string_field_not_empty("search-option")
-#        self.string_cleaner("search-option")
     
     def process(self):
         start = datetime.now()
@@ -45,9 +43,7 @@ class Search_WF(Base_Workflow):
         if search_option not in Search_WF.SEARCH_OPTIONS: search_option = None
         else:
             search_results = []
-            print "lambdas approaching"
             for string_to_search in strings_to_search:
-                print " ".join(["lambda for", string_to_search])
                 search_result = {
                 'a': lambda string_to_search: self.repository().search_all(string_to_search),
                 'b': lambda string_to_search: self.repository().search_actor(string_to_search),
@@ -58,7 +54,8 @@ class Search_WF(Base_Workflow):
                 'g': lambda string_to_search: self.repository().search_genre(string_to_search),
                 'h': lambda string_to_search: self.repository().search_character(string_to_search),
                 'i': lambda string_to_search: self.repository().search_award(string_to_search),
-                'j': lambda string_to_search: string_to_search
+                'j': lambda string_to_search: self.repository().search_award_category(string_to_search),
+                'k': lambda string_to_search: None
                 }[Search_WF.SEARCH_OPTIONS[search_option]](string_to_search)
                 search_results.append(search_result)
             
@@ -69,8 +66,14 @@ class Search_WF(Base_Workflow):
         # OUTPUT : {"movie-models" : [movie_model, ...], actors-models : [actor_model, ...], ...}
         # (See search functions in seeker.repository.py to know all possible keys)
         merged_results = {}
-        for dict in search_results:
-            merged_result = special_dictionary_merger(dict, merged_results)
+        if search_option in [u"actor", u"director", u"writer", u"movie-original-title",
+                             u"movie-aka-title", u"genre"]:
+            type_of_result = "homogeneous"
+            for dict in search_results:
+                if dict is not None: merged_result = special_dictionary_merger(dict, merged_results)
+        if search_option in [u"character", u"award", u"award-category"]:
+            type_of_result = "heterogeneous"
+            pass
         
         # TO DO : page rank the result in merged_result (ERIC)
         # INPUT : merged_result
@@ -79,10 +82,136 @@ class Search_WF(Base_Workflow):
         page_ranked_result = {}
         
         self.add_to_response("status", "ok")
+        self.add_to_response("type-of-result", type_of_result)
         self.add_to_response("search-result", merged_results)
         self.add_to_response("time-to-serve", datetime.now() - start)
-#        self.add_to_response("search-result", page_ranked_result)
+        
+class Get_Infos_For_Homogeneous_Search_WF(Base_Workflow):
+    """
+        Converts models into string infos
+        INPUT :
+            list-of-models
+        OUTPUT :
+            model-type (see Get_Infos_For_Homogeneous_Search_WF.TYPES)
+            {model_1 : [info_1, ...], ...}
+    """
+    def __init__(self, input, authorization_pipe):
+        Base_Workflow.__init__(self, input, authorization_pipe)
+        
+    def validate_input(self):
+        self.validate_list_field_not_empty("list-of-models")
+    
+    def process(self):
+        result = {}
+        for key in input.iterkeys():
+            for model in input["list-of-models"]:
+                result[key] = model.get_infos_for_model()
+                
+        self.add_to_response("result", result)
+        
+class Get_Detailed_Infos_For_Person_Model_WF(Base_Workflow):
+    """
+        For detailed displays purpose
+        INPUT :
+            person-type (actor, 
+            person-id
+        OUTPUT :
+            thumbnail-url
+            slideshow
+            birth-name
+            full-name
+            alternate-names (?)
+            nick-name (?)
+            mini-biography
+            birth-date
+            death-date
+            place-of-birth
+            place-of-death
+            oscars (won & nominated)
+            movies (5 : thumbnail-url, release-date, original-title)
+    """
+    def __init__(self, input, authorization_pipe):
+        Base_Workflow.__init__(self, input, authorization_pipe)
+        
+    def validate_input(self):
+        self.validate_string_field_not_empty("movie-id")
+        
+    def process(self):        
+        pass
 
+class Get_Detailed_Infos_For_Movie_Model_WF(Base_Workflow):
+    """
+        For detailed displays purpose
+        INPUT :
+            movie-id
+        OUTPUT :
+            original-title
+            genres
+            year-of-release
+            aka (international_title, ~3)
+            runtime
+            user-rating
+            director (1)
+            actor (3~4)
+            plot
+            summary
+            thumbnail-url
+            oscars (won & nominated)
+    """
+    def __init__(self, input, authorization_pipe):
+        Base_Workflow.__init__(self, input, authorization_pipe)
+        
+    def validate_input(self):
+        self.validate_string_field_not_empty("movie-id")
+        
+    def process(self):        
+        pass
+    
+class Store_Imdb_Object_WF(Base_Workflow):
+    """
+        Helps Jonas get some serialized imdb objects stored in
+        seeker's tables
+        INPUT :
+            serialization-string
+            filename
+            extension
+            path
+            hashcode
+            trailer-url
+            trailer-width
+            trailer-height
+        OUPUT :
+            status : "ok"
+            imdb-model : an Imdb_Object_Model
+    """
+    def __init__(self, input, authorization):
+        Base_Workflow.__init__(self, input, authorization)
+        
+    def validate_input(self):
+        self.validate_string_field_not_empty("serialization-string")
+        self.validate_string_field_not_empty("filename")
+        self.validate_string_field_not_empty("extension")
+        self.validate_string_field_not_empty("path")
+        self.validate_string_field_not_empty("trailer-url")
+        self.validate_string_field_not_empty("trailer-width")
+        self.validate_string_field_not_empty("trailer-height")
+        
+    def process(self):
+        serialization = self.request()["serialization-string"]
+        filename = self.request()["filename"]
+        extension = self.request()["extension"]
+        path = self.request()["path"]
+        hashcode = self.request()["hashcode"]
+        trailer_url = self.request()["trailer-url"]
+        width = self.request()["trailer-width"]
+        height = self.request()["trailer-height"]
+        
+        model = Imdb_Object_Model.add_imdb_object_model(serialization, filename, extension,
+                                                        path, hashcode, trailer_url, width, height)
+        
+        self.add_to_response("status", "ok")
+        self.add_to_response("imdb-model", model)
+        
 class Create_Or_Get_Movie_WF(Base_Workflow):
     '''
         INPUT :
@@ -110,9 +239,9 @@ class Create_Or_Get_Movie_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("imdb-id")
-        self.string_cleaner("imdb-id")
+#        self.string_cleaner("imdb-id")
         self.validate_string_field_not_empty("original-title")
-        self.string_cleaner("original-title")
+#        self.string_cleaner("original-title")
         self.validate_string_field_not_empty("filename")
         # No cleaning on filename
         self.validate_string_field_not_empty("extension")
@@ -153,6 +282,8 @@ class Complete_Movie_Model_WF(Base_Workflow):
             runtime
             user-rating
             thumbnail-url
+            plot
+            summary
             movie-model : the movie model (got or created by Create_Or_Get_Movie_WF)
             original-countries : list of Country_Model
             actors : list of Actor_Model
@@ -170,6 +301,8 @@ class Complete_Movie_Model_WF(Base_Workflow):
         self.validate_string_field_not_empty("runtime")
         self.validate_string_field_not_empty("user-rating")
         self.validate_string_field_not_empty("thumbnail-url")
+        self.validate_string_field_not_empty("plot")
+        self.validate_string_field_not_empty("summary")
         self.validate_field_not_null("movie-model")
         self.validate_list_field_not_empty("original-countries")
         self.validate_list_field_not_empty("actors")
@@ -220,9 +353,12 @@ class Complete_Movie_Model_WF(Base_Workflow):
                 if genre not in movie_genres:
                     movie_model.genres.add(genre)
 
-        movie_model.add_some_more_infos(self.request()["runtime"],
-                                        self.request()["user-rating"],
-                                        self.request()["thumbnail-url"])
+        movie_model = movie_model.add_some_more_infos(
+                        self.request()["runtime"],
+                        self.request()["user-rating"],
+                        self.request()["thumbnail-url"],
+                        self.request()["plot"],
+                        self.request()["summary"])
         
         self.add_to_response("status", "ok")
         self.add_to_response("movie-model", movie_model)
@@ -448,7 +584,6 @@ class Create_Or_Get_Award_WF(Base_Workflow):
     """
         INPUT : 
             DIRECT INPUT:
-                imdb-id
                 award-name
                 date-of-awarding
                 award-status (see Award_Model.STATUSES)
@@ -461,26 +596,23 @@ class Create_Or_Get_Award_WF(Base_Workflow):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
-        self.validate_string_field_not_empty("imdb-id")
-        self.string_cleaner("imdb-id")
         self.validate_string_field_not_empty("award-name")
-        self.string_cleaner("award-name")
+#        self.string_cleaner("award-name")
         self.validate_string_field_not_empty("award-status")
-        self.string_cleaner("award-status")
+#        self.string_cleaner("award-status")
         self.validate_date_field("date-of-awarding")
     
     def process(self):
-        imdb_id = self.request()["imdb-id"]
         award_name = self.request()["award-name"]
         date_of_awarding = self.request()["date-of-awarding"]
         award_status = self.request()["award-status"]
         if self.validate_list_field_not_empty("award-categories"): award_categories = self.request()["award-categories"]
         else: award_categories = None
         
-        query = Award_Model.get_award_model_by_imdb_id(imdb_id)
+        query = Award_Model.get_award_model(award_name, date_of_awarding, award_status)
         if query is None:
             already_existed = False
-            award_model = Award_Model.add_award_model(imdb_id, award_name, date_of_awarding, award_status)
+            award_model = Award_Model.add_award_model(award_name, date_of_awarding, award_status)
         else:
             already_existed = True
             award_model = query
@@ -503,7 +635,7 @@ class Create_Or_Get_Genre_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("genre-name")
-        self.string_cleaner("genre-name")
+#        self.string_cleaner("genre-name")
     
     def process(self):
         genre_name = self.request()["genre-name"]
@@ -537,7 +669,7 @@ class Create_Or_Get_Character_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("character-name")
-        self.string_cleaner("character-name")
+#        self.string_cleaner("character-name")
         self.validate_field_not_null("related-actor")
         self.validate_field_not_null("related-movie")
         self.validate_string_field_not_empty("imdb-id")
@@ -684,8 +816,8 @@ class Create_Or_Get_Award_Matcher_WF(Base_Workflow):
     """
         Binds the models related to awards together
         BE AWARE : actor-model, director-model, writer-model are
-        optional, while for instance a supervising director can
-        pretend to an award... All these person categories are not
+        optional, while for instance a staff director can
+        pretend to an award... Those person categories are not
         taken in account by the modeling we've made.
         
         INPUT :
@@ -847,18 +979,14 @@ class Create_Fake_Movie_WF(Base_Workflow):
                                                                None).work()["award-category-model"]
     
             award_imdb_id_1 = "AWARD_IMDB_ID_1"
-            if Award_Model.get_award_model_by_imdb_id(award_imdb_id_1) is None:
-                award_1 = Create_Or_Get_Award_WF({"imdb-id" : actor_imdb_id_1,
-                                                  "award-name" : "Bafta",
-                                                  "date-of-awarding" : date(2005,6,3),
-                                                  "award-status" : "Won"}, None).work()["award-model"]
+            award_1 = Create_Or_Get_Award_WF({"award-name" : "Bafta",
+                                              "date-of-awarding" : date(2005,6,3),
+                                              "award-status" : "Won"}, None).work()["award-model"]
 
             award_imdb_id_2 = "AWARD_IMDB_ID_2"
-            if Award_Model.get_award_model_by_imdb_id(award_imdb_id_2) is None:
-                award_2 = Create_Or_Get_Award_WF({"imdb-id" : actor_imdb_id_2,
-                                                  "award-name" : "Oscar",
-                                                  "date-of-awarding" : date(2005,6,3),
-                                                  "award-status" : "Nominated"}, None).work()["award-model"]
+            award_2 = Create_Or_Get_Award_WF({"award-name" : "Oscar",
+                                              "date-of-awarding" : date(2005,6,3),
+                                              "award-status" : "Nominated"}, None).work()["award-model"]
             
             genre_1 = Create_Or_Get_Genre_WF({"genre-name" : "action"}, None).work()["genre-model"]
             genre_2 = Create_Or_Get_Genre_WF({"genre-name" : "romance"}, None).work()["genre-model"]
@@ -878,12 +1006,12 @@ class Create_Fake_Movie_WF(Base_Workflow):
                                                           "related-movie" : movie_model},
                                                           None).work()["character-model"]
                                                       
-            synopsis_1 = Create_Or_Get_Synopsis_WF({"plain-text" : "First synopsis of this crazy movie!",
-                                                    "movie-model" : movie_model,
-                                                    "country-models" : [country_1, country_2]}, None).work()["synopsis-model"]                                          
-            synopsis_2 = Create_Or_Get_Synopsis_WF({"plain-text" : "Second synopsis of the 'My Favourite Movie'!",
-                                                    "movie-model" : movie_model,
-                                                    "country-models" : [country_3, country_4, country_5]}, None).work()["synopsis-model"]
+#            synopsis_1 = Create_Or_Get_Synopsis_WF({"plain-text" : "First synopsis of this crazy movie!",
+#                                                    "movie-model" : movie_model,
+#                                                    "country-models" : [country_1, country_2]}, None).work()["synopsis-model"]                                          
+#            synopsis_2 = Create_Or_Get_Synopsis_WF({"plain-text" : "Second synopsis of the 'My Favourite Movie'!",
+#                                                    "movie-model" : movie_model,
+#                                                    "country-models" : [country_3, country_4, country_5]}, None).work()["synopsis-model"]
                                                     
             aka_1 = Create_Or_Get_Aka_WF({"aka-name" : "Fatal Love Disruptor",
                                           "movie-model" : movie_model,
@@ -932,6 +1060,8 @@ class Create_Fake_Movie_WF(Base_Workflow):
                                             "runtime" : "2:24",
                                             "user-rating" : "8.6",
                                             "thumbnail-url" : "http://www.t-site.com/my_favourite_movie/thumbnail.png",
+                                            "plot" : "plot_blabla",
+                                            "summary" : "summary_blabla",
                                             "movie-model" : movie_model,
                                             "original-countries" : [country_1, country_2, country_3, country_4, country_5],
                                             "actors" : [actor_1, actor_2],
