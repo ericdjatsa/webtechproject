@@ -5,7 +5,7 @@ Created on 30 avr. 2010
 '''
 
 from src.seeker.models import *
-from tools.routines import areListEqual, special_dictionary_merger
+from tools.routines import areListEqual, homogeneous_search_dictionary_merger, heterogeneous_search_dictionary_merger
 
 class Repository:
     
@@ -97,21 +97,23 @@ class Repository:
         """
         global_result = {}
         result = Repository().search_movie(string_to_search)
-        global_result = special_dictionary_merger(result, global_result)
+        global_result = homogeneous_search_dictionary_merger(result, global_result)
         result = Repository().search_actor(string_to_search)
-        global_result = special_dictionary_merger(result, global_result)
+        global_result = homogeneous_search_dictionary_merger(result, global_result)
         result = Repository().search_aka(string_to_search)
-        global_result = special_dictionary_merger(result, global_result)
-        result = Repository().search_award(string_to_search)
-        global_result = special_dictionary_merger(result, global_result)
-        result = Repository().search_character(string_to_search)
-        global_result = special_dictionary_merger(result, global_result)
+        global_result = homogeneous_search_dictionary_merger(result, global_result)
         result = Repository().search_director(string_to_search)
-        global_result = special_dictionary_merger(result, global_result)
+        global_result = homogeneous_search_dictionary_merger(result, global_result)
         result = Repository().search_genre(string_to_search)
-        global_result = special_dictionary_merger(result, global_result)
+        global_result = homogeneous_search_dictionary_merger(result, global_result)
         result = Repository().search_writer(string_to_search)
-        global_result = special_dictionary_merger(result, global_result)
+        global_result = homogeneous_search_dictionary_merger(result, global_result)
+        result = Repository().search_award(string_to_search)
+        global_result = heterogeneous_search_dictionary_merger(result, global_result)
+        result = Repository().search_character(string_to_search)
+        global_result = heterogeneous_search_dictionary_merger(result, global_result)
+        result = Repository().search_award_category(string_to_search)
+        global_result = heterogeneous_search_dictionary_merger(result, global_result)
         return global_result
     
     @staticmethod

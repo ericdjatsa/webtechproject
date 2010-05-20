@@ -3,14 +3,15 @@ from django.db import models
 class Award_Category_Model(models.Model):
     award_category_name = models.CharField(max_length = 127) # Best Achievement in Visual Effects, ...
     
+    def __unicode__(self):
+        return self.award_category_name
+    
     @classmethod
     def kind(cls):
         return "Award_Category_Model"
     
     def get_infos_for_model(self):
-        infos = []
-        infos.append(self.award_category_name)
-        return infos
+        return self.award_category_name
     
     @staticmethod
     def add_award_category_model(award_category_name):
@@ -48,6 +49,9 @@ class Award_Model(models.Model):
     award_status = models.CharField(max_length = 31)
     
     STATUSES = ["Won", "Nominated"]
+    
+    def __unicode__(self):
+        return self.award_name
     
     @classmethod
     def kind(cls):
@@ -135,6 +139,9 @@ class Genre_Model(models.Model):
     def kind(cls):
         return "Genre_Model"
     
+    def get_infos_for_model(self):
+        return self.genre_name
+    
     @staticmethod
     def add_genre_model(genre_name):
         genre_model = Genre_Model(genre_name = genre_name)
@@ -167,7 +174,7 @@ class Genre_Model(models.Model):
 class Actor_Model(models.Model):
     full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
-    birth_date = models.DateField()
+    birth_date = models.DateField(null = True)
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
@@ -176,21 +183,21 @@ class Actor_Model(models.Model):
     place_of_birth = models.CharField(max_length = 127, null = True)
     place_of_death = models.CharField(max_length = 127, null = True)
     
+    def __unicode__(self):
+        return self.full_name
+    
     @classmethod
     def kind(cls):
         return "Actor_Model"
     
     def get_infos_for_model(self):
-        infos = []
-        infos.append(self.imdb_id)
-        infos.append(self.full_name)
-        infos.append(self.nick_name)
-        infos.append(self.birth_date)
-        infos.append(self.place_of_birth)
-        infos.append(self.death_date)
-        infos.append(self.place_of_death)
-        infos.append(self.mini_story)
-        infos.append(self.thumbnail_url)
+        infos = {}
+        infos["moovog-id"] = self.id
+        infos["full-name"] = self.full_name
+        infos["nick-name"] = self.nick_name
+        infos["birth-date"] = self.birth_date
+        infos["death-date"] = self.death_date
+        infos["thumbnail-url"] = self.thumbnail_url
         return infos
     
     @staticmethod
@@ -230,7 +237,7 @@ class Actor_Model(models.Model):
 class Writer_Model(models.Model):
     full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
-    birth_date = models.DateField()
+    birth_date = models.DateField(null = True)
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
@@ -239,21 +246,21 @@ class Writer_Model(models.Model):
     place_of_birth = models.CharField(max_length = 127, null = True)
     place_of_death = models.CharField(max_length = 127, null = True)
     
+    def __unicode__(self):
+        return self.full_name
+    
     @classmethod
     def kind(cls):
         return "Writer_Model"
     
     def get_infos_for_model(self):
-        infos = []
-        infos.append(self.imdb_id)
-        infos.append(self.full_name)
-        infos.append(self.nick_name)
-        infos.append(self.birth_date)
-        infos.append(self.place_of_birth)
-        infos.append(self.death_date)
-        infos.append(self.place_of_death)
-        infos.append(self.mini_story)
-        infos.append(self.thumbnail_url)
+        infos = {}
+        infos["moovog-id"] = self.id
+        infos["full-name"] = self.full_name
+        infos["nick-name"] = self.nick_name
+        infos["birth-date"] = self.birth_date
+        infos["death-date"] = self.death_date
+        infos["thumbnail-url"] = self.thumbnail_url
         return infos
     
     @staticmethod
@@ -293,7 +300,7 @@ class Writer_Model(models.Model):
 class Director_Model(models.Model):
     full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
-    birth_date = models.DateField()
+    birth_date = models.DateField(null = True)
     death_date = models.DateField(null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
@@ -302,21 +309,21 @@ class Director_Model(models.Model):
     place_of_birth = models.CharField(max_length = 127, null = True)
     place_of_death = models.CharField(max_length = 127, null = True)
     
+    def __unicode__(self):
+        return self.full_name
+    
     @classmethod
     def kind(cls):
         return "Director_Model"
     
     def get_infos_for_model(self):
-        infos = []
-        infos.append(self.imdb_id)
-        infos.append(self.full_name)
-        infos.append(self.nick_name)
-        infos.append(self.birth_date)
-        infos.append(self.place_of_birth)
-        infos.append(self.death_date)
-        infos.append(self.place_of_death)
-        infos.append(self.mini_story)
-        infos.append(self.thumbnail_url)
+        infos = {}
+        infos["moovog-id"] = self.id
+        infos["full-name"] = self.full_name
+        infos["nick-name"] = self.nick_name
+        infos["birth-date"] = self.birth_date
+        infos["death-date"] = self.death_date
+        infos["thumbnail-url"] = self.thumbnail_url
         return infos
     
     @staticmethod
@@ -415,7 +422,7 @@ class Movie_Model(models.Model):
             summary
             release-date
             genres
-            aka (international_title, ~3)
+            akas (all of them)
             director (1)
             actor (3~4)
             oscars (won & nominated)
@@ -430,31 +437,40 @@ class Movie_Model(models.Model):
         infos["plot"] = self.plot
         infos["summary"] = self.summary
         
-#        # Returns the release date either of the USA, UK, or International release
-#        for string in ["International", "UK", "USA"]:
-#            release_date_list = Release_Date_Model.objects.filter(related_movie = self
-#                                ).filter(countries__country_name__iexact = string)
+        # Returns the release date either of the USA, UK, or International release
+        for string in ["International", "UK", "USA"]:
+            release_date_list = Release_Date_Model.objects.filter(related_movie = self
+                                ).filter(countries__country_name__iexact = string)
 #            if release_date_list is not (None or []):
-#                infos["release-date"] = release_date_list[0].release_date
-#                break
-#        
-#        # Returns the list of the movie genres
-#        infos["genres"] = self.genres.all()
-#        
-#        # Returns the aka titles either of the USA, UK, or International release
-#        for string in ["International", "UK", "USA"]:
-#            aka_list = Aka_Model.objects.filter(related_movie = self
-#                       ).filter(countries__country_name__iexact = string)
-#            if aka_list is not (None or []):
-#                infos["akas"] = aka_list[0].aka_name
-
+            for release_date_model in release_date_list:
+                infos["release-date"] = release_date_model.release_date
+                break
+        
+        # Returns the list of the movie genres
+        genres_list = []
+        for genre in self.genres.all():
+            genres_list.append(genre.get_infos_for_model())
+        infos["genres"] = genres_list
+        
+        # Returns the aka titles either of the USA, UK, or International release
+        akas_dict = {}
+        for string in Country_Model.objects.values("country_name"):
+            aka_query = Aka_Model.objects.filter(related_movie = self).filter(
+                        countries__country_name__iexact = string["country_name"])
+            for aka_model in aka_query:
+                akas_dict[string["country_name"]] = aka_model.get_infos_for_model()
+                break
+        infos["akas"] = akas_dict
+        
         # Returns one of the movie film directors
-        infos["director"] = self.directors.all()[0].get_infos_for_model()
+        directors_list = []
+        for director_model in self.directors.all():
+            directors_list.append(director_model.get_infos_for_model())
+        infos["director"] = directors_list
         
         # Returns x of the movie actors
         x = 4
-        actors_query = Actor_Model.objects.filter(movie_model__in)
-#        >>> Publication.objects.filter(article__in=[1,2]).distinct()
+        actors_query = Actor_Model.objects.filter(movie_model__in = [self])[:x]
         actors_list = []
         for actor in actors_query:
             actors_list.append(actor.get_infos_for_model())
@@ -462,7 +478,7 @@ class Movie_Model(models.Model):
         
         # Returns the oscars for the movie
         oscars_list = []
-        oscar_award = Award_Model.objects.filter(award_name__iexact = "Oscar").get()
+        oscar_award = Award_Model.objects.filter(award_name__iexact = "Oscar")
         oscars_query = Award_Matcher_Model.objects.filter(award = oscar_award).filter(movie = self)
         for match in oscars_query:
             oscars_list.append(match.award.get_infos_for_model())
@@ -571,6 +587,9 @@ class Character_Model(models.Model):
     related_movie = models.ForeignKey(Movie_Model)
     imdb_id = models.CharField(max_length = 127)
     
+    def __unicode__(self):
+        return self.character_name
+    
     @classmethod
     def kind(cls):
         return "Character_Model"
@@ -617,6 +636,12 @@ class Aka_Model(models.Model):
     countries = models.ManyToManyField(Country_Model)
     related_movie = models.ForeignKey(Movie_Model)
     
+    def __unicode__(self):
+        return self.aka_name
+    
+    def get_infos_for_model(self):
+        return self.aka_name
+    
     @classmethod
     def kind(cls):
         return "Aka_Model"
@@ -654,6 +679,9 @@ class Release_Date_Model(models.Model):
     release_date = models.DateField()
     countries = models.ManyToManyField(Country_Model)
     related_movie = models.ForeignKey(Movie_Model)
+    
+    def __unicode__(self):
+        return " ".join([self.release_date, self.related_movie])
     
     @classmethod
     def kind(cls):
@@ -699,6 +727,9 @@ class Imdb_Object_Model(models.Model):
     trailer_url = models.CharField(max_length = 255)
     trailer_width = models.CharField(max_length = 15)
     trailer_height = models.CharField(max_length = 15)
+    
+    def __unicode__(self):
+        return self.filename
     
     @classmethod
     def kind(cls):

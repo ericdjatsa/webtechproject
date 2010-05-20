@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 
@@ -24,22 +25,18 @@ def search(request):
     search_wf = Search_WF(request.POST, None)
     search_result = search_wf.work()
     
-    if search_result["type-of-result"] is "homogeneous":
-        homogeneous_wf = Get_Infos_For_Homogeneous_Search_WF(search_result, None)
+    display_result = {}
+    if search_result["type-of-result"] == "homogeneous":
+        homogeneous_wf = Get_Infos_For_Homogeneous_Search_WF({"list-of-models" : search_result["search-result"]}, None)
         display_result = homogeneous_wf.work()
-    if search_result["type-of-result"] is "heterogeneous":
+    if search_result["type-of-result"] == "heterogeneous":
         pass
     
-#    infos = {}
-#    for item in result["search-result"].iteritems():
-#        model_infos = []
-#        for model in item[1]:
-#            if model is not None: model_infos.append(model.get_infos_for_model())
-#        infos[item[0]] = model_infos
-       
+    display_result["result"]["time-to-serve"] = str(datetime.now() - start
+                                                + search_result["time-to-serve"]
+                                                + display_result["time-to-serve"])
 #    return render_to_response("template_targeted", result)
-    return HttpResponse(JSONEncoder().encode(" ".join([str(infos),
-                                                       str(datetime.now() - start + result["time-to-serve"])])))
+    return HttpResponse(JSONEncoder().encode(str(display_result["result"])))
 
 def create_fake_complete_movie(request):
     """
@@ -51,8 +48,8 @@ def create_fake_complete_movie(request):
     wf = Create_Fake_Movie_WF({}, None)
     result = wf.work()
     return HttpResponse(JSONEncoder().encode(", ".join([result["status"],
-                                                        str(result["already-existed"]),
-                                                        str(result["time-to-serve"])])))
+                                            str(result["already-existed"]),
+                                            str(result["time-to-serve"])])))
 
 def test_area(request):
     """

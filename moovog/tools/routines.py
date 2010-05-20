@@ -61,7 +61,7 @@ def areListEqual(list1, list2):
     else:
         return False
     
-def special_dictionary_merger(dict_a, dict_b):
+def homogeneous_search_dictionary_merger(dict_a, dict_b):
     """
         merges 2 dictionaries, this function is symmetric
     """
@@ -76,4 +76,7 @@ def special_dictionary_merger(dict_a, dict_b):
                         dict_b[k].append(thing)
             except Exception: continue
         else: dict_b[k] = dict_a[k]
+    return dict_b
+
+def heterogeneous_search_dictionary_merger(dict_a, dict_b):
     return dict_b
