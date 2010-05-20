@@ -7,7 +7,7 @@ This file gather all together the logic behind the views
 
 from base.Base_Workflow import Base_Workflow
 from src.seeker.models import *
-from tools.routines import special_dictionary_merger
+from tools.routines import homogeneous_search_dictionary_merger, heterogeneous_search_dictionary_merger
 
 import logging
 from datetime import datetime
@@ -66,14 +66,21 @@ class Search_WF(Base_Workflow):
         # OUTPUT : {"movie-models" : [movie_model, ...], actors-models : [actor_model, ...], ...}
         # (See search functions in seeker.repository.py to know all possible keys)
         merged_results = {}
+        type_of_result = ""
         if search_option in [u"actor", u"director", u"writer", u"movie-original-title",
                              u"movie-aka-title", u"genre"]:
             type_of_result = "homogeneous"
             for dict in search_results:
-                if dict is not None: merged_result = special_dictionary_merger(dict, merged_results)
-        if search_option in [u"character", u"award", u"award-category"]:
+                if dict is not None: merged_results = homogeneous_search_dictionary_merger(dict, merged_results)
+        if search_option in [u"unknown", u"character", u"award", u"award-category"]:
             type_of_result = "heterogeneous"
             pass
+        
+#        if type_of_result is "homogeneous":
+#            for key in merged_results.iterkeys():
+#                for model in merged_results[key]:
+#                    new_list.append(model.get_infos_for_model())
+#                merged_results[key] = new_list
         
         # TO DO : page rank the result in merged_result (ERIC)
         # INPUT : merged_result
@@ -102,42 +109,93 @@ class Get_Infos_For_Homogeneous_Search_WF(Base_Workflow):
         self.validate_list_field_not_empty("list-of-models")
     
     def process(self):
+        start = datetime.now()
         result = {}
-        for key in input.iterkeys():
-            for model in input["list-of-models"]:
-                result[key] = model.get_infos_for_model()
+        search_result = self.request()["list-of-models"]
+        for key in search_result.iterkeys():
+            new_list = []
+            for model in search_result[key]:
+                new_list.append(model.get_infos_for_model())
+            result[key] = new_list
                 
         self.add_to_response("result", result)
+        self.add_to_response("time-to-serve", datetime.now() - start)
         
 class Get_Detailed_Infos_For_Person_Model_WF(Base_Workflow):
     """
         For detailed displays purpose
         INPUT :
-            person-type (actor, 
+            person-type (actor, director, writer)
             person-id
         OUTPUT :
             thumbnail-url
-            slideshow
-            birth-name
             full-name
+            nick-name
             alternate-names (?)
-            nick-name (?)
-            mini-biography
+            birth-name (?)
+            mini-story
             birth-date
             death-date
             place-of-birth
             place-of-death
-            oscars (won & nominated)
+            awards (won & nominated)
             movies (5 : thumbnail-url, release-date, original-title)
+            slideshow
     """
+    PERSON_TYPES = {u"actor" : "a", u"writer" : "b", u"director" : "c"}
+    
     def __init__(self, input, authorization_pipe):
         Base_Workflow.__init__(self, input, authorization_pipe)
         
     def validate_input(self):
-        self.validate_string_field_not_empty("movie-id")
+        self.validate_string_field_not_empty("person-type")
+        self.validate_string_field_not_empty("person-id")
         
     def process(self):        
-        pass
+        person_type = self.request()["person-type"]
+        person_id = self.request()["person-id"]
+        
+        if person_type not in Get_Detailed_Infos_For_Person_Model_WF.PERSON_TYPES.values(): person_type = None
+        person_model = {
+                'a': lambda person_id: Actor_Model.get_actor_model_by_id(id),
+                'b': lambda person_id: Writer_Model.get_writer_model_by_id(id),
+                'c': lambda person_id: Director_Model.get_director_model_by_id(id),
+                'd': lambda person_id: None
+                }[Get_Detailed_Infos_For_Person_Model_WF.PERSON_TYPES[person_type]](person_id)
+        
+        result = {}
+        result["thumbnail-url"] = person_model.thumbnail_url
+        result["full-name"] = person_model.full_name
+        result["nick-name"] = person_model.nick_name
+        result["mini-story"] = person_model.mini_story
+        result["birth-date"] = person_model.birth_date
+        result["death-date"] = person_model.death_date
+        result["place-of-birth"] = person_model.place_of_birth
+        result["place-of-death"] = person_model.place_of_death
+        
+        result["awards"] = []
+        matchers = {
+                'a': lambda person_model: Award_Matcher_Model.objects.filter(actor = person_model),
+                'b': lambda person_model: Award_Matcher_Model.objects.filter(writer = person_model),
+                'c': lambda person_model: Award_Matcher_Model.objects.filter(director = person_model),
+                'd': lambda person_model: None
+                }[Get_Detailed_Infos_For_Person_Model_WF.PERSON_TYPES[person_type]](person_model)
+        award = {}
+        for matcher in matchers:
+            award["award"] = matcher.award.award_name
+            award["award-status"] = matcher.award.award_status
+            award["award-category"] = matcher.award_category.award_category_name
+            award["movie"] = matcher.movie.original_title
+        result["awards"].append(award)
+        
+        result["movies"] = []
+        matchers = {
+                'a': lambda person_model: Movie_Model.objects.filter(actors = person_model),
+                'b': lambda person_model: Movie_Model.objects.filter(writers = person_model),
+                'c': lambda person_model: Movie_Model.objects.filter(directors = person_model),
+                'd': lambda person_model: None
+                }[Get_Detailed_Infos_For_Person_Model_WF.PERSON_TYPES[person_type]](person_model)
+        
 
 class Get_Detailed_Infos_For_Movie_Model_WF(Base_Workflow):
     """
@@ -424,6 +482,8 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
             birth-date
             nick-name (optional)
             death-date (optional)
+            mini-story (optional)
+            thumbnail-url (optional)
         OUTPUT:
             status = "ok"
             writer-model (a Writer_Model)
