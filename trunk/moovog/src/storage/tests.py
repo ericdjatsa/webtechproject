@@ -1,6 +1,6 @@
 from store_movie import *
 from moovog.src.crawler.models import *
-import imdb 
+from moovog import imdb 
 
 def test():
     i = imdb.IMDb()
