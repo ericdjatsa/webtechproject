@@ -6,7 +6,7 @@ def convert_date(date):
         return None
     day = ''
     i = 0
-    print date
+    #print date
     while(date[i] != ' '):
         day = day + date[i]
         i = i + 1   
@@ -18,7 +18,7 @@ def convert_date(date):
         i = i + 1
     i= i + 1
 
-    print date[i:]
+    #print date[i:]
 
     if (month == 'January'):
         month = '01'
