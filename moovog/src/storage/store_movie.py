@@ -24,6 +24,7 @@ class Thread_store_actor(threading.Thread):
     def run(self):
         #print '===========store started========='  
         a = Actor_Model.get_actor_model_by_imdb_id(self.person.getID())
+        if (a!=None): self.table.append(a)
         if (a == None):
 
             #///IMDB Instance////
@@ -57,34 +58,22 @@ class Thread_store_actor(threading.Thread):
                 actor_creation = Create_Or_Get_Actor_WF(Input,None)
                 a=actor_creation.process()
                 a = actor_creation.response()['actor-model']
+                self.table.append(a)
             except: pass
          #       print 'cannot store actor' 
 
-
-            Input['birth-date']= convert_date(self.person.get('birth date').__str__())
-            Input['mini-story']= self.person['biography']
-            Input['death-date']= convert_date(self.person.get('death date'))
-            Input['thumbnail-url']= None
-            Input['nick-name']= None
-		#		Input['thumbnail-url']= None
-            actor_creation = Create_Or_Get_Actor_WF(Input,None)
-            actor_creation.process()
-            a = actor_creation.response()['actor-model']
-
-            #///////////////////////////////////////////
-        if (a!=None):
-            self.table.append(a) 
-        
+                
         #////Storing the Role of the actor/////
-            try:
-                Input={}
-                Input['imdb-id']=self.person.currentRole.getID()
-                Input['character-name']=self.person.currentRole.__str__()
-                Input['related-actor']=a
-                Input['related-movie']=self.movie
-                character_creation = Create_Or_Get_Character_WF(Input,None) 
-                character_creation.process()
-            except:pass
+        try:
+            Input={}
+            Input['imdb-id']=self.person.currentRole.getID()
+            Input['character-name']=self.person.currentRole.__str__()
+            Input['related-actor']=a
+            Input['related-movie']=self.movie
+            character_creation = Create_Or_Get_Character_WF(Input,None) 
+            character_creation.process()
+            #print character_creation.response()['already-existed']
+        except:pass
           #      print 'cannot store role' 
 
         #///////////////////////////////////////////
@@ -104,8 +93,9 @@ class Thread_store_director(threading.Thread):
         self.person = person
         self.table = table 
     def run(self):
-        #print '===========store started========='  
+        print '===========store started========='  
         a = Director_Model.get_director_model_by_imdb_id(self.person.getID())
+        if (a!=None): self.table.append(a)
         if (a == None):
             i = imdb.IMDb()
             i.update(self.person)
@@ -132,27 +122,17 @@ class Thread_store_director(threading.Thread):
             
             try:
                 director_creation = Create_Or_Get_Director_WF(Input,None)
-                adirector_creation.process()
+                director_creation.process()
                 a = director_creation.response()['director-model']
+                self.table.append(a) 
+                print a.id
             except:
                 pass
-        if (a!=None):
-            self.table.append(a) 
-        
-        
 
-            Input['birth-date']= convert_date(self.person.get('birth date').__str__())
-            Input['mini-story']= self.person['biography']
-            Input['death-date']= convert_date(self.person.get('death date'))
-            Input['thumbnail-url']= None
-            Input['nick-name']= None
-            director_creation = Create_Or_Get_Director_WF(Input,None)
-            director_creation.process()
-            a = director_creation.response()['director-model']
-        self.table.append(a) 
+        
 
         self.table_done[self.order]=1
-        #print '==========unpdate done==============='
+        print '==========unpdate done==============='
         self._Thread__stop()
 #Writers
 class Thread_store_writer(threading.Thread):
@@ -166,6 +146,7 @@ class Thread_store_writer(threading.Thread):
     def run(self):
         #print '===========store started========='  
         a = Writer_Model.get_writer_model_by_imdb_id(self.person.getID())
+        if (a!=None): self.table.append(a) 
         if (a == None):
             i = imdb.IMDb()
             i.update(self.person)
@@ -193,21 +174,11 @@ class Thread_store_writer(threading.Thread):
                 writer_creation = Create_Or_Get_Writer_WF(Input,None)
                 a=writer_creation.process()
                 a = writer_creation.response()['writer-model']
+                self.table.append(a)
             except:
                 pass
-        if (a!=None):  
-            self.table.append(a)
 
-
-            Input['birth-date']= convert_date(self.person.get('birth date').__str__())
-            Input['mini-story']= self.person['biography']
-            Input['death-date']= convert_date(self.person.get('death date'))
-            Input['thumbnail-url']= None
-            Input['nick-name']= None
-            writer_creation = Create_Or_Get_Writer_WF(Input,None)
-            writer_creation.process()
-            a = writer_creation.response()['writer-model']
-        self.table.append(a) 
+         
         self.table_done[self.order]=1
         #print '==========unpdate done===============
         self._Thread__stop()
@@ -325,6 +296,7 @@ class Store_movie():
         movie_creation = Create_Or_Get_Movie_WF(Input,None)
         movie_creation.process()
         film = movie_creation.response()['movie-model']
+        print movie_creation.response()['already-existed']
 
         print 'movie stored'
         
@@ -357,7 +329,10 @@ class Store_movie():
             done=1
             for j in table_done:
                 done = done * j
+        for director in directeurs: print director.id
         print 'directors stored'
+  
+        
 
 
         #///////storing wiriters//////////
@@ -410,12 +385,6 @@ class Store_movie():
         #Input['country-models']=pays
         #synopsis_creation=Create_Or_Get_Synopsis_WF(Input,None)
         #synopsis_creation.process()
-        Input={}
-        Input['plain-text']=self.movie['plot']
-        Input['movie-model']=film
-        Input['country-models']=pays
-        synopsis_creation=Create_Or_Get_Synopsis_WF(Input,None)
-        synopsis_creation.process()
 
         #/////////////storing aka////////////////
         akas = self.movie['aka']
@@ -504,10 +473,57 @@ class Store_movie():
             #matching
        
             for person in award['to']:
-                #try:
-                    caategory=category
-                    Thread_award_matcher(person,film,self.movie,awward,caategory,table_done).start()
+                try:
+                #    caategory=category
+                 # Thread_award_matcher(person,film,self.movie,awward,caategory,table_done).start()
                 #except: pass
+                    if ('actor' in person_is(person,self.movie)):
+                        Input={}
+                        Input['movie-model']=film
+                        Input['award-model']=awward
+                        Input['award-category-model']=category
+                        actor = Actor_Model.get_actor_model_by_imdb_id(person.getID())
+                        Input['actor-model']= actor
+                        Input['director-model']= None                        Input['writer-model']= None
+                        matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
+                        matcher_creation.process()
+                        #print 'award found for an actor'
+
+                    if ('director' in person_is(person,self.movie)):
+                        Input={}
+                        Input['movie-model']=film
+                        Input['award-model']=awward
+                        Input['award-category-model']=category
+                        director = Director_Model.get_director_model_by_imdb_id(person.getID())
+                        Input['actor-model']= None
+                        Input['director-model']= director                        Input['writer-model']= None
+                        matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
+                        matcher_creation.process()
+                        #print 'award found for director'
+
+                    if ('writer' in person_is(person,self.movie)):
+                        Input={}
+                        Input['movie-model']=film
+                        Input['award-model']=awward
+                        Input['award-category-model']=category
+                        writer = Writer_Model.get_writer_model_by_imdb_id(person.getID())
+                        Input['actor-model']= None
+                        Input['director-model']= None                        Input['writer-model']= writer
+                        matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
+                        matcher_creation.process()
+                        #print 'award found for writer'
+ 
+                    else:
+                        Input={}
+                        Input['movie-model']=film
+                        Input['award-model']=awward
+                        Input['award-category-model']=category
+                        Input['actor-model']= None
+                        Input['director-model']= None                        Input['writer-model']= None
+                        matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
+                        matcher_creation.process()
+
+                except : pass
 
  
         done = 0 
