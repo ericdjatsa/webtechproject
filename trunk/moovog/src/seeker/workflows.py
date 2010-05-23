@@ -74,13 +74,8 @@ class Search_WF(Base_Workflow):
                 if dict is not None: merged_results = homogeneous_search_dictionary_merger(dict, merged_results)
         if search_option in [u"unknown", u"character", u"award", u"award-category"]:
             type_of_result = "heterogeneous"
-            pass
-        
-#        if type_of_result is "homogeneous":
-#            for key in merged_results.iterkeys():
-#                for model in merged_results[key]:
-#                    new_list.append(model.get_infos_for_model())
-#                merged_results[key] = new_list
+            for dict in search_results:
+                if dict is not None: merged_results = heterogeneous_search_dictionary_merger(dict, merged_results)
         
         # TO DO : page rank the result in merged_result (ERIC)
         # INPUT : merged_result
@@ -97,27 +92,56 @@ class Get_Infos_For_Homogeneous_Search_WF(Base_Workflow):
     """
         Converts models into string infos
         INPUT :
-            list-of-models
+            dict-of-models : {key_model : [model_1; model_2, ...], ...}
         OUTPUT :
-            model-type (see Get_Infos_For_Homogeneous_Search_WF.TYPES)
-            {model_1 : [info_1, ...], ...}
+            result : {model_1 : [info_1, ...], ...}
+            time-to-serve
     """
     def __init__(self, input, authorization_pipe):
         Base_Workflow.__init__(self, input, authorization_pipe)
         
     def validate_input(self):
-        self.validate_list_field_not_empty("list-of-models")
+        self.validate_list_field_not_empty("dict-of-models")
     
     def process(self):
         start = datetime.now()
         result = {}
-        search_result = self.request()["list-of-models"]
+        search_result = self.request()["dict-of-models"]
         for key in search_result.iterkeys():
             new_list = []
             for model in search_result[key]:
                 new_list.append(model.get_infos_for_model())
             result[key] = new_list
                 
+        self.add_to_response("result", result)
+        self.add_to_response("time-to-serve", datetime.now() - start)
+
+class Get_Infos_For_Heterogeneous_Search_WF(Base_Workflow):
+    """
+        Converts models into string infos
+        INPUT :
+            dict-of-matches : {"match_1" : {key_model_1 : model_1, ...}, ...}
+        OUTPUT :
+            result : {"match_1" : {key_model_1 : [info_1, ...], ...}, ...}
+            time-to-serve
+    """
+    def __init__(self, input, authorization_pipe):
+        Base_Workflow.__init__(self, input, authorization_pipe)
+        
+    def validate_input(self):
+        self.validate_("dict-of-matches")
+    
+    def process(self):
+        start = datetime.now()
+        result = {}
+        search_result = self.request()["dict-of-matches"]
+        i = 0
+        
+        for key in search_result.keys():
+            for key_match in dict.keys():
+                dict[key_match] = dict[key_match].get_infos_for_model()
+            result[key] = dict
+        
         self.add_to_response("result", result)
         self.add_to_response("time-to-serve", datetime.now() - start)
         
@@ -131,8 +155,8 @@ class Get_Detailed_Infos_For_Person_Model_WF(Base_Workflow):
             thumbnail-url
             full-name
             nick-name
-            alternate-names (?)
-            birth-name (?)
+            alternate-names (not available for the moment)
+            birth-name (not available for the moment)
             mini-story
             birth-date
             death-date
@@ -140,7 +164,7 @@ class Get_Detailed_Infos_For_Person_Model_WF(Base_Workflow):
             place-of-death
             awards (won & nominated)
             movies (5 : thumbnail-url, release-date, original-title)
-            slideshow
+            slideshow (not available for the moment)
     """
     PERSON_TYPES = {u"actor" : "a", u"writer" : "b", u"director" : "c"}
     
@@ -189,13 +213,21 @@ class Get_Detailed_Infos_For_Person_Model_WF(Base_Workflow):
         result["awards"].append(award)
         
         result["movies"] = []
-        matchers = {
-                'a': lambda person_model: Movie_Model.objects.filter(actors = person_model),
-                'b': lambda person_model: Movie_Model.objects.filter(writers = person_model),
-                'c': lambda person_model: Movie_Model.objects.filter(directors = person_model),
+        movies = {
+                'a': lambda person_model: Movie_Model.objects.filter(actors = person_model)[:5],
+                'b': lambda person_model: Movie_Model.objects.filter(writers = person_model)[:5],
+                'c': lambda person_model: Movie_Model.objects.filter(directors = person_model)[:5],
                 'd': lambda person_model: None
                 }[Get_Detailed_Infos_For_Person_Model_WF.PERSON_TYPES[person_type]](person_model)
+        movies_dict = {}
+        if movies is not None:
+            for movie in movies:
+                movies_dict["original-title"] = movie.original_title
+                movies_dict["release-date"] = movie.get_basic_release_date_for_movie()
+                result["movies"].append(movies_dict)
         
+        self.add_to_response("status", "ok")
+        self.add_to_response("detailed-infos", result)
 
 class Get_Detailed_Infos_For_Movie_Model_WF(Base_Workflow):
     """
@@ -203,18 +235,21 @@ class Get_Detailed_Infos_For_Movie_Model_WF(Base_Workflow):
         INPUT :
             movie-id
         OUTPUT :
-            original-title
-            genres
-            year-of-release
-            aka (international_title, ~3)
-            runtime
-            user-rating
-            director (1)
-            actor (3~4)
-            plot
-            summary
-            thumbnail-url
-            oscars (won & nominated)
+            status : "ok"
+            detailed-infos : {
+                original-title,
+                genres,
+                year-of-release,
+                aka, (international_title, ~3)
+                runtime,
+                user-rating,
+                directors, (1)
+                actors, (3~4)
+                plot,
+                summary,
+                thumbnail-url,
+                oscars (won & nominated)
+            }
     """
     def __init__(self, input, authorization_pipe):
         Base_Workflow.__init__(self, input, authorization_pipe)
@@ -222,8 +257,69 @@ class Get_Detailed_Infos_For_Movie_Model_WF(Base_Workflow):
     def validate_input(self):
         self.validate_string_field_not_empty("movie-id")
         
-    def process(self):        
-        pass
+    def process(self):
+        movie = Movie_Model.get_movie_model_by_id(self.request()["movie-id"])
+        infos = {}
+        
+        # Easy-to-get infos
+        infos["original-title"] = movie.original_title
+        infos["runtime"] = movie.runtime
+        infos["user-rating"] = movie.user_rating
+        infos["thumbnail-url"] = movie.thumbnail_url
+        infos["plot"] = movie.plot
+        infos["summary"] = movie.summary
+        
+        # Returns the release date either of the USA, UK, or International release
+        desired_release_dates = ["International", "USA", "UK", "France"]
+        while infos["release-date"] is None:
+            release_date_list = list(Release_Date_Model.objects.filter(related_movie =
+                                self).filter(countries__country_name__iexact =
+                                desired_release_dates.__iter__().next()))
+            if release_date_list is not (None or []):
+                infos["release-date"] = release_date_list[0].release_date
+        if infos["release-date"] is None:
+            infos["release-date"] = list(Release_Date_Model.objects.filter(related_movie = movie))[0]
+        
+        # Returns the list of the movie genres
+        genres_list = []
+        for genre in movie.genres.all():
+            genres_list.append(genre.get_infos_for_model())
+        infos["genres"] = genres_list
+        
+        # Returns the aka titles either of the USA, UK, or International release
+        akas_dict = {}
+        desired_akas = ["International", "USA", "UK", "France"]
+        for string in desired_akas:
+            aka_query = list(Aka_Model.objects.filter(related_movie = movie).filter(
+                        countries__country_name__iexact = string))
+            if aka_query is not (None or []):
+                akas_dict[string] = aka_query[0].get_infos_for_model()
+        infos["akas"] = akas_dict
+        
+        # Returns one of the movie film directors
+#        directors_list = []
+#        for director_model in movie.directors.all():
+#            directors_list.append(director_model.get_infos_for_model())
+        infos["director"] = list(movie.directors.all())[0].get_infos_for_model()
+        
+        # Returns x of the movie actors
+        x = 4
+        actors_query = Actor_Model.objects.filter(movie_model__in = [movie])[:x]
+        actors_list = []
+        for actor in actors_query:
+            actors_list.append(actor.get_infos_for_model())
+        infos["actors"] = actors_list
+        
+        # Returns the oscars for the movie
+        oscars_list = []
+        oscar_award = Award_Model.objects.filter(award_name__iexact = "Oscar")
+        oscars_query = Award_Matcher_Model.objects.filter(award = oscar_award).filter(movie = movie)
+        for match in oscars_query:
+            oscars_list.append(match.award.get_infos_for_model())
+        infos["oscars"] = oscars_list
+        
+        self.add_to_response("status", "ok")
+        self.add_to_response("detailed-infos", infos)
     
 class Store_Imdb_Object_WF(Base_Workflow):
     """

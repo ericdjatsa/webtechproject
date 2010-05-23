@@ -192,7 +192,8 @@ class Actor_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = {}
-        infos["moovog-id"] = self.id
+        infos["person-id"] = self.id
+        infos["person-type"] = "actor"
         infos["full-name"] = self.full_name
         infos["nick-name"] = self.nick_name
         infos["birth-date"] = self.birth_date
@@ -255,7 +256,8 @@ class Writer_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = {}
-        infos["moovog-id"] = self.id
+        infos["person-id"] = self.id
+        infos["person-type"] = "writer"
         infos["full-name"] = self.full_name
         infos["nick-name"] = self.nick_name
         infos["birth-date"] = self.birth_date
@@ -318,7 +320,8 @@ class Director_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = {}
-        infos["moovog-id"] = self.id
+        infos["person-id"] = self.id
+        infos["person-type"] = "director"
         infos["full-name"] = self.full_name
         infos["nick-name"] = self.nick_name
         infos["birth-date"] = self.birth_date
@@ -414,20 +417,18 @@ class Movie_Model(models.Model):
     
     def get_infos_for_model(self):
         """
+            movie-id
             original-title
             runtime
             user-rating
             thumbnail
             plot
-            summary
             release-date
             genres
-            akas (all of them)
-            director (1)
-            actor (3~4)
-            oscars (won & nominated)
+            akas
         """
         infos = {}
+        infos["movie-id"] = self.id
         
         # Easy-to-get infos
         infos["original-title"] = self.original_title
@@ -435,16 +436,17 @@ class Movie_Model(models.Model):
         infos["user-rating"] = self.user_rating
         infos["thumbnail-url"] = self.thumbnail_url
         infos["plot"] = self.plot
-        infos["summary"] = self.summary
         
         # Returns the release date either of the USA, UK, or International release
-        for string in ["International", "UK", "USA"]:
-            release_date_list = Release_Date_Model.objects.filter(related_movie = self
-                                ).filter(countries__country_name__iexact = string)
-#            if release_date_list is not (None or []):
-            for release_date_model in release_date_list:
-                infos["release-date"] = release_date_model.release_date
-                break
+        desired_release_dates = ["International", "UK", "USA", "France"]
+        while infos["release-date"] is None:
+            release_date_list = list(Release_Date_Model.objects.filter(related_movie =
+                                self).filter(countries__country_name__iexact =
+                                desired_release_dates.__iter__().next()))
+            if release_date_list is not (None or []):
+                infos["release-date"] = release_date_list[0].release_date
+        if infos["release-date"] is None:
+            infos["release-date"] = list(Release_Date_Model.objects.filter(related_movie = self))[0]
         
         # Returns the list of the movie genres
         genres_list = []
@@ -454,37 +456,14 @@ class Movie_Model(models.Model):
         
         # Returns the aka titles either of the USA, UK, or International release
         akas_dict = {}
-        for string in Country_Model.objects.values("country_name"):
+        desired_akas = ["International", "USA", "UK", "France"]
+        for string in desired_akas:
             aka_query = Aka_Model.objects.filter(related_movie = self).filter(
-                        countries__country_name__iexact = string["country_name"])
-            for aka_model in aka_query:
-                akas_dict[string["country_name"]] = aka_model.get_infos_for_model()
-                break
+                        countries__country_name__iexact = string)
+            if aka_query is not (None or []):
+                akas_dict[string] = list[aka_query][0].get_infos_for_model()
         infos["akas"] = akas_dict
         
-        # Returns one of the movie film directors
-        directors_list = []
-        for director_model in self.directors.all():
-            directors_list.append(director_model.get_infos_for_model())
-        infos["director"] = directors_list
-        
-        # Returns x of the movie actors
-        x = 4
-        actors_query = Actor_Model.objects.filter(movie_model__in = [self])[:x]
-        actors_list = []
-        for actor in actors_query:
-            actors_list.append(actor.get_infos_for_model())
-        infos["actors"] = actors_list
-        
-        # Returns the oscars for the movie
-        oscars_list = []
-        oscar_award = Award_Model.objects.filter(award_name__iexact = "Oscar")
-        oscars_query = Award_Matcher_Model.objects.filter(award = oscar_award).filter(movie = self)
-        for match in oscars_query:
-            oscars_list.append(match.award.get_infos_for_model())
-        infos["oscars"] = oscars_list
-        return infos
-
     @staticmethod
     def add_movie_model(imdb_id, original_title, filename, extension, path_on_disk, hash_code):
         movie_model = Movie_Model(imdb_id = imdb_id,
@@ -505,6 +484,15 @@ class Movie_Model(models.Model):
         self.save()
         return self
     
+    def get_basic_release_date_for_movie(self):
+        release_dates = Release_Date_Model.objects.filter(related_movie = self)
+        try:
+            for release_date in release_dates:
+                if "International" in Country_Model.objects.extra(select = "country_name"):
+                    return release_date
+                    break
+        except Exception, x: return release_dates.__iter__().next()
+        
     @staticmethod
     def get_movie_model_by_id(id):
         try:
@@ -515,7 +503,7 @@ class Movie_Model(models.Model):
     @staticmethod
     def get_movie_model_by_imdb_id(id):
         try:
-           model = Movie_Model.objects.get(imdb_id = id)
+            model = Movie_Model.objects.get(imdb_id = id)[0]
         except Exception: return None
         return model
     
@@ -619,7 +607,7 @@ class Character_Model(models.Model):
     @staticmethod
     def get_character_model_by_imdb_id(id):
         try:
-            model = Character_Model.objects.get(imdb_id = id)
+            model = Movie_Model.objects.get(imdb_id = id)
         except Exception: return None
         return model
     
