@@ -90,6 +90,15 @@ class Base_Workflow():
             self.register_invalid_field(fieldName, "list value is empty")
             return False
         else: return True 
+    
+    def validate_dictionary_field_not_empty(self, fieldName):
+        if not self.request().has_key(fieldName): value = None
+        else: value = self.request()[fieldName]
+
+        if value is None or value == {}:
+            self.register_invalid_field(fieldName, "dictionary value is empty")
+            return False
+        else: return True 
 
     def validate_string_field_not_empty(self, fieldName):
         if not self.request().has_key(fieldName): value = None
