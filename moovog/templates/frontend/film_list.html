@@ -47,7 +47,10 @@
 				</a>
 			</div>
 			<div class="film_tooltip">
-				<embed src="{{ movie.imdb_id|internet_movie_archive_player }}" width="320" height="260" autostart="true" mute="true" controlbar="none" />
+				<embed 
+					 src="{{ movie.imdb_id|internet_movie_archive_player }}" 
+					 FlashVars="width=320&height=260&autostart=True&mute=True&controlbar=None"
+					 type="application/x-shockwave-flash" />
 			</div>
 			{% endfor %}
 	{% endif %}
