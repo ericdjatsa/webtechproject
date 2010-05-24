@@ -141,6 +141,9 @@ class Genre_Model(models.Model):
     
     def get_infos_for_model(self):
         return self.genre_name
+	 
+    def __unicode__(self):
+        return self.genre_name
     
     @staticmethod
     def add_genre_model(genre_name):
