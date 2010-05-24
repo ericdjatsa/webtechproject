@@ -27,6 +27,6 @@ class ImdbCache(models.Model):
 	content = models.TextField()
 	
 class Trailer(models.Model):
-	imdb_id = models.CharField(max_length=12)
+	imdb_id = models.CharField(max_length=12, primary_key=True)
 	trailer_url = models.CharField(max_length = 256)
 	
