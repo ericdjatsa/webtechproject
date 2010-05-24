@@ -503,7 +503,7 @@ class Movie_Model(models.Model):
     @staticmethod
     def get_movie_model_by_imdb_id(id):
         try:
-            model = Movie_Model.objects.get(imdb_id = id)[0]
+            model = Movie_Model.objects.get(imdb_id = id)
         except Exception: return None
         return model
     
@@ -607,7 +607,7 @@ class Character_Model(models.Model):
     @staticmethod
     def get_character_model_by_imdb_id(id):
         try:
-            model = Movie_Model.objects.get(imdb_id = id)
+            model = Character_Model.objects.get(imdb_id = id)
         except Exception: return None
         return model
     
