@@ -81,7 +81,7 @@ class Thread_store_actor(threading.Thread):
 
         self.table_done[self.order]=1
         #print '==========store Actor and role done==============='
-        #self._Thread__stop()
+        self._Thread__stop()
 
 #Directors
 class Thread_store_director(threading.Thread):
@@ -133,7 +133,7 @@ class Thread_store_director(threading.Thread):
 
         self.table_done[self.order]=1
         print '==========unpdate done==============='
-        #self._Thread__stop()
+        self._Thread__stop()
 #Writers
 class Thread_store_writer(threading.Thread):
     def __init__(self,person,table,table_done):
@@ -181,7 +181,7 @@ class Thread_store_writer(threading.Thread):
          
         self.table_done[self.order]=1
         #print '==========unpdate done===============
-        #self._Thread__stop()
+        self._Thread__stop()
 
 #///Awards macher thread///
 
@@ -225,7 +225,8 @@ class Thread_award_matcher(threading.Thread):
             Input['award-category-model']=self.category
             actor = Actor_Model.get_actor_model_by_imdb_id(self.person.getID())
             Input['actor-model']= actor
-            Input['director-model']= None            Input['writer-model']= None
+            Input['director-model']= None
+            Input['writer-model']= None
             matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
             matcher_creation.process()
             #print 'award found for an actor'
@@ -237,7 +238,8 @@ class Thread_award_matcher(threading.Thread):
             Input['award-category-model']=self.category
             director = Director_Model.get_director_model_by_imdb_id(self.person.getID())
             Input['actor-model']= None
-            Input['director-model']= director            Input['writer-model']= None
+            Input['director-model']= director
+            Input['writer-model']= None
             matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
             matcher_creation.process()
             #print 'award found for director'
@@ -249,7 +251,8 @@ class Thread_award_matcher(threading.Thread):
             Input['award-category-model']=self.category
             writer = Writer_Model.get_writer_model_by_imdb_id(self.person.getID())
             Input['actor-model']= None
-            Input['director-model']= None            Input['writer-model']= writer
+            Input['director-model']= None
+            Input['writer-model']= writer
             matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
             matcher_creation.process()
             #print 'award found for writer'
@@ -260,13 +263,14 @@ class Thread_award_matcher(threading.Thread):
             Input['award-model']=self.award
             Input['award-category-model']=self.category
             Input['actor-model']= None
-            Input['director-model']= None            Input['writer-model']= None
+            Input['director-model']= None
+            Input['writer-model']= None
             matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
             matcher_creation.process()
             #print 'award found for no one :D'
         #print '/////////award matchinf finnished/////////'
         self.table_done[self.order]=1
-        #self._Thread__stop()
+        self._Thread__stop()
        
 
 
@@ -282,8 +286,7 @@ class Store_movie():
 
 
     def start(self):
-     
-        parallel=False
+
         #Storing te movie
         print 'storing movie...'
         Input={}
@@ -305,12 +308,10 @@ class Store_movie():
         table_done=[]
         print 'storing actors...' 
         acteurs = []
-        actors = self.movie['actors']
+        #HACK
+        actors = self.movie['actors'][:1]
         for actor in actors:
-            if (parallel == True):
-                Thread_store_actor(actor,film,acteurs,table_done).start()
-            else:
-                Thread_store_actor(actor,film,acteurs,table_done).run()
+            Thread_store_actor(actor,film,acteurs,table_done).start()
         
         done = 0
         while(done == 0):
@@ -326,11 +327,8 @@ class Store_movie():
         directeurs = []
         directors = self.movie['director']
         for director in directors:
-            if (parallel == True):
-                Thread_store_director(director,directeurs,table_done).start()
-            else:
-                Thread_store_director(director,directeurs,table_done).run()
-  
+            Thread_store_director(director,directeurs,table_done).start()
+
         done = 0
         while(done == 0):
             done=1
@@ -348,10 +346,7 @@ class Store_movie():
         ecrivains = []
         writers = self.movie['writer']
         for writer in writers:
-            if (parallel == True):
-                Thread_store_writer(writer,ecrivains,table_done).start()
-            else:
-                Thread_store_writer(writer,ecrivains,table_done).run()
+            Thread_store_writer(writer,ecrivains,table_done).start()
 
         done = 0
         while(done == 0):
@@ -494,7 +489,8 @@ class Store_movie():
                         Input['award-category-model']=category
                         actor = Actor_Model.get_actor_model_by_imdb_id(person.getID())
                         Input['actor-model']= actor
-                        Input['director-model']= None                        Input['writer-model']= None
+                        Input['director-model']= None
+                        Input['writer-model']= None
                         matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
                         matcher_creation.process()
                         #print 'award found for an actor'
@@ -506,7 +502,8 @@ class Store_movie():
                         Input['award-category-model']=category
                         director = Director_Model.get_director_model_by_imdb_id(person.getID())
                         Input['actor-model']= None
-                        Input['director-model']= director                        Input['writer-model']= None
+                        Input['director-model']= director
+                        Input['writer-model']= None
                         matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
                         matcher_creation.process()
                         #print 'award found for director'
@@ -518,7 +515,8 @@ class Store_movie():
                         Input['award-category-model']=category
                         writer = Writer_Model.get_writer_model_by_imdb_id(person.getID())
                         Input['actor-model']= None
-                        Input['director-model']= None                        Input['writer-model']= writer
+                        Input['director-model']= None
+                        Input['writer-model']= writer
                         matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
                         matcher_creation.process()
                         #print 'award found for writer'
@@ -529,7 +527,8 @@ class Store_movie():
                         Input['award-model']=awward
                         Input['award-category-model']=category
                         Input['actor-model']= None
-                        Input['director-model']= None                        Input['writer-model']= None
+                        Input['director-model']= None
+                        Input['writer-model']= None
                         matcher_creation=Create_Or_Get_Award_Matcher_WF(Input,None)
                         matcher_creation.process()
 

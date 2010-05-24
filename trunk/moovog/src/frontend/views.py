@@ -8,10 +8,11 @@ from django.shortcuts import get_object_or_404, render_to_response
 
 from src.frontend.add_to_db import * 
 from src.frontend.models import Film
+from src.seeker.models import Movie_Model
 
 def index(request):
 	return HttpResponse(loader.get_template('frontend/film_list.html').render(Context({
-		'movies' : Film.objects.all(), 
+		'movies' : Movie_Model.objects.all(), 
 		'paginate_by' : 5,})))
 
 def add_to_db(request, step):

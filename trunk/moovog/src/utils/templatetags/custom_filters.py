@@ -2,6 +2,7 @@
 from django import template
 from src.utils.get_image import getOrCacheImage
 from src.frontend.models import Trailer
+from src.seeker.models import Release_Date_Model
 
 register = template.Library()
 @register.filter("key")
@@ -23,4 +24,19 @@ def internet_movie_archive_player(imdb_id):
 
 @register.filter("get_cover_image")
 def get_cover_image(imdb_url):
-	return getOrCacheImage(imdb_url)
+	print "Getting cover for image %s" % (imdb_url)
+	if imdb_url == '' or imdb_url == None:
+		return ''
+	else:
+		try:
+		  return getOrCacheImage(imdb_url)
+		except:
+		  return ''
+	
+@register.filter("get_release_year")
+def get_release_year(movie):
+  try:
+	 return Release_Date_Model.objects.filter(related_movie = movie)[0].release_date.year
+  except:
+	 return "1984"
+  
