@@ -57,7 +57,8 @@ def addFilmsToDb(diskScanResult, imdbMatches, association):
 				#will still be called, which is exactly the overhead we're trying to avoid using the DB. 
 				if Trailer.objects.filter(imdb_id = imdbMovie.getID()).__len__ == 0:
 					Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
-		except Exception as ex:
+#		except Exception as ex:
+		except:
 			print ex
 
 
