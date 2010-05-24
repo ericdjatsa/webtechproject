@@ -56,7 +56,7 @@ def addFilmsToDb(diskScanResult, imdbMatches, association):
 				#making imdb_id primary key is not enough to do away with this if, as get_trailer_embed 
 				#will still be called, which is exactly the overhead we're trying to avoid using the DB. 
 				if Trailer.objects.filter(imdb_id = imdbMovie.getID()).__len__ == 0:
-				  Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
+					Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
 		except Exception as ex:
 			print ex
 
