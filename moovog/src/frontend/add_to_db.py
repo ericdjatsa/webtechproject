@@ -6,6 +6,7 @@ from src.frontend.models import Film
 from src.frontend.models import IgnoreTable
 from src.frontend.models import Trailer
 from src.utils.internet_movie_archive import get_trailer_embed
+from src.storage.store_movie import Store_movie
 
 imdb = IMDb(accessSystem='http', adultSearch=0)
 imdb.set_proxy('')
@@ -16,17 +17,6 @@ imdb.set_proxy('')
 def getNewCrawledFiles():
 #	return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.md5 = crawler_file.hash_code) and not exists (select * from seeker_movie_model where seeker_movie_model.hash_code = crawler_file.hash_code and seeker_movie_model.filename = crawler_file.filename))"])
   return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.md5 = crawler_file.hash_code) and not exists (select * from frontend_film where frontend_film.hash_code = crawler_file.hash_code and frontend_film.filename = crawler_file.filename))"])
-
-#def imdbSearch(filmName):
-#	imdbResultSet = imdb.search_movie(filmName)[:5]
-#	imdbMatches = []
-#	firstResult = 1
-#	for imdbResult in imdbResultSet:
-#		#update only first of found movies to contain all data, as data retrieval takes a long time
-#		imdb.update(imdbResult)
-#		imdbMatches.append(imdbResult)
-#		print "Found movie %s" % (imdbResult["title"])
-#	return imdbResultSet
 
 def queryImdbWithCrawledFiles():
 	diskScanResult  = getNewCrawledFiles()
@@ -62,7 +52,11 @@ def addFilmsToDb(diskScanResult, imdbMatches, association):
 				Film(title = dictGet(imdbMovie, 'title'), image = dictGet(imdbMovie, 'cover url'), 
 				  year = dictGet(imdbMovie, 'year'), filename = d.filename, extension = d.extension,
 				  hash_code = d.hash_code, path = d.path, imdb_id = imdbMovie.getID()).save()
-				Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
+				Store_movie(movie = imdbMovie, fichier = d).start()
+				#making imdb_id primary key is not enough to do away with this if, as get_trailer_embed 
+				#will still be called, which is exactly the overhead we're trying to avoid using the DB. 
+				if Trailer.objects.filter(imdb_id = imdbMovie.getID()).__len__ == 0:
+				  Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
 		except Exception as ex:
 			print ex
 
