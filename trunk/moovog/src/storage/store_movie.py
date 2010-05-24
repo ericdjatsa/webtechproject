@@ -416,6 +416,7 @@ class Store_movie():
         #/////////store release date///////////////////
         Input={}
         Input['release-date']=str(self.movie['year'])+'-'+'01'+'-'+'01'
+        print Input['release-date'] +'   //////////////////////////////////////////////'
         Input['movie-model']=film
         Input['country-models']=pays       
         release_creation=Create_Or_Get_Release_Date_WF(Input,None)

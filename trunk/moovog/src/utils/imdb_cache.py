@@ -25,3 +25,28 @@ def imdbSearchMovie(title):
 			c.save()
 			i = i + 1
 		return resultList
+
+def imdbUpdatePerson(person):
+	cached = ImdbCache.objects.filter(imdb_id = person.getID())
+	if cached.__len__() > 0:
+		return cPickle.loads(base64.b64decode(cached[0].content))
+	else:
+		imdb = imdb.IMDb()
+            	imdb.update(person)
+		content = base64.b64encode(cPickle.dumps(person, 2))
+		c = ImdbCache(keyword = '', result_index = 0, imdb_id = person.getID(), content = content)
+		c.save()
+		return person
+
+#def imdbUpdateMovie(movie):
+#	cached = ImdbCache.objects.filter(imdb_id = movie.getID())
+#	if cached.__len__() > 0:
+#		return cPickle.loads(base64.b64decode(cached[0].content))
+#	else:
+#		imdb = imdb.IMDb()
+#           	imdb.update(person)
+#		imdb.update(person, info = ['awards'])
+#		content = base64.b64encode(cPickle.dumps(person, 2))
+#		c = ImdbCache(keyword = '', result_index = 0, imdb_id = person.getID(), content = content)
+#		c.save()
+		return person
