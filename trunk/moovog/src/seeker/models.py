@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 
 class Award_Category_Model(models.Model):
@@ -752,3 +753,64 @@ class Imdb_Object_Model(models.Model):
                 Imdb_Object_Model.objects.filter(id = id).delete()
             except Exception, x: return False
             return True
+            
+
+#My Test Movie Model
+class Test_Movie_Model(models.Model):
+    original_title = models.CharField(max_length = 255)
+    # the original title of the movie, in original country(ies)
+    original_countries = []
+    # the original movie country, from which it comes
+    awards = []
+    # the awards of the movie (won or nominated, it has its importance)
+    actors = []
+    # actors of the movie
+    writers = []
+    # writers of the movie
+    directors = []
+    # directors of the movie
+    genres = []
+    # action, thriller, love romance, ...
+    runtime = models.CharField(max_length = 7, null = True)
+    # time duration of the movie
+    user_rating = models.CharField(max_length = 7, null = True)
+    # user rating of the movie
+    imdb_id = models.CharField(max_length = 63)
+    # id of the movie on imdb - useful to decide whether a movie
+    # is already or not in our database
+    plot = models.TextField()
+    # plot of the movie
+    summary = models.TextField()
+    # summary of the movie
+    
+    thumbnail_url = models.CharField(max_length = 255, null = True)
+    # url of the thumbnail of the movie
+    filename = models.CharField(max_length = 255)
+    # name of movie on local disk
+    extension = models.CharField(max_length = 31)
+    # .avi, .mkv, .mpeg, ...
+    path = models.CharField(max_length = 255)
+    # path to movie on disk
+    hash_code = models.CharField(max_length = 31)
+    # hashcode of the movie
+    movie_trailer_url = models.CharField(max_length = 255)
+    # link to the trailer of the movie
+    
+    first_created = models.DateTimeField(auto_now = True)
+    # datetime when movie was first created
+    last_modified = models.DateTimeField(auto_now_add = True)
+    # datetime when movie was last modified
+    
+    
+    #Added by me:
+    infos=dict()
+    
+    def set_info_akas(self,akas_dict) :
+        self.infos["akas"]=dict(akas_dict)
+    
+    def __unicode__(self):
+        return self.original_title
+    
+    @classmethod
+    def kind(cls):
+        return "Movie_Model" 
