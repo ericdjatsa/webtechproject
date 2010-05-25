@@ -24,21 +24,25 @@ class Award_Category_Model(models.Model):
     def get_award_category_model(award_category_name):
         try:
             query = Award_Category_Model.objects.filter(award_category_name = award_category_name)
-        except Exception: return None
-        if len(query) != 0: return query[0]
+        except Exception: 
+			 return None
+        if len(query) != 0: 
+			 return query[0]
         else: return None
     
     @staticmethod
     def get_award_category_model_by_id(award_category_id):
         try:
             award_category_model = Award_Category_Model.objects.get(id = award_category_id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return award_category_model
     
     @staticmethod
     def delete_award_category_model(award_category_id):
         award_category_model = Award_Category_Model.get_award_category_model_by_id(award_category_id)
-        if award_category_model is None: return False
+        if award_category_model is None: 
+			 return False
         else:
             award_category_model.delete()
             return True
@@ -79,20 +83,23 @@ class Award_Model(models.Model):
             award_model = Award_Model.objects.get(award_name = award_name,
                                                   date_of_awarding = date_of_awarding,
                                                   award_status = award_status)
-        except Exception: return None
+        except Exception: 
+			 return None
         return award_model
     
     @staticmethod
     def get_award_model_by_id(award_id):
         try:
             award_model = Award_Model.objects.get(id = award_id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return award_model
     
     @staticmethod
     def delete_award_model(award_id):
         award_model = Award_Model.get_country_model_by_id(award_id)
-        if award_model is None: return False
+        if award_model is None: 
+			 return False
         else:
             award_model.delete()
             return True
@@ -114,21 +121,25 @@ class Country_Model(models.Model):
     def get_country_model(country_name):
         try:
             query = Country_Model.objects.filter(country_name = country_name)
-        except Exception: return None
-        if len(query) != 0: return query[0]
+        except Exception: 
+			 return None
+        if len(query) != 0: 
+			 return query[0]
         else: return None
     
     @staticmethod
     def get_country_model_by_id(country_id):
         try:
             country_model = Country_Model.objects.get(id = country_id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return country_model
     
     @staticmethod
     def delete_country_model(country_id):
         country_model = Country_Model.get_country_model_by_id(country_id)
-        if country_model is None: return False
+        if country_model is None: 
+			 return False
         else:
             country_model.delete()
             return True
@@ -156,21 +167,26 @@ class Genre_Model(models.Model):
     def get_genre_model(genre_name):
         try:
             query = Genre_Model.objects.filter(genre_name = genre_name)
-        except Exception: return None
-        if len(query) != 0: return query[0]
-        else: return None
+        except Exception: 
+			 return None
+        if len(query) != 0: 
+			 return query[0]
+        else: 
+			 return None
     
     @staticmethod
     def get_genre_model_by_id(genre_id):
         try:
             genre_model = Genre_Model.objects.get(id = genre_id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return genre_model
     
     @staticmethod
     def delete_genre_model(genre_id):
         genre_model = Genre_Model.get_genre_model_by_id(genre_id)
-        if genre_model is None: return False
+        if genre_model is None: 
+			 return False
         else:
             genre_model.delete()
             return True
@@ -221,20 +237,23 @@ class Actor_Model(models.Model):
     def get_actor_model_by_id(id):
         try:
             model = Actor_Model.objects.get(id = id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return model
     
     @staticmethod
     def get_actor_model_by_imdb_id(id):
         try:
             model = Actor_Model.objects.get(imdb_id = id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return model
     
     @staticmethod
     def delete_actor_model(actor_id):
         actor_model = Actor_Model.get_actor_model_by_id(actor_id)
-        if actor_model is None: return False
+        if actor_model is None: 
+			 return False
         else:
             actor_model.delete()
             return True
@@ -336,33 +355,36 @@ class Director_Model(models.Model):
     @staticmethod
     def add_director_model(imdb_id, full_name, birth_date, death_date = None,
                            nick_name = None, mini_story = None, thumbnail_url = None):
-        model =Director_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
+		  model =Director_Model(imdb_id = imdb_id, full_name = full_name, nick_name = nick_name,
                               birth_date = birth_date, death_date = death_date,
                               mini_story = mini_story, thumbnail_url = thumbnail_url)
-        try:
-           model.save()
-        except:
-           print "Error: imdb_id=%s, full_name=%s, nickname=%s, birthdate=%s, deathdate=%s, ministory=%s, thumbnail=%s" % (imdb_id, full_name, birth_date, death_date, nick_name, mini_story, thumbnail_url)
-        return model
+#        try:
+		  model.save()
+#        except:
+#           print "Error: imdb_id=%s, full_name=%s, nickname=%s, birthdate=%s, deathdate=%s, ministory=%s, thumbnail=%s" % (imdb_id, full_name, birth_date, death_date, nick_name, mini_story, thumbnail_url)
+		  return model
     
     @staticmethod
     def get_director_model_by_id(id):
         try:
             model = Director_Model.objects.get(id = id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return model
     
     @staticmethod
     def get_director_model_by_imdb_id(id):
         try:
             model = Director_Model.objects.get(imdb_id = id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return model
     
     @staticmethod
     def delete_director_model(director_id):
         director_model = Director_Model.get_director_model_by_id(director_id)
-        if director_model is None: return False
+        if director_model is None: 
+			 return False
         else:
             director_model.delete()
             return True
@@ -495,7 +517,8 @@ class Movie_Model(models.Model):
                 if "International" in Country_Model.objects.extra(select = "country_name"):
                     return release_date
                     break
-        except Exception, x: return release_dates.__iter__().next()
+        except Exception, x: 
+			 return release_dates.__iter__().next()
         
     @staticmethod
     def get_movie_model_by_id(id):
@@ -508,7 +531,8 @@ class Movie_Model(models.Model):
     def get_movie_model_by_imdb_id(id):
         try:
             model = Movie_Model.objects.get(imdb_id = id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return model
     
     @staticmethod
@@ -541,7 +565,8 @@ class Award_Matcher_Model(models.Model):
                                                       award = award,
                                                       award_category = award_category)
             award_matcher_model.save()
-        except Exception, x: return None
+        except Exception, x: 
+			 return None
         return award_matcher_model
     
     @staticmethod
@@ -562,7 +587,8 @@ class Award_Matcher_Model(models.Model):
     def get_award_matcher_by_id(award_matcher_id):
         try:
             award_matcher = Award_Matcher_Model.objects.get(id = award_matcher_id)
-        except Exception, x: return None
+        except Exception, x: 
+			 return None
         return award_matcher
     
     @staticmethod
@@ -605,14 +631,16 @@ class Character_Model(models.Model):
     def get_character_model_by_id(character_id):
         try:
             character_model = Character_Model.objects.get(id = character_id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return character_model
     
     @staticmethod
     def get_character_model_by_imdb_id(id):
         try:
             model = Character_Model.objects.get(imdb_id = id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return model
     
     @staticmethod
@@ -648,21 +676,26 @@ class Aka_Model(models.Model):
     def get_aka_model(aka_name):
         try:
             query = Aka_Model.objects.filter(aka_name = aka_name)
-        except Exception: return None
-        if len(query) != 0: return query[0]
-        else: return None
+        except Exception: 
+			 return None
+        if len(query) != 0: 
+			 return query[0]
+        else: 
+			 return None
     
     @staticmethod
     def get_aka_model_by_id(aka_id):
         try:
             aka_model = Aka_Model.objects.get(id = aka_id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return aka_model
     
     @staticmethod
     def delete_aka_model(aka_id):
         aka_model = Aka_Model.get_aka_model_by_id(aka_id)
-        if aka_model is None: return False
+        if aka_model is None: 
+			 return False
         else:
             aka_model.delete()
             return True
@@ -691,21 +724,26 @@ class Release_Date_Model(models.Model):
         try:
             query = Release_Date_Model.objects.filter(release_date = release_date,
                                                       related_movie = related_movie)
-        except Exception, x: return None
-        if len(query) != 0: return query[0]
-        else: return None
+        except Exception, x: 
+			 return None
+        if len(query) != 0: 
+			 return query[0]
+        else: 
+			 return None
     
     @staticmethod
     def get_release_date_model_by_id(release_date_id):
         try:
             release_date_model = Release_Date_Model.objects.get(id = release_date_id)
-        except Exception: return None
+        except Exception: 
+			 return None
         return release_date_model
     
     @staticmethod
     def delete_release_date_model(release_date_id):
         release_date_model = Release_Date_Model.get_release_date_model_by_id(release_date_id)
-        if release_date_model is None: return False
+        if release_date_model is None: 
+			 return False
         else:
             release_date_model.delete()
             return True
@@ -742,8 +780,10 @@ class Imdb_Object_Model(models.Model):
     def get_imdb_object_model_by_id(id):
         try:
             query = Imdb_Object_Model.objects.filter(id = id)
-        except Exception, x: return None
-        if len(query) != 0: return query[0]
+        except Exception, x: 
+			 return None
+        if len(query) != 0: 
+			 return query[0]
         else: return None
         
     @staticmethod
@@ -751,7 +791,8 @@ class Imdb_Object_Model(models.Model):
         if id is not None:
             try:
                 Imdb_Object_Model.objects.filter(id = id).delete()
-            except Exception, x: return False
+            except Exception, x: 
+				  return False
             return True
             
 
