@@ -1,65 +1,675 @@
-{% extends "frontend/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mum's Moovog</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Person A"/>
+<!-- add your meta tags here -->
+<script language="javascript" type="text/javascript" src="js/comment.js"></script>
+<link href="http://bk.pptv.com/res/baike/200901082/movie_summary.css?20081217"	rel="stylesheet" type="text/css" />
+</head>
+<body>
 
-{% block style %}
-.film_thumbnail
-{
- float:	left;
- height: 240px; 
- width: 180px;
- margin: 4px;
- text-align: center;
- border: 1px solid black;
+
+<!--Start: top domain-->
+<!--{header}//-->
+<link rel="stylesheet" type="text/css" href="http://static1.pplive.cn/public/091227/images/style.css?20100412" />
+<script type="text/javascript" src="js/searchtips.js"></script>
+<script type="text/javascript" src="js/bkportal.js"></script>
+
+<!--Start: mini menu-->
+<div class="l_miniMenu miniMenuSkin_2">
+	<div class="miniMenu c_b">
+    	<div class="leftMenu c_b">
+            <a href="home.htm" title="Mum's Moovog" class="miniLogo">Moovog</a>
+
+            <ul class="c_b">
+
+                <li><a href="home.htm" title="Home">Home</a></li>
+                <li><a href="home.htm" title="A">A</a></li>
+                <li><a href="home.htm" title="B">B</a></li>
+                <li><a href="home.htm" title="C">C</a></li>
+                <li><a href="home.htm" title="D">D</a></li>
+
+                <li><a href="home.htm" title="E">E</a></li>
+            </ul>
+        </div>
+        <div class="miniSearch c_b">
+        	<input type="text" class="searchTxt" value="-- Input Key Word--" id="Text1" />
+            <input type="submit" class="searchBtn" value="Search" id="Submit1" />
+        </div>
+        <div class="miniUserInfo">
+
+    	    <a href="home.htm" target="_blank" id="btn_uname" style="display: none;">name</a>
+			<a href="javascript:;" id="btn_logout" style="display: none;">Logout</a>
+			<tt id="btn_login">
+                <a href="login/login.htm" title="login" target="_blank">Login</a>
+            </tt>
+			<a href="login/register.htm" title="register" target="_blank" id="btn_register">Register</a>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+(function () {
+    initSearch();
+
+    try {
+        if (JwUser.check()) {
+            document.getElementById('btn_login').style.display = 'none';
+            var btnName = document.getElementById('btn_uname');
+            var btnLogout = document.getElementById('btn_logout');
+            btnName.style.display = '';
+            btnLogout.style.display = '';
+            btnName.innerHTML = JwUser.userInfo['UserName'];
+            btnLogout.onclick = function () {
+                if (!confirm('Sure to logout?')) {
+                    return;
+                }
+                JwUser.logout();
+                window.location.reload();
+            };
+        }
+        document.getElementById('btn_login').getElementsByTagName('a')[0].href='http://passport.pptv.com/Login.aspx?APReturnURL='+encodeURIComponent(location.href);
+    } catch (e) { }
+})();
+</script>
+
+
+<!--End: Mini Menu-->
+
+<!--End: Top Domain-->
+
+
+<script type="text/javascript" language="JavaScript" src="js/tip.js"></script>
+<div id="page_margins">
+
+ <div id="page">
+
+
+
+
+<div class="adv980">
+<script type="text/javascript">
+<!--
+  ac_as_id = 42827;
+  ac_click_track_url = "";
+  ac_format = 0;
+  ac_mode = 1;
+  ac_width = 980;
+  ac_height = 80;
+// -->
+
+</script>
+<script type="text/javascript" src="js/g.js">
+</script>
+</div>
+
+
+
+
+
+<!--Start: Direction of Pages-->
+<div id="nav">
+	<div class="current">
+		Current Position:>>
+		<a href="home.htm">Mum's Moovog</a> >>
+		<a href="/people/list">Movie</a>
+		
+		>>
+		<i>Movie Title A</i>
+
+	</div>
+
+	<div class="caption">
+		<b>Title A </b>
+		<i>(Alternate Name)</i>		
+		
+		(Relaese Date: 2008)
+	</div>
+</div>
+
+<!--End:Direction of Pages-->
+
+
+
+
+<div id="main">
+        <div id="col1">
+
+
+<div id="col1_content" class="clearfix">
+	<!-- coverpic -->
+
+	<div class="poster">
+		<img src="pic/14.jpg" alt="poster" />
+	</div>
+
+	<dl class="thumb_msg" style="position: relative;">
+
+		<dt class="top">
+			<!--<a href="#" class="btn_more_44x13">&nbsp;</a>-->
+			<span title="moviesearchlist">Hottest Movie Search:</span>
+		</dt>
+
+
+
+
+		<dd class="cnt">
+		
+<dl>		
+
+<dt><a href="moviesearchlist.htm"><img src="pic/9.jpg"/></a></dt>
+<dd>
+<h1><a href="/movie/17039">Title B</a></h1>
+<h2>Type:Story, Comedy</h2>
+<h2>Language: English</h2>
+<div class="UserEvaluation" title="hotlevel"><div class="bg"><div class="qg" style="width:92.0%">&nbsp;</div></div><code>9.2</code></div>
+</dd>
+</dl>
+
+		
+<dl>		
+<dt><a href="moviesearchlist.htm"><img src="pic/9.jpg"/></a></dt>
+<dd>
+
+<h1><a href="/movie/17039">Title C</a></h1>
+<h2>Type:Story, Comedy</h2>
+<h2>Language: English</h2>
+<div class="UserEvaluation" title="hotlevel"><div class="bg"><div class="qg" style="width:80.0%">&nbsp;</div></div><code>8.0</code></div>
+</dd>
+</dl>
+
+		
+<dl>		
+<dt><a href="moviesearchlist.htm"><img src="pic/9.jpg"/></a></dt>
+<dd>
+<h1><a href="/movie/17039">Title D</a></h1>
+
+<h2>Type:Science Fiction</h2>
+<h2>Language: French</h2>
+<div class="UserEvaluation" title="hotlevel"><div class="bg"><div class="qg" style="width:59.0%">&nbsp;</div></div><code>5.9</code></div>
+</dd>
+</dl>
+
+		
+<dl>		
+<dt><a href="moviesearchlist.htm"><img src="pic/9.jpg"/></a></dt>
+<dd>
+<h1><a href="/movie/17039">Title E</a></h1>
+<h2>Type:Story, Comedy</h2>
+
+<h2>Language: English</h2>
+<div class="UserEvaluation" title="hotlevel"><div class="bg"><div class="qg" style="width:27.0%">&nbsp;</div></div><code>2.7</code></div>
+</dd>
+</dl>
+
+		
+<dl>		
+<dt><a href="moviesearchlist.htm"><img src="pic/9.jpg"/></a></dt>
+<dd>
+<h1><a href="/movie/17039">Title F</a></h1>
+<h2>Type:Story, Comedy</h2>
+<h2>Language: English</h2>
+
+<div class="UserEvaluation" title="hotlevel"><div class="bg"><div class="qg" style="width:00.0%">&nbsp;</div></div><code>0.0</code></div>
+</dd>
+</dl>
+
+
+		</dd>
+	</dl>
+	
+
+</div>
+
+        </div>
+        
+        
+        
+    <div id="col3">
+
+    <div id="col3_content">
+
+    
+<!--Start:Middle page-->
+
+    <div id="Div1">
+    <div id="Div2" class="clearfix">
+
+<div class="tab_menu">
+    <div class="user"><b>Mum's Moovog</b></div>
+    <ul>
+
+        <li><a href="moviesearchlist.htm"  class="active" >Introduction</a></li>
+        <!--li><a href="B" >B</a></li>
+        <li><a href="C" >C</a> </li-->
+    </ul>
+</div>
+
+
+          <div class="col3_wrap1">
+		  <div class="col3_wrap2">
+
+            <!-- add your content here -->
+
+            <div class="subcolumns">
+              <div class="c66l">
+              <div class="figure_detail">
+                    <var><b>Also as:</b>
+					<a href="" title="intername">Internationnal Name; </a>
+					<a href="" title="oriname">Original Name; </a>
+					<a href="" title="altname">Alternate Name...</a>
+
+					</var>
+                     <var>
+                    <b>Director:</b>
+					<a href="personsearchlist.htm" > X </a></var>
+					
+					<br clear="all" />
+					
+					<var class="movie_actors">
+					<b>Cast: </b>
+
+					
+						<i>
+							<a href="personsearchlist.htm" class="picsBox_img_85x83" title="A"><img src="pic/13.jpg" alt=""></a>
+
+							<p class="pl-7"><a href="/people/12080" title="">A</a></p>
+						</i>
+					
+						<i>
+							<a href="personsearchlist.htm" class="picsBox_img_85x83" title="B"><img src="pic/17.jpg" alt=""></a>
+							<p class="pl-7"><a href="/people/12316" title="">B</a></p>
+
+						</i>
+					
+						<i>
+							<a href="personsearchlist.htm" class="picsBox_img_85x83" title="C"><img src="pic/18.jpg" alt=""></a>
+
+							<p class="pl-7"><a href="/people/11503" title="">C</a></p>
+						</i>
+					</var>
+					<br clear="all" />
+					<var><b>Run Time:</b> 120 (min)</var>
+
+					
+					<var><b>Release Date in US:</b>
+					<a href="" title="2009">2009</a>
+					</var>
+					
+					<var><b>Type:</b>
+					<a href="" title="story">Story</a>
+					<a href="" title="action">Action</a>
+
+					<a href="" title="comedy">Comedy</a>
+					</var>
+					
+					<var><b>Awards: </b>
+						<a href="" title="awards">A lot of awards... </a>
+					
+					</var>
+
+				</div>
+			    <div class="detail_tag"><i>Tags:</i><var>
+
+			    
+					<span class="tag tag_green tag_front"><b><a href="" title="title">Title A</a></b></span>
+				
+					<span class="tag tag_green tag_front"><b><a href="" title="A">Person A</a></b></span>
+				
+					<span class="tag tag_green tag_front"><b><a href="" title="B">Person B</a></b></span>
+				
+					<span class="tag tag_green tag_front"><b><a href="" title="C">Person C</a></b></span>
+				
+					<span class="tag tag_green tag_front"><b><a href="" title="D">Person D</a></b></span>
+				
+					<span class="tag tag_green tag_front"><b><a href="" title="story">Story</a></b></span>
+
+				
+					<span class="tag tag_green tag_front"><b><a href="" title="action">Action</a></b></span>
+				
+					<span class="tag tag_green tag_front"><b><a href="" title="comedy">Comedy</a></b></span>
+			
+				</var>
+			    </div>
+
+
+<div class="line03">
+	<tt><b>&nbsp;</b> </tt>
+</div>
+
+
+<script type="text/javascript" language="JavaScript">
+function _showDiv(){
+	var short=document.getElementById('short_');
+	var content=document.getElementById('content_');
+	var all=document.getElementById('all');
+	var shot=document.getElementById('shot');
+	if(short.style.display=='none'){
+	var display=shot.style.display='none';
+	var display=all.style.display='block';
+		short.style.display='block';
+		content.style.display='none';
+	}else{
+	var display=shot.style.display='block';
+	var display=all.style.display='none';
+		short.style.display='none';
+		content.style.display='block';
+	}
 }
-
-.thumbnail_image
-{
- height: 70%;
-}	
-
-td.center
-{
-	text-align: center; 
+function _showDiv1(episodeid){
+	var shot=document.getElementById('shot_'+episodeid);
+	var all=document.getElementById('all_'+episodeid);
+	var shot_plot=document.getElementById('shot_plot_'+episodeid);
+	var all_plot=document.getElementById('all_plot_'+episodeid);
+	if(shot.style.display=='none'){
+	    shot.style.display='block';
+	    shot_plot.style.display='block';
+	    all.style.display='none';
+	    all_plot.style.display='none';
+	}else{
+	     shot.style.display='none';
+	    shot_plot.style.display='none';
+	    all.style.display='block';
+	    all_plot.style.display='block';
+	}
 }
+</script>
 
-p
-{
- margin: 2px;
-}
 
-.bordered
-{
-	border: 	1px solid black;
-}
-{% endblock style %}
 
-{% block page_header %}
-   <!-- page header -->
-   <a href="{% url src.frontend.views.add_to_db %}">add film</a> 
-{% endblock page_header %}
-{% block page_nav %}
-   <!-- navigation -->
-{% endblock page_nav %}
-{% block page_content %}
-   <!-- page content -->
-   <!-- pagination links -->
-   <!-- film list -->
 
-   {% if object %}
-   <div>
-      <p>
-         <h3>{{ object.title }}<h3>
-      </p>
-      <p>
-         {{ object.release_date.year }}
-      </p>
-      <p>
-         <img src="{{ object.image }}" />
-      </p>	 
-   </div>   
- 
-   {% endif %}
+<!-- Start: Basic Intro -->
+<h4 class="figure_block">
+	<b>Plot:</b>
 
-{% endblock page_content %}
-{% block page_footer %}
-   <!-- page footer -->
-{% endblock page_footer %}
+	
+	<a>
+        <span id="all" onclick="_showDiv()" title="fullsynopsis">Full synopsis</span>
+
+		<span id="shot" onclick="_showDiv()" title="briefsummary" style="display:none">Brief Summary</span>
+	</a>
+	<s>&nbsp;</s>
+
+</h4>
+<div id="short_" class="figure_content">
+The story of an archer in the army of Richard Coeur de Lion who fights against the Norman invaders and becomes the legendary hero known as Robin Hood.
+</div>
+
+
+<div id="content_" class="figure_content figure_all">
+<br>            SPOILER REVEALS ENDING Following King Richard's death in France archer Robin Longstride,along with Will Scarlett, Alan-a-Dale and Little John,decides to return to England. 
+
+<br>
+<br>
+<br>            They encounter the dying Robert of Locksley,whose party was ambushed by treacherous Godfrey,who hopes to facilitate a French invasion of England, and Robin promises the dying knight he will return his sword to his father Walter in Nottingham. 
+<br>
+<br>
+<br>            Here Walter encourages him to impersonate the dead man to prevent his land being confiscated by the crown,and he finds himself with Marian, a ready-made wife.Hoping to stir baronial opposition to weak King John and allow an easy French take-over, Godfrey worms his way into the king's service as Earl Marshal of England and brutally invades towns under the pretext of collecting Royal taxes. 
+<br>
+<br>
+<br>            Walter tells Robin he knew his father,a freedom-fighter who hoped to unite the barons for a better society but Walter is killed by Godfrey after a raid on Nottingham. 
+<br>
+<br>
+<br>            Robin rallies the barons and the king and thwarts the invasion,avenging Walter by slaying Godfrey. Sensing that Robin's popularity makes him a threat,John declares him an outlaw. Thus along with his friends,including his wife and her priest Friar Tuck, Robin joins other orphans and outcasts in the greenwoods where the legend begins.
+<br>
+
+<br>
+
+</div>
+<!--End: Basic Into-->
+
+
+
+<!-- Start: Related Movies-->
+
+<style type="text/css">
+  .figure_content var{height:125px;overflow:hidden}
+</style>
+
+
+<div class="line03">
+	<tt><b>&nbsp;</b> </tt>
+
+</div>
+<h4 class="figure_block"><!--Please Add Search Bar Here-->
+	<a id="j_dom_searchsubmit" title="serch" href="#2" onclick="window.open('http://www.pp.tv/s?w=2012&st=bkso'+encodeURI(document.getElementById('_j_dom_SearchInput').value),'_blank')" class="submit">Search</a>
+	<span class="bg">
+	<input id="_j_dom_SearchInput" type="text" value="2012" onKeydown="if(event.keyCode==13){window.open('http://www.pp.tv/s?w=2012&st=bkso'+encodeURI(document.getElementById('_j_dom_SearchInput').value),'_blank');}" /></span>
+	<b>Moovog Search</b><code></code>
+
+</h4>
+
+
+<div class="figure_content">
+
+    <var>
+        <a href="" target="_blank"
+                class="picsBox_img_125x95" title="title A">
+            <img src="pic/14.jpg"
+                alt="altname" onerror="this.src='pic/19.gif';"> </a>
+        <a href="moviesearchlist.htm"
+            title="title A" target="_blank">Title A</a>
+        <br>120 (min)
+    </var>
+
+<!--div class="m"><a href="moviesearchlist.htm" target="_blank" title="more">More</a>&nbsp;>></div-->
+</div>
+
+
+<!-- End; related Movies-->
+
+
+<!-- Start: related Pictures-->
+
+<div class="line03">
+	<tt><b>&nbsp;</b> </tt>
+</div>
+                  <h4 class="figure_block"> <b>Related Pictures:</b>
+                    <a href="http://www.google.com" title="More">More</a> <s>&nbsp;</s>
+
+                  </h4>
+                  
+                  
+<div class="figure_content">
+    
+	<div class="pic_small_box">
+		<div class="image_container">
+            <a href=""><img src="pic/20.jpg" alt="titleA" /></a>
+		</div>
+        500x748
+		<b>Title A</b>
+	</div>
+
+	
+</div>
+
+<!-- End: related pictures-->
+
+<div class="blank_div">
+	&nbsp;
+</div>
+
+                <div class="blank_div">&nbsp;</div>
+
+                  
+           
+
+              </div>
+              <div class="c33r">
+
+                  <div class="right_related_info">
+
+                    <!-- Insert your subtemplate content here -->
+                    
+
+<div style="width:200px;margin: 5px 0 0 5px;">
+<script type="text/javascript">
+<!--
+  ac_as_id = 42828;
+  ac_click_track_url = "";
+  ac_format = 0;
+  ac_mode = 1;
+  ac_width = 200;
+  ac_height = 200;
+// -->
+</script>
+<script type="text/javascript" src="js/c.js">
+</script>
+</div>
+
+
+
+<!--End:Middle page-->
+
+<img class="live_time_list" src="pic/title/bb.gif"/>
+
+<div class="splitline">&nbsp;</div>
+
+<div class="db_ads" id="db_ads_live">
+
+    <div style="padding:10px;line-height:18px;"><font color="#666666">Advertisment:<br>
+    ADs</font></div>
+
+</div>
+
+
+<div class="splitline" style="margin-top:10px;">&nbsp;</div>
+<script type="text/javascript" language="JavaScript" src="/js/bk_epg.js"></script>
+
+
+
+
+                    
+<!-- New Refreshed Person Info. -->                  	                   
+                    
+<h4><s>New </s>Uploaded Movies:</h4>
+
+<div class="area_pic_link">
+
+	<span class="hot_movie">
+
+		  <a href="moviesearchlist.htm" title="Movie C" target="_blank">
+			  <img src="pic/9.jpg" width="75" height="100" />
+			  <b>Movie C</b>
+		  </a>
+	  </span>
+	  
+	<span class="hot_movie">
+		  <a href="moviesearchlist.htm" title="Movie D" target="_blank">
+			  <img src="pic/9.jpg" width="75" height="100" />
+
+			  <b>Movie D</b>
+		  </a>
+	  </span>	
+	  
+	  <span class="hot_movie">
+		  <a href="moviesearchlist.htm" title="Movie E" target="_blank">
+			  <img src="pic/9.jpg" width="75" height="100" />
+			  <b>Movie E</b>
+		  </a>
+
+	  </span>
+
+	<span class="hot_movie">
+		  <a href="moviesearchlist.htm" title="Movie F" target="_blank">
+			  <img src="pic/9.jpg" width="75" height="100" />
+			  <b>Movie F</b>
+		  </a>
+	  </span>
+	  
+	  	<span class="hot_movie">
+
+		  <a href="moviesearchlist.htm" title="Movie G" target="_blank">
+			  <img src="pic/9.jpg" width="75" height="100" />
+			  <b>Movie G</b>
+		  </a>
+	  </span>
+	  
+	  	<span class="hot_movie">
+		  <a href="moviesearchlist.htm" title="Movie H" target="_blank">
+			  <img src="pic/9.jpg" width="75" height="100" />
+
+			  <b>Movie H</b>
+		  </a>
+	  </span>
+	  
+	  	<span class="hot_movie">
+		  <a href="moviesearchlist.htm" title="Movie I" target="_blank">
+			  <img src="pic/9.jpg" width="75" height="100" />
+			  <b>Movie I</b>
+		  </a>
+
+	  </span>
+	  
+	  	<span class="hot_movie">
+		  <a href="moviesearchlist.htm" title="Movie J" target="_blank">
+			  <img src="pic/9.jpg" width="75" height="100" />
+			  <b>Movie J</b>
+		  </a>
+	  </span>	  
+
+
+</div>
+<div class="splitline">&nbsp;</div>
+
+
+<div style="text-align:center;"><a href="home.htm" target="_blank">
+<img src="pc/4.gif" width="190" height="184" border="0"></a></div>
+
+
+				</div>
+			</div>
+
+                </div>
+              </div>
+
+          </div>
+
+          <!-- IE Column Clearing -->
+          <div id="ie_clearing"> &#160; </div>
+        </div>
+      </div>
+
+      <!-- begin: #footer -->
+</div>
+
+      
+
+<!--Start: the button page-->
+
+<!--Start:CopyRight-->
+    <div class="foot c_b">
+		<div class="info">
+			<p align="center"> Copyright &copy;  Mum's Moovog Team, Eurecom, France  &nbsp&nbsp&nbsp&nbsp&nbsp  Note:Don't use it for business!</p>
+		</div>
+
+	</div>
+<!--End:Cpoyright-->
+
+
+    <!--Common code-->
+	<script type="text/javascript"> var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www."); document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E")); </script> <script type="text/javascript"> try { var pageTracker = _gat._getTracker("UA-9848620-1"); pageTracker._trackPageview(); } catch(err) {}</script>
+    <!--End common code-->
+</div>
+
+<!--Common code-->
+
+<script type="text/javascript"> var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www."); document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E")); </script> <script type="text/javascript"> try { var pageTracker = _gat._getTracker("UA-9848620-1"); pageTracker._trackPageview(); } catch(err) {}</script>
+<!--End common code-->
+
+<div id="bk_tip_container" class="drift_layer" style="display:none;"></div>
+<script src="js/footer_pplivecom_new.js" type="text/javascript"></script>
+
+<!--End: the button page-->
+
+  </div>
+
+<script type="text/javascript" src="js/g.js">
+
+</script>
+
+</body>
+</html>
+

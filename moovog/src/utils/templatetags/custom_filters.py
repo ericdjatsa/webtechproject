@@ -3,6 +3,7 @@ from django import template
 from src.utils.get_image import getOrCacheImage
 from src.frontend.models import Trailer
 from src.seeker.models import Release_Date_Model
+from src.utils.clean_name import cleanName
 
 register = template.Library()
 @register.filter("key")
@@ -40,3 +41,6 @@ def get_release_year(movie):
   except:
 	 return "1984"
   
+@register.filter("clean_name")
+def clean_name(name):
+	return cleanName(name)

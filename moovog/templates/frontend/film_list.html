@@ -11,10 +11,10 @@
 
 {% block page_header %}
 	<!-- page header -->
-  <a id="settings_link" href="{% url src.frontend.views.preferences %}">{% blocktrans %}settings{% endblocktrans %}</a>
+<!--  <a id="settings_link" href="{% url src.frontend.views.preferences %}">{% blocktrans %}settings{% endblocktrans %}</a> -->
 
  <!--		<a href="{% url src.frontend.views.add_to_db 1 %}">add film</a> --> 
-		<div class="header">
+<!--		<div class="header">
 		<div class="title">
 			<span id="moovog_m">M</span>
 			<span id="moovog_o1">O</span>
@@ -22,9 +22,8 @@
 			<span id="moovog_v">V</span>
 			<span id="moovog_o3">O</span>
 			<span id="moovog_g">G</span>
-		</div>
-		<div id="searchbox">	{% include "seeker/search_bar.html" %} </div>
-		</div>
+		</div> -->
+<!--		</div> -->
 {% endblock page_header %}
 {% block page_nav %}
    <!-- navigation -->
@@ -38,23 +37,25 @@
 		{% if movies %}
 		{% for movie in movies %}
 			<div class="film_thumbnail">
-				<a class="film_thumbnail" href="{% url django.views.generic.list_detail.object_detail movie.id %}">
-					<div class="left"><img src="{{ movie.thumbnail_url|get_cover_image }}" class="thumbnail_image"/></div>
+					<div class="left">
+						<a href="{% url src.frontend.views.movie movie.title|clean_name, movie.pk %}">
+							<img src="{{ movie.image_url|get_cover_image }}" class="thumbnail_image"/>
+						</a>
+					</div>
 					<div class="right">
-						<p>Title: {{ movie.original_title }}</p>
-						<p>Year: {{ movie|get_release_year }}</p>
+						<p>Title: {{ movie.title }}</p>
+						<p>Year: {{ movie.year }}</p>
 
 						<p>Genre: 
 						  {% for genre in movie.genres.all %}
 						  {% if forloop.last %}
-						  {{ genre }}
+						  <a href="{% url src.frontend.views.genre genre.name|clean_name, genre.pk %}">{{ genre.name }}</a>
 						  {% else %}
-						  {{ genre }},&nbsp;
+						  <a href="{% url src.frontend.views.genre genre.name|clean_name, genre.pk %}">{{ genre.name }}</a>,&nbsp;
 						  {% endif %}
 						  {% endfor %}
 						</p>
 					</div>
-				</a>
 			</div>
 			<div class="film_tooltip">
 				<embed 

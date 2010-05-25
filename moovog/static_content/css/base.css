@@ -40,3 +40,18 @@ a:active
 {
 	color:#FFFFFF;
 }
+
+#title_image
+{
+	float: left;
+}
+
+#searchbox
+{
+	float: right;
+}
+
+td.administration_link
+{
+	text-align: right;
+}
