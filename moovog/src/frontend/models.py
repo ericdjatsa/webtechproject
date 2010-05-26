@@ -30,22 +30,8 @@ class Person(models.Model):
 			super(Person, self).save()
 		elif self.is_full:
 			#perform update
-			self.set_pk_val(Person.objects.filter(imdb_id = self.imdb_id)[0].pk)
+			self._set_pk_val(Person.objects.get(imdb_id = self.imdb_id).pk)
 			super(Person, self).save()
-	def fetch(self):
-		if (not self.is_full) and (self.imdb_id != None):
-			i = imdbUpdate(imdbGetPerson(self.imdb_id))
-			try: self.birth_date = datetime.strptime(i['birth date'], "%d %B %Y").date()
-			except: self.birth_date = None
-			try: self.death_date = datetime.strptime(i['death date'], "%d %B %Y").date()
-			except: self.death_date = None
-			try: self.image_url = i['headshot']
-			except: self.image_url = None
-			try: self.bio = i['mini biography']
-			except: self.bio = None
-			try: self.birth_name = i['birth name']
-			except: self.birth_name = None
-			self.save()
 			
 class Character(models.Model):
 	name = models.CharField(max_length=32)
@@ -69,8 +55,8 @@ class Movie(models.Model):
 	path = models.CharField(max_length = 256)
 	hash_code = models.CharField(max_length = 64)
 	imdb_id = models.CharField(max_length = 12, unique = True)
-	synopsis = models.TextField()
 	plot = models.TextField()
+	short_plot = models.TextField()
 	genres = models.ManyToManyField(Genre)	
 	is_full = models.BooleanField()
 	runtimes = models.IntegerField()

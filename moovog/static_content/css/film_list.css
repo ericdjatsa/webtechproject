@@ -8,11 +8,12 @@
 	border: 1px solid black;
 }
 
+/*
 .thumbnail_image
 {
 	height: 90%;
 }	
-
+*/
 td.center
 {
 	text-align: center; 
@@ -113,15 +114,26 @@ clear: both;
 color: #00FF00;
 }
 
+img.thumbnail_image
+{
+	height: 80%;
+}
+
 div.left
 {
-float: left;
+	width: 20%;
+	float: left; 
+	position: relative;
 }
 
 div.right
 {
+	width: 65%;
+	position: relative;
 	padding-left: 20px;
 	float: right;
+	word-wrap: break-word;
+/*	width: 60% */
 }
 
 #settings_link

@@ -49,12 +49,16 @@
 						<p>Genre: 
 						  {% for genre in movie.genres.all %}
 						  {% if forloop.last %}
-						  <a href="{% url src.frontend.views.genre genre.name|clean_name, genre.pk %}">{{ genre.name }}</a>
+						  <a href="{% url src.frontend.views.genre genre.name|clean_name, genre.pk %}">{{ genre. }}</a>
 						  {% else %}
-						  <a href="{% url src.frontend.views.genre genre.name|clean_name, genre.pk %}">{{ genre.name }}</a>,&nbsp;
+						  <a href="{% url src.frontend.views.genre genre.name|clean_name, genre.pk %}">{{ genre }}</a>,
 						  {% endif %}
 						  {% endfor %}
 						</p>
+						<p>Plot: {{ movie.short_plot }}</p>
+						<p> <a href="{% url src.frontend.views.movie movie.title|clean_name, movie.id %}">details</a>
+							<a href="{% url src.frontend.views.movie_watch movie.title|clean_name, movie.id %}">watch</a>
+					</p>
 					</div>
 			</div>
 			<div class="film_tooltip">

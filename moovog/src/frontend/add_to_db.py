@@ -14,7 +14,7 @@ from src.frontend.models import Character
 from src.frontend.models import get_or_create_character
 from src.frontend.models import get_or_create_person
 from src.utils.internet_movie_archive import get_trailer_embed
-from src.storage.store_movie import Store_movie
+#from src.storage.store_movie import Store_movie
 
 #get all files which are not in the ignore table or in the movie table from the crawler table. This query
 #uses raw sql because django is stupid and not capable of doing this query (as opposed to rubyOnRails),
@@ -53,6 +53,7 @@ def saveMovie(mov, file):
 		path = file.path,
 		imdb_id = mov.getID(),
 		plot = dictGet(mov, 'plot', [""])[0].split("::")[0],
+		short_plot = dictGet(mov, 'plot outline'),
 		is_full = True,
 		runtimes = dictGet(mov, 'runtimes', [0])[0],
 		rating = dictGet(mov, 'rating', 0.0))
@@ -111,7 +112,7 @@ def addFilmsToDb(diskScanResult, imdbMatches, association):
 				if Trailer.objects.filter(imdb_id = imdbMovie.getID()).__len__ == 0:
 					Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
 #		except Exception as ex:
-		except:
+		except Exception, ex:
 			print ex
 
 
