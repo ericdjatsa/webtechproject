@@ -5,33 +5,13 @@ Created on 30 avr. 2010
 @author: Christophe
 '''
 
-from seeker.models import *
-#from tools.routines import areListEqual, homogeneous_search_dictionary_merger, heterogeneous_search_dictionary_merger
+try:
+    from src.seeker.models import *
+except Exception, x: from seeker.models import *
+from tools.routines import areListEqual, homogeneous_search_dictionary_merger, heterogeneous_search_dictionary_merger
 
 class Repository:
-    
-#    @staticmethod
-#    def get_synopsis_model(movie_model, country_models):
-#        """
-#            Searches for the movie's synopsis that is written in the same
-#            languages (countries).
-#            Returns that synopsis model if found, None if not.
-#        """
-#        country_names = []
-#        for country_model in country_models:
-#            country_names.append(country_model.country_name)
-#        
-#        movie_synopsis_models = movie_model.synopsis_model_set.all()
-#        
-#        for movie_synopsis_model in movie_synopsis_models:
-#            movie_synopsis_countries = movie_synopsis_model.countries.all()
-#            movie_synopsis_country_names = []
-#            for movie_synopsis_country in movie_synopsis_countries:
-#                movie_synopsis_country_names.append(movie_synopsis_country.country_name)
-#            if areListEqual(movie_synopsis_country_names, country_names):
-#                return movie_synopsis_model
-#        return None
-    
+
     @staticmethod
     def get_release_date_model(movie_model, country_models):
         """
@@ -110,11 +90,11 @@ class Repository:
         result = Repository().search_writer(string_to_search)
         global_result = homogeneous_search_dictionary_merger(result, global_result)
         result = Repository().search_award(string_to_search)
-        global_result = heterogeneous_search_dictionary_merger(result, global_result)
-        result = Repository().search_character(string_to_search)
-        global_result = heterogeneous_search_dictionary_merger(result, global_result)
-        result = Repository().search_award_category(string_to_search)
-        global_result = heterogeneous_search_dictionary_merger(result, global_result)
+#        global_result = heterogeneous_search_dictionary_merger(result, global_result)
+#        result = Repository().search_character(string_to_search)
+#        global_result = heterogeneous_search_dictionary_merger(result, global_result)
+#        result = Repository().search_award_category(string_to_search)
+#        global_result = heterogeneous_search_dictionary_merger(result, global_result)
         return global_result
     
     @staticmethod
@@ -207,16 +187,18 @@ class Repository:
             Character_Model instances
             
             OUTPUT :
-                movie-models : a list of Movie_Model
-                actor-models : a list of Actor_Model
+                {match-1 : {"actor" : actor_1, "movie" : movie_1}, match-2 : ...}
         """
         query = Character_Model.objects.filter(character_name__icontains = string_to_search)
-        result_actors = []
-        result_movies = []
-        for character_model in query:
-            result_actors.append(character_model.related_actor)
-            result_movies.append(character_model.related_movie)
-        return {"actor-models" : result_actors, "movie-models" : result_movies}
+        result = {}
+        i = 0
+        if query is not None:
+            for character_model in query:
+                i += 1
+                result["match"+str(i)] = {}
+                result["match"+str(i)]["actor"] = character_model.related_actor
+                result["match"+str(i)]["movie"] = character_model.related_movie
+        return result
     
     @staticmethod
     def search_award(string_to_search):
@@ -225,37 +207,30 @@ class Repository:
             Award_Model instances
             
             OUTPUT :
-                movie-models : a list of Movie_Model
-                actor-models : a list of Actor_Model
-                director-models : a list of Director_Model
-                writer-models : a list of Writer_Model
+                {match-1 : {"movie" : movie_1, "person" : person_1, "award-category" : 
+                award_category_1, "date-of-awarding" : date, award-status : status
+                }, match-2 : ...}
         """
         query = Award_Model.objects.filter(award_name__icontains = string_to_search)
-        result_actors = []
-        result_movies = []
-        result_directors = []
-        result_writers = []
+        result = {}
         if query is not None:
             for award_model in query:
-                movie_set = award_model.movie_model_set.all()
-                actor_set = award_model.actor_model_set.all()
-                director_set = award_model.director_model_set.all()
-                writer_set = award_model.writer_model_set.all()
-                if movie_set is not None:
-                    for movie_model in movie_set:
-                        result_movies.append(movie_model)
-                if actor_set is not None:
-                    for actor_model in actor_set:
-                        result_actors.append(actor_model)
-                if director_set is not None:
-                    for director_model in director_set:
-                        result_directors.append(director_model)
-                if writer_set is not None:
-                    for writer_model in writer_set:
-                        result_writers.append(writer_model)
-        return {"actor-models" : result_actors, "movie-models" : result_movies,
-                "director-models" : result_directors, "writer-models" : result_writers}
-        
+                matches = Award_Matcher_Model.objects.filter(award = award_model)
+                i = 0
+                if matches is not None:
+                    for match in matches:
+                        i += 1
+                        result["match"+str(i)] = {}
+                        result["match"+str(i)]["movie"] = match.movie
+                        if match.actor is not None: result["match"+str(i)]["person"] = match.actor
+                        elif match.director is not None: result["match"+str(i)]["person"] = match.director
+                        elif match.writer is not None: result["match"+str(i)]["person"] = match.writer
+                        else: result["match"+str(i)]["person"] = None
+                        result["match"+str(i)]["award-category"] = match.award_category
+                        result["match"+str(i)]["date-of-awarding"] = award_model.date_of_awarding
+                        result["match"+str(i)]["award-status"] = award_model.award_status
+        return result
+
     @staticmethod
     def search_award_category(string_to_search):
         """
@@ -278,7 +253,7 @@ class Repository:
                     result["award-category-"+str(i)].append(award_matcher_model.director)
                     result["award-category-"+str(i)].append(award_matcher_model.writer)
                     result["award-category-"+str(i)].append(award_matcher_model.movie)
-                    result["award-category-"+str(i)].append(award_matcher_model.award) 
+                    result["award-category-"+str(i)].append(award_matcher_model.award)
                     result["award-category-"+str(i)].append(award_matcher_model.award_category)
         return result
         

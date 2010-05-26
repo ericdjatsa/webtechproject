@@ -27,16 +27,53 @@ def search(request):
     
     display_result = {}
     if search_result["type-of-result"] == "homogeneous":
-        homogeneous_wf = Get_Infos_For_Homogeneous_Search_WF({"list-of-models" : search_result["search-result"]}, None)
+        homogeneous_wf = Get_Infos_For_Homogeneous_Search_WF(
+                        {"dict-of-models" : search_result["search-result"]}, None)
         display_result = homogeneous_wf.work()
-    if search_result["type-of-result"] == "heterogeneous":
-        pass
+#    if search_result["type-of-result"] == "heterogeneous":
+#        heterogeneous_wf = Get_Infos_For_Heterogeneous_Search_WF(
+#                            {"dict-of-matches" : search_result["search-result"]}, None)
+#        display_result = heterogeneous_wf.work()
     
     display_result["result"]["time-to-serve"] = str(datetime.now() - start
                                                 + search_result["time-to-serve"]
                                                 + display_result["time-to-serve"])
 #    return render_to_response("template_targeted", result)
+#    return HttpResponse(JSONEncoder().encode(str(search_result["search-result"]["actor-models"][0].get_infos_for_model())))
     return HttpResponse(JSONEncoder().encode(str(display_result["result"])))
+
+def get_detailed_infos_for_movie(request):
+    """
+        INPUT :
+            movie-id
+        OUTPUT :
+            Get_Detailed_Infos_For_Movie_Model_WF's output
+    """
+    start = datetime.now()
+    if request.method == "GET": HttpResponse("POST excepted")
+    details_wf = Get_Detailed_Infos_For_Movie_Model_WF(request.POST, None)
+    result = details_wf.work()
+    result["time-to-serve"] += datetime.now() - start
+    
+#    return render_to_response("template_url", JSONEncoder().encode(str(result)))
+    return HttpResponse(JSONEncoder().encode(str(result)))
+
+def get_detailed_infos_for_person(request):
+    """
+        INPUT :
+            person-id
+            person-type
+        OUTPUT :
+            Get_Detailed_Infos_For_Person_Model_WF's output
+    """
+    start = datetime.now()
+    if request.method == "GET": HttpResponse("POST excepted")
+    details_wf = Get_Detailed_Infos_For_Person_Model_WF(request.POST, None)
+    result = details_wf.work()
+    result["time-to-serve"] += datetime.now() - start
+    
+#    return render_to_response("template_url", JSONEncoder().encode(str(result)))
+    return HttpResponse(JSONEncoder().encode(str(result)))
 
 def create_fake_complete_movie(request):
     """

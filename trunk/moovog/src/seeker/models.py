@@ -212,7 +212,7 @@ class Actor_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = {}
-        infos["person-id"] = self.id
+        infos["person-id"] = str(self.id)
         infos["person-type"] = "actor"
         infos["full-name"] = self.full_name
         infos["nick-name"] = self.nick_name
@@ -279,7 +279,7 @@ class Writer_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = {}
-        infos["person-id"] = self.id
+        infos["person-id"] = str(self.id)
         infos["person-type"] = "writer"
         infos["full-name"] = self.full_name
         infos["nick-name"] = self.nick_name
@@ -343,7 +343,7 @@ class Director_Model(models.Model):
     
     def get_infos_for_model(self):
         infos = {}
-        infos["person-id"] = self.id
+        infos["person-id"] = str(self.id)
         infos["person-type"] = "director"
         infos["full-name"] = self.full_name
         infos["nick-name"] = self.nick_name
@@ -464,15 +464,17 @@ class Movie_Model(models.Model):
         infos["plot"] = self.plot
         
         # Returns the release date either of the USA, UK, or International release
-        desired_release_dates = ["International", "UK", "USA", "France"]
-        while infos["release-date"] is None:
+        infos["release-date"] = None
+        desired_release_date_countries = ["International", "USA", "UK", "France"]
+        for country in desired_release_date_countries:
             release_date_list = list(Release_Date_Model.objects.filter(related_movie =
-                                self).filter(countries__country_name__iexact =
-                                desired_release_dates.__iter__().next()))
-            if release_date_list is not (None or []):
+                                self).filter(countries__country_name__iexact = country))
+            if len(release_date_list) != 0:
                 infos["release-date"] = release_date_list[0].release_date
+                break
         if infos["release-date"] is None:
-            infos["release-date"] = list(Release_Date_Model.objects.filter(related_movie = self))[0]
+            try: infos["release-date"] = list(Release_Date_Model.objects.filter(related_movie = self))[0]
+            except Exception, x: pass
         
         # Returns the list of the movie genres
         genres_list = []
@@ -486,9 +488,11 @@ class Movie_Model(models.Model):
         for string in desired_akas:
             aka_query = Aka_Model.objects.filter(related_movie = self).filter(
                         countries__country_name__iexact = string)
-            if aka_query is not (None or []):
-                akas_dict[string] = list[aka_query][0].get_infos_for_model()
+            if len(aka_query) != 0:
+                akas_dict[string] = aka_query[0].get_infos_for_model()
         infos["akas"] = akas_dict
+        
+        return infos
         
     @staticmethod
     def add_movie_model(imdb_id, original_title, filename, extension, path_on_disk, hash_code):
@@ -706,7 +710,7 @@ class Release_Date_Model(models.Model):
     related_movie = models.ForeignKey(Movie_Model)
     
     def __unicode__(self):
-        return " ".join([self.release_date, self.related_movie])
+        return " ".join([str(self.release_date), str(self.related_movie)])
     
     @classmethod
     def kind(cls):
