@@ -13,6 +13,7 @@ from src.frontend.models import Person
 from src.frontend.models import Character
 from src.frontend.models import get_or_create_character
 from src.frontend.models import get_or_create_person
+from src.frontend.models import get_or_create_genre
 from src.utils.internet_movie_archive import get_trailer_embed
 #from src.storage.store_movie import Store_movie
 
@@ -44,25 +45,31 @@ def getImdbMovie(imdbMovies, imdbId):
 
 def saveMovie(mov, file):
 	m = Movie(
-		title = dictGet(mov, 'title'),
+		title = dictGet(mov, 'title')[:(Movie._meta.get_field('title').max_length - 2)],
 		year = dictGet(mov, 'year'),
-		image_url = dictGet(mov, 'cover url'),
-		filename = file.filename,
-		extension = file.extension,
-		hash_code = file.hash_code,
-		path = file.path,
-		imdb_id = mov.getID(),
+		image_url = dictGet(mov, 'cover url')[:(Movie._meta.get_field('image_url').max_length - 2)],
+		filename = file.filename[:(Movie._meta.get_field('filename').max_length - 2)],
+		extension = file.extension[:(Movie._meta.get_field('extension').max_length - 2)],
+		hash_code = file.hash_code[:(Movie._meta.get_field('hash_code').max_length - 2)],
+		path = file.path[:(Movie._meta.get_field('path').max_length - 2)],
+		imdb_id = mov.getID()[:(Movie._meta.get_field('imdb_id').max_length - 2)],
 		plot = dictGet(mov, 'plot', [""])[0].split("::")[0],
 		short_plot = dictGet(mov, 'plot outline'),
 		is_full = True,
-		runtimes = dictGet(mov, 'runtimes', [0])[0],
+		runtimes = dictGet(mov, 'runtimes', [0])[0][:(Movie._meta.get_field('runtimes').max_length - 2)],
 		rating = dictGet(mov, 'rating', 0.0))
-	m.save()
+	try:
+		m.save()
+	except Exception, e:
+		print e
 		
 	for genre in dictGet(mov, 'genre', []):
-		g = Genre(name = genre)
-		g.save()
-		m.genres.add(g)
+		g = get_or_create_genre(genre)
+		try:
+			g.save()
+			m.genres.add(g)
+		except Exception, e:
+			print e
 		
 	for actor in dictGet(mov, 'actors', []):
 #		actor = imdbUpdate(actor)
@@ -74,7 +81,10 @@ def saveMovie(mov, file):
 			actor = p,
 			character = q,
 			movie = m)
-		r.save()
+		try:
+			r.save()
+		except Exception, e:
+			print e
 	
 	for writer in dictGet(mov, 'writer', []):
 		p = get_or_create_person(name = dictGet(writer, 'name'),
@@ -82,7 +92,10 @@ def saveMovie(mov, file):
 		r = Wrote(
 			person = p,
 			movie = m)
-		r.save()
+		try:
+			r.save()
+		except Exception, e:
+			print e
 		
 	for director in dictGet(mov, 'director', []):
 		get_or_create_person(name = dictGet(director, 'name'),
@@ -90,7 +103,10 @@ def saveMovie(mov, file):
 		r = Directed(
 			person = p,
 			movie = m)
-		r.save()
+		try:
+			r.save()
+		except Exception, e:
+			print e
 		
 
 def addFilmsToDb(diskScanResult, imdbMatches, association):
@@ -99,7 +115,7 @@ def addFilmsToDb(diskScanResult, imdbMatches, association):
 			assoc = association["%d" % (d.id)]
 			if assoc == 'ignore':
 				print "putting file %s in ignore table" % (d.path)
-				IgnoreTable(filename = d.filename, md5 = d.hash_code, extension = d.extension, path = d.path).save()
+				IgnoreTable(filename = d.filename, hash_code = d.hash_code, extension = d.extension, path = d.path).save()
 			else:
 				#TODO: Add movie to database (query christophe about that)
 				#search imdb movie for this id
@@ -109,7 +125,7 @@ def addFilmsToDb(diskScanResult, imdbMatches, association):
 #				Store_movie(movie = imdbMovie, fichier = d).start()
 				#making imdb_id primary key is not enough to do away with this if, as get_trailer_embed 
 				#will still be called, which is exactly the overhead we're trying to avoid using the DB. 
-				if Trailer.objects.filter(imdb_id = imdbMovie.getID()).__len__ == 0:
+				if Trailer.objects.filter(imdb_id = imdbMovie.getID()).__len__() == 0:
 					Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
 #		except Exception as ex:
 		except Exception, ex:

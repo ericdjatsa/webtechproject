@@ -15,11 +15,11 @@ class Genre(models.Model):
 			super(Genre, self).save()
 
 class Person(models.Model):
-	name = models.CharField(max_length=32)
-	birth_name = models.CharField(max_length=32, null = True)
+	name = models.CharField(max_length=50)
+	birth_name = models.CharField(max_length=50, null = True)
 	birth_date = models.DateField(null = True)
 	death_date = models.DateField(null = True)
-	imdb_id = models.CharField(max_length = 12, unique = True)
+	imdb_id = models.CharField(max_length = 14, unique = True)
 	bio = models.TextField(null = True)
 	is_full = models.BooleanField()
 	image_url = models.CharField(max_length=256, null = True)
@@ -34,8 +34,8 @@ class Person(models.Model):
 			super(Person, self).save()
 			
 class Character(models.Model):
-	name = models.CharField(max_length=32)
-	imdb_id = models.CharField(max_length = 12, null = True)
+	name = models.CharField(max_length=50)
+	imdb_id = models.CharField(max_length = 14, null = True)
 	is_full = models.BooleanField()
 	def __unicode__(self):
 		return self.name
@@ -47,19 +47,19 @@ class Character(models.Model):
 	
 
 class Movie(models.Model):
-	title = models.CharField(max_length=30)
-	year = models.CharField(max_length=4)
-	image_url = models.CharField(max_length=200)
+	title = models.CharField(max_length=100)
+	year = models.CharField(max_length=10)
+	image_url = models.CharField(max_length=255)
 	filename = models.CharField(max_length = 256)
 	extension = models.CharField(max_length = 32)
 	path = models.CharField(max_length = 256)
-	hash_code = models.CharField(max_length = 64)
-	imdb_id = models.CharField(max_length = 12, unique = True)
+	hash_code = models.CharField(max_length = 72)
+	imdb_id = models.CharField(max_length = 14, unique = True)
 	plot = models.TextField()
 	short_plot = models.TextField()
 	genres = models.ManyToManyField(Genre)	
 	is_full = models.BooleanField()
-	runtimes = models.IntegerField()
+	runtimes = models.CharField(max_length = 64)
 	rating = models.FloatField()
 	def __unicode__(self):
 		return "%s (%s)" % (self.title, self.year)
@@ -99,7 +99,7 @@ class IgnoreTable(models.Model):
 	filename = models.CharField(max_length=256)
 	extension = models.CharField(max_length=32)
 	path = models.CharField(max_length=256)
-	hash_code = models.CharField(max_length=64)
+	hash_code = models.CharField(max_length=72)
 	def __unicode__(self):
 		return self.path
 
@@ -142,3 +142,12 @@ def get_or_create_character(name, imdb_id = None):
 		c = Character(name = name, imdb_id = imdb_id, is_full = False)
 		c.save()
 	return c
+	
+def get_or_create_genre(name):
+	g = Genre.objects.filter(name = name)
+	if g.__len__() == 0:
+		g = Genre(name = name)
+		g.save()
+		return g
+	else:
+		return g[0]
