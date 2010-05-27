@@ -21,25 +21,21 @@
             <div class="leftMenu c_b">
                 
                 <ul class="c_b">
-                    <li><a href="home.htm" title="home">Home</a></li>
-                    <li><a href="home.htm" title="A">A</a></li>
-                    <li><a href="home.htm" title="B">B</a></li>
-                    <li><a href="home.htm" title="C">C</a></li>
-                    <li><a href="home.htm" title="D">D</a></li>
-                    <li><a href="home.htm" title="E">E</a></li>
-                    <li><a href="home.htm" title="F">F</a></li>
+                    <li><a href="../home.htm" title="home">Home</a></li>
+                    <li><a href="../home.htm" title="A">A</a></li>
+                    <li><a href="../home.htm" title="B">B</a></li>
+                    <li><a href="../home.htm" title="C">C</a></li>
+                    <li><a href="../home.htm" title="D">D</a></li>
+                    <li><a href="../home.htm" title="E">E</a></li>
+                    <li><a href="../home.htm" title="F">F</a></li>
                 </ul>
             </div>
-            <!--div class="miniSearch c_b">
-                <input type="text" class="searchTxt" />
-                <input type="button" class="searchBtn" value="search" />
-            </div-->
             <div class="miniUserInfo">
                 <a href="../home.htm" target="_blank" id="btn_uname" style="display: none;">
                     name</a>
                     <a href="login.htm" id="btn_logout" style="display: none;">Logout</a>
                     <tt id="btn_login"><a href="login.htm" title="login" target="_self">Login</a>
-                    </tt>|<a href="newregister.htm" title="register" target="_blank" id="btn_register">Register</a>
+                    </tt>|<a href="register.htm" title="register" target="_blank" id="btn_register">Register</a>
             </div>
         </div>
     </div>
@@ -50,7 +46,6 @@
     <div class="la_topInfo c_b">
         <a href="../home.htm" title="logo" class="sp"-->
             <img src="../pic/12.gif" alt="logo" style="width: 834px; height: 82px" /></a>
-        <!--a href="http://passport.pptv.com" title="User Center" class="logo logo_userCenter"></a-->
     </div>
     <!--End: the top logo-->
     
@@ -63,22 +58,10 @@
         <div class="bg_menu c_b">
              
             <ul class="menu c_b">
-                <!--li><a href="http://passport.pptv.com" title="个人中心" class="now"><strong>个人中心</strong></a></li-->
-                <li><a href="/usercenter.aspx" title="usecenter" class=""><strong>UserCenter</strong></a></li>
-                <li><a href="/userinfo.aspx" title="userinfo" class=""><strong>UserInfo</strong></a></li>
-                <!--li><a href="/detail.aspx" title="账户安全" class=""><strong>账户安全</strong></a></li-->               
-                <!--li><a href="http://passport.pptv.com/fetchpassworduser.aspx" title="安全中心" class=""><strong>安全中心</strong></a></li-->
-                <!--li><a href="http://vip.pptv.com" title="会员中心"><strong>会员中心</strong></a></li-->
-                <!--li><a href="http://help.pptv.com/faq" title="用户帮助"><strong>用户帮助</strong></a></li-->
+                <li><a href="showuserinfo.htm" title="usecenter" class=""><strong>UserCenter</strong></a></li>
+                <li><a href="modifyuserinfo.htm" title="userinfo" class=""><strong>UserInfo</strong></a></li>
 
             </ul>
-            
-            <!--ul class="nav c_b">
-               <li><a href="/usercenter.aspx" title="首页" class=""><strong>首页</strong></a></li>
-                <li><a href="/userinfo.aspx" title="个人资料" class=""><strong>个人资料</strong></a></li>
-                <li><a href="/detail.aspx" title="账户安全" class=""><strong>账户安全</strong></a></li>
-            </ul-->
-            
         </div>
         <span class="bg_right"></span>
     </div>
@@ -90,7 +73,7 @@
 <!--Start: the Body of the Page-->
     <div class="la_pageLogin c_b">
         <form name="formLogin" method="post" action="dologin.do" id="formLogin">
-        <input type="hidden" name="returnURL" value="home.htm">
+        <input type="hidden" name="returnURL" value="../home.htm">
         <input type="hidden" name="action" value="login">
         <input type="hidden" name="APTokenRequest" value="">
         <p class="bg_top c_b">
@@ -99,8 +82,6 @@
 
         <div class="pageLogin c_b login">
             <div class="login_title c_b">
-                <!--h3 class="h3_user">
-                    User Login</h3-->
                 <div class="h3_2">
                     <strong style="color: #000000">Before enjoying movies, please login first!</strong></div>
             </div>
