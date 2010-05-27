@@ -1,0 +1,65 @@
+{% extends "film/base.html" %}
+
+{% block style %}
+.film_thumbnail
+{
+ float:	left;
+ height: 240px; 
+ width: 180px;
+ margin: 4px;
+ text-align: center;
+ border: 1px solid black;
+}
+
+.thumbnail_image
+{
+ height: 70%;
+}	
+
+td.center
+{
+	text-align: center; 
+}
+
+p
+{
+ margin: 2px;
+}
+
+.bordered
+{
+	border: 	1px solid black;
+}
+{% endblock style %}
+
+{% block page_header %}
+   <!-- page header -->
+   <a href="{% url playground.film.views.add_to_db %}">add film</a> 
+{% endblock page_header %}
+{% block page_nav %}
+   <!-- navigation -->
+{% endblock page_nav %}
+{% block page_content %}
+   <!-- page content -->
+   <!-- pagination links -->
+   <!-- film list -->
+
+   {% if object %}
+   <div>
+      <p>
+         <h3>{{ object.title }}<h3>
+      </p>
+      <p>
+         {{ object.release_date.year }}
+      </p>
+      <p>
+         <img src="{{ object.image }}" />
+      </p>	 
+   </div>   
+ 
+   {% endif %}
+
+{% endblock page_content %}
+{% block page_footer %}
+   <!-- page footer -->
+{% endblock page_footer %}

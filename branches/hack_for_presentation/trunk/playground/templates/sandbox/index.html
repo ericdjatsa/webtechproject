@@ -1,0 +1,12 @@
+<a href="/playground/sandbox/post/">Post new message</a>
+
+{% if latest_message_list %}
+    <ul>
+    {% for msg in latest_message_list %}
+        <li><a href="/playground/sandbox/message/{{ msg.id }}/">{{ msg.timestamp}}  {{ msg.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No messages posted yet.</p>
+{% endif %}
+

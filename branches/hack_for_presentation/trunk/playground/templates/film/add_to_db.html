@@ -1,0 +1,54 @@
+{% extends "film/base.html" %}
+
+{% load custom_filters %}
+
+{% block style %}
+table.bordered, th.bordered, td.bordered, tr.bordered
+{
+border: 1px solid black;
+}
+{% endblock style %}
+
+{% block page_header %}
+   <!-- page header -->
+{% endblock page_header %}
+{% block page_nav %}
+   <!-- navigation -->
+{% endblock page_nav %}
+{% block page_content %}
+   <!-- page content -->
+
+
+   {% if disk_scan_result %}
+   <table >
+      <tr><th>filename</th><th>extension</th><th>path</th><th>MD5</th><th>imdb matches</th></tr>
+   {% for result in disk_scan_result %}
+      <tr class="bordered">
+         <td class>{{ result.filename }}</td>
+	 <td>{{ result.extension }}</td>
+	 <td>{{ result.path }}</td>
+	 <td>{{ result.md5 }}</td>
+	 <td>
+	    <table>
+	      {% for imdb_match in imdb_matches|key:result.filename %}
+	       <tr class="bordered">
+	          <td>
+{# {% if imdb_match|key:'cover url' %} #}
+		     <img src="{{ imdb_match|key:'cover url' }}" alt="cover image"/>
+{#{% endif %} #}
+		  </td>
+	          <td>{{ imdb_match.title }}: {{ imdb_match.year }}</td>
+		  <td></td>
+	       </tr>
+	       {% endfor %}
+	    </table>
+	 </td>   
+      </tr>
+   {% endfor %}
+   </table>
+   {% endif %}
+
+{% endblock page_content %}
+{% block page_footer %}
+   <!-- page footer -->
+{% endblock page_footer %}

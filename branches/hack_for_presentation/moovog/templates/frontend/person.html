@@ -1,0 +1,52 @@
+{% extends "frontend/base.html" %}
+
+{% load custom_filters %}
+{% load i18n %}
+
+{% block page_content %}
+{% if person %}
+<h1>Person {{ person.name }}</h1><br />
+
+<ul>
+	<li> image: <img src="{{ person.image_url|get_cover_image }}" /></li>
+	<li> born: {{ person.birth_date }}</li>
+	<li> died: {{ person.death_date }}</li>
+	<li> short bio: {{ person.bio }}</li>
+{% if directed %}
+	<li> directed:
+		
+		<ul>
+		{% for d in directed %}
+		<li><a href="{% url src.frontend.views.movie d.movie.title|clean_name, d.movie.id %}">
+			{{ d.movie.title }} ({{d.movie.year }})</a></li>
+		{% endfor %}
+		</ul>
+		
+	</li>
+{% endif %}
+	{% if wrote %}
+	<li> wrote:
+		<ul>
+		{% for d in wrote %}
+		<li><a href="{% url src.frontend.views.movie d.movie.title|clean_name, d.movie.id %}">
+			{{ d.movie.title }} ({{d.movie.year }})</a></li>
+		{% endfor %}
+		</ul>
+	</li>
+	{% endif %}
+{% if acted %}
+	<li> acted in:
+		
+		<ul>
+		{% for a in acted %}
+		<li><a href="{% url src.frontend.views.movie a.movie.title|clean_name, a.movie.id %}">
+			{{ a.movie.title }} ({{ a.movie.year }})</a></li>
+		{% endfor %}
+		</ul>
+		
+	</li>
+{% endif %}
+</ul>
+
+{% endif %}
+{% endblock page_content %}

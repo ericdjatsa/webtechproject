@@ -1,0 +1,15 @@
+{% block content %}
+<h1>New message</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="/playground/sandbox/post/" method="post">
+<table>
+<tr><td>title</td><td><input type="text" name="title" id="title" value="" /></td></tr>
+<tr><td>text</td><td><input type="text" name="text" id="text" value="" /></td></tr>
+</table>
+<input type="submit" value="Post" />
+</form>
+
+{% endblock content %}
+
