@@ -2,13 +2,12 @@
 from django.db import models
 
 class Award_Category_Model(models.Model):
-    award_category_name = models.CharField(max_length = 127) # Best Achievement in Visual Effects, ...
+    award_category_name = models.CharField(max_length = 255) # Best Achievement in Visual Effects, ...
     
     def __unicode__(self):
         return self.award_category_name
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Award_Category_Model"
     
     def get_infos_for_model(self):
@@ -48,18 +47,17 @@ class Award_Category_Model(models.Model):
             return True
 
 class Award_Model(models.Model):
-    award_name = models.CharField(max_length = 127) # Oscar, Saturn Award, Eddie ...
+    award_name = models.CharField(max_length = 255) # Oscar, Saturn Award, Eddie ...
     date_of_awarding = models.DateField()
     award_categories = models.ManyToManyField(Award_Category_Model, through = "Award_Matcher_Model")
-    award_status = models.CharField(max_length = 31)
+    award_status = models.CharField(max_length = 31, null = True)
     
     STATUSES = ["Won", "Nominated"]
     
     def __unicode__(self):
         return self.award_name
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Award_Model"
     
     def get_infos_for_model(self):
@@ -71,7 +69,6 @@ class Award_Model(models.Model):
     
     @staticmethod
     def add_award_model(award_name, date_of_awarding, award_status):
-        if award_status not in Award_Model.STATUSES: award_status = None
         award_model = Award_Model(award_name = award_name, date_of_awarding = date_of_awarding,
                                   award_status = award_status)
         award_model.save()
@@ -107,8 +104,7 @@ class Award_Model(models.Model):
 class Country_Model(models.Model):
     country_name = models.CharField(max_length = 127)
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Country_Model"
     
     @staticmethod
@@ -147,8 +143,7 @@ class Country_Model(models.Model):
 class Genre_Model(models.Model):
     genre_name = models.CharField(max_length = 127)
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Genre_Model"
     
     def get_infos_for_model(self):
@@ -194,8 +189,8 @@ class Genre_Model(models.Model):
 class Actor_Model(models.Model):
     full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
-    birth_date = models.DateField(null = True)
-    death_date = models.DateField(null = True)
+    birth_date = models.CharField(max_length = 31, null = True)
+    death_date = models.CharField(max_length = 31, null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
     mini_story = models.TextField(null = True)
@@ -206,8 +201,10 @@ class Actor_Model(models.Model):
     def __unicode__(self):
         return self.full_name
     
-    @classmethod
-    def kind(cls):
+    def identify(self):
+        return "actor"
+    
+    def kind(self):
         return "Actor_Model"
     
     def get_infos_for_model(self):
@@ -261,8 +258,8 @@ class Actor_Model(models.Model):
 class Writer_Model(models.Model):
     full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
-    birth_date = models.DateField(null = True)
-    death_date = models.DateField(null = True)
+    birth_date = models.CharField(max_length = 31, null = True)
+    death_date = models.CharField(max_length = 31, null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
     mini_story = models.TextField(null = True)
@@ -273,8 +270,10 @@ class Writer_Model(models.Model):
     def __unicode__(self):
         return self.full_name
     
-    @classmethod
-    def kind(cls):
+    def identify(self):
+        return "writer"
+    
+    def kind(self):
         return "Writer_Model"
     
     def get_infos_for_model(self):
@@ -325,8 +324,8 @@ class Writer_Model(models.Model):
 class Director_Model(models.Model):
     full_name = models.CharField(max_length = 255)
     nick_name = models.CharField(max_length = 127, null = True)
-    birth_date = models.DateField(null = True)
-    death_date = models.DateField(null = True)
+    birth_date = models.CharField(max_length = 31, null = True)
+    death_date = models.CharField(max_length = 31, null = True)
     awards = models.ManyToManyField(Award_Model, through = "Award_Matcher_Model") # must be a list of Award_Model if any
     imdb_id = models.CharField(max_length = 63)
     mini_story = models.TextField(null = True)
@@ -337,8 +336,10 @@ class Director_Model(models.Model):
     def __unicode__(self):
         return self.full_name
     
-    @classmethod
-    def kind(cls):
+    def identify(self):
+        return "director"
+    
+    def kind(self):
         return "Director_Model"
     
     def get_infos_for_model(self):
@@ -420,11 +421,11 @@ class Movie_Model(models.Model):
     # url of the thumbnail of the movie
     filename = models.CharField(max_length = 255)
     # name of movie on local disk
-    extension = models.CharField(max_length = 31)
+    extension = models.CharField(max_length = 5, null = True)
     # .avi, .mkv, .mpeg, ...
     path = models.CharField(max_length = 255)
     # path to movie on disk
-    hash_code = models.CharField(max_length = 31)
+    hash_code = models.CharField(max_length = 255)
     # hashcode of the movie
     movie_trailer_url = models.CharField(max_length = 255)
     # link to the trailer of the movie
@@ -437,8 +438,7 @@ class Movie_Model(models.Model):
     def __unicode__(self):
         return self.original_title
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Movie_Model"
     
     def get_infos_for_model(self):
@@ -454,7 +454,7 @@ class Movie_Model(models.Model):
             akas
         """
         infos = {}
-        infos["movie-id"] = self.id
+        infos["movie-id"] = str(self.id)
         
         # Easy-to-get infos
         infos["original-title"] = self.original_title
@@ -553,10 +553,9 @@ class Award_Matcher_Model(models.Model):
     director = models.ForeignKey(Director_Model, null = True)
     writer = models.ForeignKey(Writer_Model, null = True)
     award = models.ForeignKey(Award_Model)
-    award_category = models.ForeignKey(Award_Category_Model)
+    award_category = models.ForeignKey(Award_Category_Model, null = True)
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Award_Manager_Model"
     
     @staticmethod
@@ -612,8 +611,7 @@ class Character_Model(models.Model):
     def __unicode__(self):
         return self.character_name
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Character_Model"
     
     @staticmethod
@@ -666,8 +664,7 @@ class Aka_Model(models.Model):
     def get_infos_for_model(self):
         return self.aka_name
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Aka_Model"
     
     @staticmethod
@@ -712,8 +709,7 @@ class Release_Date_Model(models.Model):
     def __unicode__(self):
         return " ".join([str(self.release_date), str(self.related_movie)])
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Release_Date_Model"
         
     @staticmethod
@@ -755,7 +751,7 @@ class Release_Date_Model(models.Model):
 class Imdb_Object_Model(models.Model):
     object_serialization = models.TextField()
     filename = models.CharField(max_length = 255)
-    extension = models.CharField(max_length = 7)
+    extension = models.CharField(max_length = 255, null = True)
     path = models.CharField(max_length = 255)
     hashcode = models.CharField(max_length = 127)
     trailer_url = models.CharField(max_length = 255)
@@ -765,8 +761,7 @@ class Imdb_Object_Model(models.Model):
     def __unicode__(self):
         return self.filename
     
-    @classmethod
-    def kind(cls):
+    def kind(self):
         return "Imdb_Object_Model"
     
     @staticmethod
@@ -832,7 +827,7 @@ class Test_Movie_Model(models.Model):
     # url of the thumbnail of the movie
     filename = models.CharField(max_length = 255)
     # name of movie on local disk
-    extension = models.CharField(max_length = 31)
+    extension = models.CharField(max_length = 5, null = True)
     # .avi, .mkv, .mpeg, ...
     path = models.CharField(max_length = 255)
     # path to movie on disk
@@ -856,6 +851,5 @@ class Test_Movie_Model(models.Model):
     def __unicode__(self):
         return self.original_title
     
-    @classmethod
-    def kind(cls):
-        return "Movie_Model" 
+    def kind(self):
+        return "Test_Movie_Model" 

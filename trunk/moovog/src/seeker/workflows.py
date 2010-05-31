@@ -86,7 +86,13 @@ class Search_WF(Base_Workflow):
         # INPUT : merged_result
         # Sort them ascendantly
         # OUTPUT : page_ranked_result
-        page_ranked_result = {}
+        
+#        page_ranked_result = {}
+#        for key in merged_results.iterkeys():
+#            if merged_results[key] not in [None, []]:
+#                page_ranked_result[key] = self.repository().rank(merged_results[key][0].kind(),
+#                                                                 merged_results[key],
+#                                                                 search_string)
         
         self.add_to_response("status", "ok")
         self.add_to_response("type-of-result", type_of_result)
@@ -392,38 +398,24 @@ class Create_Or_Get_Movie_WF(Base_Workflow):
         OUTPUT :
             status : "ok"
             movie-model (a Movie_Model)
-            already-existed (boolean)  
-              
-        BE AWARE : The models that are related to the Movie_Model (pk : movie-id)
-        with a ManyToOneField (=ForeignKey) must be created AFTER the processing
-        of this workflow, using the corresponding Create_Or_Get workflow and the
-        movie-id rendered by this workflow.
-        Otherwise, the Movie_Model (pk : movie-id) will lack its foreignkey related
-        models (Complete_Movie_Model_WF DOES NOT take care of this particular type
-        of relation)
+            already-existed (boolean)
     '''    
     def __init__(self, input, authorization):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
         self.validate_string_field_not_empty("imdb-id")
-#        self.string_cleaner("imdb-id")
         self.validate_string_field_not_empty("original-title")
-#        self.string_cleaner("original-title")
         self.validate_string_field_not_empty("filename")
-        # No cleaning on filename
-        self.validate_string_field_not_empty("extension")
-        # No cleaning on extension
         self.validate_string_field_not_empty("path-on-disk")
-        # No cleaning on path-on-disk
         self.validate_string_field_not_empty("hashcode")
-        self.string_cleaner("hashcode")
     
     def process(self):
         imdb_id = self.request()["imdb-id"]
         original_title = self.request()["original-title"]
         filename = self.request()["filename"]
-        extension = self.request()["extension"]
+        if self.validate_string_field_not_empty("extension"): extension = self.request()["extension"]
+        extension = None
         path_on_disk = self.request()["path-on-disk"]
         hash_code = self.request()["hashcode"]
         
@@ -466,9 +458,6 @@ class Complete_Movie_Model_WF(Base_Workflow):
         Base_Workflow.__init__(self, input, authorization)
     
     def validate_input(self):
-        self.validate_string_field_not_empty("runtime")
-        self.validate_string_field_not_empty("user-rating")
-        self.validate_string_field_not_empty("thumbnail-url")
         self.validate_string_field_not_empty("plot")
         self.validate_string_field_not_empty("summary")
         self.validate_field_not_null("movie-model")
@@ -504,17 +493,20 @@ class Complete_Movie_Model_WF(Base_Workflow):
             movie_actors = movie_model.actors.all()
             for actor in actors:
                 if actor not in movie_actors:
-                    movie_model.actors.add(actor)
+                    try: movie_model.actors.add(actor)
+                    except Exception, x: pass
         if writers is not None:
             movie_writers = movie_model.writers.all()
             for writer in writers:
                 if writer not in movie_writers:
-                    movie_model.writers.add(writer)
+                    try: movie_model.writers.add(writer)
+                    except Exception, x: pass
         if directors is not None:
             movie_directors = movie_model.directors.all()
             for director in directors:
                 if director not in movie_directors:
-                    movie_model.directors.add(director)
+                    try: movie_model.directors.add(director)
+                    except Exception, x: pass
         if genres is not None:
             movie_genres = movie_model.genres.all()
             for genre in genres:
@@ -536,7 +528,7 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
         INPUT:
             imdb-id
             full-name
-            birth-date
+            birth-date (optional)
             nick-name (optional)
             death-date (optional)
             mini-story (optional)
@@ -551,16 +543,14 @@ class Create_Or_Get_Actor_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("imdb-id")
-        self.string_cleaner("imdb-id")
         self.validate_string_field_not_empty("full-name")
-        self.string_cleaner("full-name")
-        self.validate_date_field("birth-date")
     
     def process(self):
         imdb_id = self.request()["imdb-id"]
         full_name = self.request()["full-name"]
-        birth_date = self.request()["birth-date"]
-        if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
+        if self.validate_string_field_not_empty("birth-date"): birth_date = self.request()["birth-date"]
+        else: birth_date = None
+        if self.validate_string_field_not_empty("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
         if self.validate_string_field_not_empty("nick-name"):
             self.string_cleaner("nick-name")
@@ -589,7 +579,7 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
         INPUT:
             imdb-id
             full-name
-            birth-date
+            birth-date (optional)
             nick-name (optional)
             death-date (optional)
             mini-story (optional)
@@ -604,16 +594,14 @@ class Create_Or_Get_Writer_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("imdb-id")
-        self.string_cleaner("imdb-id")
         self.validate_string_field_not_empty("full-name")
-        self.string_cleaner("full-name")
-        self.validate_date_field("birth-date")
     
     def process(self):
         imdb_id = self.request()["imdb-id"]
         full_name = self.request()["full-name"]
-        birth_date = self.request()["birth-date"]
-        if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
+        if self.validate_string_field_not_empty("birth-date"): birth_date = self.request()["birth-date"]
+        else: birth_date = None
+        if self.validate_string_field_not_empty("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
         if self.validate_string_field_not_empty("nick-name"):
             self.string_cleaner("nick-name")
@@ -642,7 +630,7 @@ class Create_Or_Get_Director_WF(Base_Workflow):
         INPUT:
             imdb-id
             full-name
-            birth-date
+            birth-date (optional)
             nick-name (optional)
             death-date (optional)
         OUTPUT:
@@ -655,16 +643,14 @@ class Create_Or_Get_Director_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("imdb-id")
-        self.string_cleaner("imdb-id")
         self.validate_string_field_not_empty("full-name")
-        self.string_cleaner("full-name")
-        self.validate_date_field("birth-date")
     
     def process(self):
         imdb_id = self.request()["imdb-id"]
         full_name = self.request()["full-name"]
-        birth_date = self.request()["birth-date"]
-        if self.validate_date_field("death-date"): death_date = self.request()["death-date"]
+        if self.validate_string_field_not_empty("birth-date"): birth_date = self.request()["birth-date"]
+        else: birth_date = None
+        if self.validate_string_field_not_empty("death-date"): death_date = self.request()["death-date"]
         else: death_date = None
         if self.validate_string_field_not_empty("nick-name"):
             self.string_cleaner("nick-name")
@@ -702,7 +688,6 @@ class Create_Or_Get_Country_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("country-name")
-        self.string_cleaner("country-name")
     
     def process(self):
         country_name = self.request()["country-name"]
@@ -733,7 +718,6 @@ class Create_Or_Get_Award_Category_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("award-category-name")
-        self.string_cleaner("award-category-name")
     
     def process(self):
         award_category_name = self.request()["award-category-name"]
@@ -752,11 +736,10 @@ class Create_Or_Get_Award_Category_WF(Base_Workflow):
    
 class Create_Or_Get_Award_WF(Base_Workflow):
     """
-        INPUT : 
-            DIRECT INPUT:
-                award-name
-                date-of-awarding
-                award-status (see Award_Model.STATUSES)
+        INPUT :
+            award-name
+            date-of-awarding
+            award-status (see Award_Model.STATUSES)
         OUTPUT:
             status = "ok"
             award-model
@@ -767,17 +750,13 @@ class Create_Or_Get_Award_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("award-name")
-#        self.string_cleaner("award-name")
-        self.validate_string_field_not_empty("award-status")
-#        self.string_cleaner("award-status")
         self.validate_date_field("date-of-awarding")
     
     def process(self):
         award_name = self.request()["award-name"]
         date_of_awarding = self.request()["date-of-awarding"]
         award_status = self.request()["award-status"]
-        if self.validate_list_field_not_empty("award-categories"): award_categories = self.request()["award-categories"]
-        else: award_categories = None
+        if award_status not in Award_Model.STATUSES: award_status = None
         
         query = Award_Model.get_award_model(award_name, date_of_awarding, award_status)
         if query is None:
@@ -805,7 +784,6 @@ class Create_Or_Get_Genre_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("genre-name")
-#        self.string_cleaner("genre-name")
     
     def process(self):
         genre_name = self.request()["genre-name"]
@@ -839,10 +817,9 @@ class Create_Or_Get_Character_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("character-name")
-#        self.string_cleaner("character-name")
+        self.validate_string_field_not_empty("imdb-id")
         self.validate_field_not_null("related-actor")
         self.validate_field_not_null("related-movie")
-        self.validate_string_field_not_empty("imdb-id")
     
     def process(self):
         imdb_id = self.request()["imdb-id"]
@@ -863,46 +840,6 @@ class Create_Or_Get_Character_WF(Base_Workflow):
         self.add_to_response("character-model", character_model)
         self.add_to_response("already-existed", already_existed)
 
-class Create_Or_Get_Synopsis_WF(Base_Workflow):
-    """
-        INPUT :
-            DIRECT INPUT :
-                plain-text
-            RELATED INPUT :
-                movie-model
-                country-models (a list of Country_Model)
-        OUTPUT :
-            status : "ok"
-            synopsis-model (a Synopsis_Model)
-            already-existed (boolean)
-    """
-    def __init__(self, input, authorization):
-        Base_Workflow.__init__(self, input, authorization)
-    
-    def validate_input(self):
-        self.validate_string_field_not_empty("plain-text")
-        # No control on that input !
-        self.validate_field_not_null("movie-model")
-        self.validate_list_field_not_empty("country-models")
-    
-    def process(self):
-        plain_text = self.request()["plain-text"]
-        movie_model = self.request()["movie-model"]
-        country_models = self.request()["country-models"]
-                
-        query = self.repository().get_synopsis_model(movie_model, country_models)
-        if query is None:
-            already_existed = False
-            synopsis_model = Synopsis_Model.add_synopsis_model(plain_text, movie_model)
-            synopsis_model = self.repository().add_countries(synopsis_model, country_models)
-        else:
-            already_existed = True
-            synopsis_model = query
-
-        self.add_to_response("status", "ok")
-        self.add_to_response("synopsis-model", synopsis_model)
-        self.add_to_response("already-existed", already_existed)
-
 class Create_Or_Get_Aka_WF(Base_Workflow):
     """
         INPUT :
@@ -921,7 +858,6 @@ class Create_Or_Get_Aka_WF(Base_Workflow):
     
     def validate_input(self):
         self.validate_string_field_not_empty("aka-name")
-        self.string_cleaner("aka-name")
         self.validate_field_not_null("movie-model")
         self.validate_list_field_not_empty("country-models")
     
@@ -993,7 +929,7 @@ class Create_Or_Get_Award_Matcher_WF(Base_Workflow):
         INPUT :
             movie-model
             award-model
-            award-category-model
+            award-category-model (optional)
             actor-model (optional)
             director-model (optional)
             writer-model (optional)
@@ -1008,12 +944,13 @@ class Create_Or_Get_Award_Matcher_WF(Base_Workflow):
     def validate_input(self):
         self.validate_field_not_null("movie-model")
         self.validate_field_not_null("award-model")
-        self.validate_field_not_null("award-category-model")
     
     def process(self):
         movie_model = self.request()["movie-model"]
         award_model = self.request()["award-model"]
-        award_category_model = self.request()["award-category-model"]
+        if self.validate_field_not_null("award-category-model"):
+            award_category_model = self.request()["award-category-model"]
+        else: award_category_model = None
         if self.validate_field_not_null("actor-model"):
             actor_model = self.request()["actor-model"]
         else: actor_model = None
