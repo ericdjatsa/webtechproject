@@ -10,7 +10,7 @@ urlpatterns = patterns('',
 	(r'^frontend/', include('src.frontend.urls')),
 	(r'^static/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': settings.STATIC_DOC_ROOT }),
-# 	(r'^seeker/', include('src.seeker.urls')),
+ 	(r'^seeker/', include('src.seeker.urls')),
 
 
     # Example:

@@ -1,6 +1,4 @@
-
-
-
+# -*- coding: utf-8 -*-
 
 def parse_countries(string,table):
     country = ''
@@ -28,20 +26,18 @@ def parse_countries(string,table):
     table.append(country)
     parse_countries(string[j:],table)
 
-
-
 def parse_aka(string):
 
     #returned dic
-    returned={}
+    returned = {}
     
     #list of countries
-    countries=[]
-    returned['countries']=countries
+    countries = []
+    returned['countries'] = countries
 
-    aka=''
-    j=1
-    while (string[j]!='"'):
+    aka = ''
+    j = 1
+    while (string[j] != '"'):
         aka = aka + string[j]
         j=j+1
     
@@ -49,5 +45,18 @@ def parse_aka(string):
 
     parse_countries(string[j:],countries)
     
-    returned['countries']=countries
+    returned['countries'] = countries
     return returned
+
+def another_aka_parser(aka_list):
+    result = {}
+    country = []
+    for aka_string in aka_list:
+        aka_fragments = aka_string.rpartition("-")
+        country_string = aka_fragments[2].lstrip()
+        country_string = aka_fragments[2].rstrip()
+        country.append(country_string)
+        
+        aka_string_fragment = aka_fragments[0]
+        # go ahead an build a clean function
+    return result
