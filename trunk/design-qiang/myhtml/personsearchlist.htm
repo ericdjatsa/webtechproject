@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html >
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<title>Void!!!!!!!!!!This page needs to modify!!!!Search movies.. - Search Result - Mum's Moovog</title>
+	<meta name="robots" content="all" />
+
+	<link href="http://static1.pplive.cn/ikan3/ikan091227/images/style.css?v=05111020" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/common.js"></script>
+</head>
+<body>
+
+</body>
+
+</html>
+<script type="text/javascript">
+(function() {
+    var dtxt = '搜索电影 电视剧...';
+    var input = $('_j_dom_SearchInput');
+    input.value = dtxt;
+    input.addEvent('focus', function(ev) { if (dtxt == this.value) { this.value = ''; } });
+    input.addEvent('blur', function(ev) { if (this.value.replace(/(^\s*)|(\s*$)/g, '') == '') { this.value = dtxt; } });
+    initSearch();
+})();
+
+(function() {
+    var lis = $$('div.pptv_topLogin .show li');
+    var aels = lis[0].getElements('a');
+    aels[1].addEvent('click', function(ev) { ev.stop(); JwUser.logout(); });
+    JwUser.addEvent('onLoginStateChange', function(ev) {
+        if (ev.state == 'logined') {
+            aels[0].innerHTML = ev.userInfo.UserName;
+            lis[0].setStyle('display', '');
+            lis[1].setStyle('display', 'none');
+            lis[2].setStyle('display', 'none');
+        } else {
+            lis[0].setStyle('display', 'none');
+            lis[1].setStyle('display', '');
+            lis[2].setStyle('display', '');
+        }
+    });
+    JwUser.init();
+})();
+
+(function() {
+    var btns = $$('div.pptv_topLogin .show .more');
+    var panels = $$('div.pptv_topLogin .show .moreLi');
+    for (var i = 0, len = btns.length; i < len; i++) { btns[i].setAttribute('jsvalue', i); }
+    var pt1, pt2, rt, el;
+    $(document).addEvent('mousemove', function(ev) {
+        pt1 = ev.page;
+        for (var i = 0, len = panels.length; i < len; i++) {
+            el = panels[i];
+            if (el.getStyle('display') != 'none') {
+                pt2 = el.getPosition();
+                rt = { w: el.offsetWidth, h: el.offsetHeight + 24, x: pt2.x, y: pt2.y - 24 };
+                if (pt1.x < rt.x || pt1.x > rt.x + rt.w || pt1.y < rt.y || pt1.y > rt.y + rt.h) {
+                    el.setStyle('display', 'none');
+                }
+            }
+        }
+    });
+    btns.addEvent('mouseover', function() { var ix = parseInt(this.getAttribute('jsvalue')); panels.setStyle('display', 'none'); panels[ix].setStyle('display', 'block'); });
+})();
+
+(function() {
+    var sid = null;
+    function tabview(tabs, views) {
+        for (var i = 0, len = tabs.length; i < len; i++) {
+            tabs[i].setAttribute('jsvalue', i);
+        }
+        var selix = 0;
+        function switchTab(obj, delay) {                	
+            var ix = parseInt(obj.getAttribute('jsvalue'));
+            clearTimeout(sid);
+            sid = setTimeout(function() {
+                tabs[selix].className = ''; views[selix].setStyle('display', 'none');
+                selix = ix;
+                tabs[selix].className = 'now'; views[selix].setStyle('display', 'block');
+            }, delay);
+        }
+        tabs.addEvent('click', function(ev){ev.stop();switchTab(this, 0);this.blur();return false;});
+        tabs.addEvents({'mouseover': function(ev){switchTab(this, 400);},
+            'mouseout': function(ev){clearTimeout(sid);}
+        });
+    }
+
+    tabview($$('div.navTab a'), [$$('div.navType1')[0], $$('div.navType2')[0]]);
+})();
+</script>
+<script type="text/javascript">
+	$ma($('sp_1'), $('sp_search_1'));
+	//$ma($('sp_2'), $('sp_search_2'));
+</script>
+
+
+<script type="text/javascript" src="http://res.pplive.com/js/rcc/footer_pplivecom_new.js"></script> 
