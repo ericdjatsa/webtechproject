@@ -811,7 +811,7 @@ class Test_Movie_Model(models.Model):
     # directors of the movie
     genres = []
     # action, thriller, love romance, ...
-    runtime = models.CharField(max_length = 7, null = True)
+    runtime = models.CharField(max_length = 15, null = True)
     # time duration of the movie
     user_rating = models.CharField(max_length = 7, null = True)
     # user rating of the movie
