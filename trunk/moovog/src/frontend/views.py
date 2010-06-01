@@ -117,25 +117,40 @@ def movie_watch(request, name, movie_id):
 	
 def search_post(request):
 #	try:	
-		for key in request.POST.keys():
-			print "POST %s: %s" % (key, request.POST[key])
-			
-		search_type = request.POST["search-option"]
-		search_words = [cleanName(word) for word in request.POST["search-string"].split(" ")]
-		search_string = u''
-		first = True
-		print "creating search string"
-		for word in search_words:
-			if first:
-				first = False
-				search_string += word
+		search_type = request.GET["search-option"]
+		search_words = request.GET["search-string"]
+		
+		if search_type == "person":
+			template = loader.get_template('frontend/search_person.html')
+			results = Person.objects.all()
+		elif search_type == "character":
+			template = loader.get_template('frontend/search_character.html')
+			results = Character.objects.all()
+		elif search_type == "genre":
+			template = loader.get_template('frontend/search_genre.html')
+			results = Genre.objects.all()
+		else:
+			template = loader.get_template('frontend/search_movie.html')
+			results = Movie.objects.all()
+		
+		for word in search_words.split(" "):
+			if search_type == "movie":
+				results = results.filter(title__icontains = word)
 			else:
-				search_string += "+"
-				search_string += word
-		print "using search string: %s %s" % (search_type, search_string)
-		return HttpResponseRedirect(reverse(viewname='src.frontend.views.search', args= (search_type, search_string)))		
-#	except:
-#		return HttpResponseRedirect(reverse('src.frontend.views.index'))	
+				results = results.filter(name__icontains = word)
+			
+		if results.__len__() == 1:
+			if search_type ==  "movie":
+				return HttpResponseRedirect(reverse(viewname='src.frontend.views.movie', args= (cleanName(results[0].title), results[0].id)))
+			elif search_type == "person":
+				return HttpResponseRedirect(reverse(viewname='src.frontend.views.person', args= (cleanName(results[0].name), results[0].id)))
+			elif search_type == "character":
+				return HttpResponseRedirect(reverse(viewname='src.frontend.views.character', args= (cleanName(results[0].name), results[0].id)))
+			elif search_type == "genre":
+				return HttpResponseRedirect(reverse(viewname='src.frontend.views.genre', args= (cleanName(results[0].name), results[0].id)))
+	
+		context = Context({'results': results, 'query': search_words})
+		return HttpResponse(template.render(context))
 		
 def search(request, search_type, search_query):
 	print "search called: %s %s" % (search_type, search_query)
@@ -204,7 +219,12 @@ def search_json(request):
 			
 		data = ""
 		for r in result_strings:
-			data = data + r['name'] + "&" + getOrCacheImage(r['img']) + "\n"
+			data = data + r['name'];
+			if qtype == "movie" or qtype == "person":
+				image = getOrCacheImage(r['img'])
+				if not (image == None or image == ""): 
+					data = data + "&" + image
+			data = data + "\n"
 			
 #		data = simplejson.dumps({'message': {'type': 'debug', 'msg': 'no error'}, 'data': result_strings})
 #		data = serializers.serialize('json', {'message': {'type': 'debug', 'msg': 'no error'}, 'data': result_strings})
