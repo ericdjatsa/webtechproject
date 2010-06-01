@@ -183,7 +183,7 @@
 					{% for a in acted %}
 						<i>
 							<a href="{% url src.frontend.views.person a.actor.name|clean_name, a.actor.id %}" class="picsBox_img_85x83" title="A">
-			<img src="{{ actedin.actor.image_url|get_cover_image }}" alt=""></a>
+			<img src="{{ a.actor.image_url|get_cover_image }}" alt=""></a>
 
 							<p class="pl-7"><a href="{% url src.frontend.views.person a.actor.name|clean_name, a.actor.id %}" title="">{{ a.actor.name }}</a></p>
 						</i>
