@@ -358,8 +358,6 @@ class Repository:
         if models_type in ['Actor_Model','Director_Model','Writer_Model'] :
             WEIGHTS = {u"full_name" : 5,u"nick_name":3}
         elif models_type=='Movie_Model' :
-            #WEIGHTS = {u"original_title" : 5,u"akas":3} #I would love to do this but akas is not a field in Movie it is
-            #inside a dictionnary
             WEIGHTS = {u"original_title" : 5}
         elif models_type=='Award_Model' :
             WEIGHTS = {u"award_name" : 5}
@@ -372,40 +370,18 @@ class Repository:
         
         for mod in models_list :
             
-            rnk=Repository.compute_rank(mod,attributes,search_string,WEIGHTS) #this is the first computation of the rank
+            rnk=Repository.compute_rank(mod,attributes,search_string,WEIGHTS) #this is the first computation of the rank    
             
-            if models_type=='Movie_Model' :
-                
-                #create fictitious akas attributes like : akas_International,akas_UK,etc...
-                #or after the attrgetter in basic_rank add : if attribute_name.startswith('akas') then search in the akas dictionary
-                attributes.extend(["akas_International", "akas_France"])
-                WEIGHTS["akas_International"]=3
-                WEIGHTS["akas_France"]=3
-                
-                #Now computations based on akas,user_rating,awards etc...
-                #update rnk
-               
-                akas_dict={}
-                akas_dict=mod.infos["akas"]
-                
-                #for (k,v) in akas_dict.iteritems() :
-                    #print 'i ',i
-                    #print '(k,v)','(',k,':',v,')'
-                    
-                rnk+=Repository.compute_rank(mod,attributes[1:],search_string,WEIGHTS) #I skip the first attribute which is original_title because I've already computed the rank based on it above
-                
-                #Taking into account the user rating could provide a wrong ranking to the models because a movie can we very well rated by the users but be irelevant for the search_string
-                #To solve this issue,I assign to the movie's original_title attribute a very high weight with respect to the user rating weight
+            
+            if models_type=='Movie_Model':
+				#Taking into account the user rating could provide a wrong ranking to the models because a movie can we very well rated by the users but be irelevant for the search_string
+				#To solve this issue,I assign to the movie's original_title attribute a very high weight with respect to the user rating weight
                 WEIGHTS["user_rating"]=1
                 rnk+=float(mod.user_rating)*WEIGHTS["user_rating"]
-                  
-            elif models_type=='Award_Model' :
-                print ''        
-                #based on number of connections to the award
-                #update rnk
+            elif models_type=='Award_Model' :       
+                #update rnk based on number of connections to the award
                 WEIGHTS["award_categories"]=0.5
                 rnk+=len(mod.award_categories)*WEIGHTS["award_categories"]
-                
                 
             mods[str(mod)]=rnk
         
