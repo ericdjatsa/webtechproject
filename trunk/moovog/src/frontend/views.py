@@ -14,6 +14,8 @@ from src.utils.imdb_cache import imdbUpdate
 from src.utils.imdb_cache import imdbGetPerson
 #from src.seeker.models import Movie_Model
 
+from src.utils.get_image import getOrCacheImage
+
 def index(request):
 	return HttpResponse(loader.get_template('frontend/film_list.html').render(Context({
 		'movies' : Movie.objects.all(), 
@@ -155,5 +157,59 @@ def search(request, search_type, search_query):
 			results = results.filter(title__icontains = word)
 		else:
 			results = results.filter(name__icontains = word)
+			
+	if results.__len__() == 1:
+		if search_type ==  "movie":
+			return HttpResponseRedirect(reverse(viewname='src.frontend.views.movie', args= (cleanName(results[0].title), results[0].id)))
+		elif search_type == "person":
+			return HttpResponseRedirect(reverse(viewname='src.frontend.views.person', args= (cleanName(results[0].name), results[0].id)))
+		elif search_type == "character":
+			return HttpResponseRedirect(reverse(viewname='src.frontend.views.character', args= (cleanName(results[0].name), results[0].id)))
+		elif search_type == "genre":
+			return HttpResponseRedirect(reverse(viewname='src.frontend.views.genre', args= (cleanName(results[0].name), results[0].id)))
+	
 	context = Context({'results': results, 'query': search_query.replace("+", " ")})
 	return HttpResponse(template.render(context))
+	
+def search_json(request):
+	if not (request.GET.has_key('q') or request.GET.has_key('type')):
+		# error handling
+		print "Error: request does not have keys q and type: %s" % (request.keys())
+		return HttpResponse("", mimetype='text/plain; encoding=UTF-8')
+	else:
+		query = request.GET['q']
+		qtype = request.GET['type']
+		limit = (int (request.GET['limit']) if request.GET.has_key('limit') else 5)
+		
+		
+		if qtype == "person":
+			results = Person.objects.all()
+		elif qtype == "character":
+			results = Character.objects.all()
+		elif qtype == "genre":
+			results = Genre.objects.all()
+		else:
+			results = Movie.objects.all()
+			
+		for word in query.split(" "):
+			if qtype == "movie":
+				results = results.filter(title__icontains = word)
+			else:
+				results = results.filter(name__icontains = word)
+				
+		if qtype == "movie":
+			result_strings = [ {'name': r.title, 'img': r.image_url} for r in results[:limit]]
+		else:
+			result_strings = [ {'name': r.name, 'img': r.image_url} for r in results[:limit]]
+			
+		data = ""
+		for r in result_strings:
+			data = data + r['name'] + "&" + getOrCacheImage(r['img']) + "\n"
+			
+#		data = simplejson.dumps({'message': {'type': 'debug', 'msg': 'no error'}, 'data': result_strings})
+#		data = serializers.serialize('json', {'message': {'type': 'debug', 'msg': 'no error'}, 'data': result_strings})
+		print data
+#		return HttpResponse(serializers.serialize('json', {'error': 'none', 'data': result_strings}), mimetype='application/json')
+#		return HttpResponse(serializers.serialize('json', result_strings), mimetype='application/json')
+#		return HttpResponse(json, mimetype='application/json')
+		return HttpResponse(content = data, mimetype='text/plain; encoding=UTF-8')
