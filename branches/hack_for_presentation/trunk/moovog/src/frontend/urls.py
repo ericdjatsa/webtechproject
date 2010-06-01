@@ -12,4 +12,5 @@ urlpatterns = patterns('',
     (r'^preferences/$', 'src.frontend.views.preferences'),
     (r'^search/$', 'src.frontend.views.search_post'),
     (r'^search/(?P<search_type>(movie)|(person)|(character)|(genre))/(?P<search_query>[A-Za-z0-9+_\-]*)/$', 'src.frontend.views.search'),
+    (r'^search/json/$', 'src.frontend.views.search_json'),
 )

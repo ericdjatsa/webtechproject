@@ -70,7 +70,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     r'C:\xampplite\svn\moovog\templates',
-    r'/home/zaddach/projects/webtech/svn/trunk/moovog/templates',
+    r'/home/zaddach/projects/webtech/svn/branches/hack_for_presentation/trunk/moovog/templates',
     r'/home/rachid/Bureau/Proet_Django/svn/trunk/moovog/templates',
 )
 

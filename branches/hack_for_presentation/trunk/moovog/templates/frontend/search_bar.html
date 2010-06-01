@@ -3,12 +3,12 @@
 <!--	<div class="headerContent"><strong><label>Search Bar</label></strong></div> -->
 	<form action="/frontend/search/" method="POST">
 		<p>
-	        <input name="search-string" type="text" size="40" style="margin-top:10px; margin-right:5px"/>
+	        <input id="search-string" name="search-string" type="text" size="40" style="margin-top:10px; margin-right:5px"/>
 	   </p>
 		<p>
 			<div>
 				<input type="submit" value="Let's Go"/>
-				<select name="search-option">
+				<select id="search-type" name="search-option">
 					<option value="movie">movies</option>
 					<option value="person">persons</option>
 					<option value="genre">genre</option>
