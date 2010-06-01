@@ -1,0 +1,611 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>Mum's Moovog : Tonight, you start to really appreciate watching moovies...</title>
+	<meta name="keywords" content="Moovog movie IMDB" />
+	<meta name="description" content="Moovog movie IMDB" />
+	
+    <!--title>_PPTV</title>
+    <link href="http://static1.pplive.cn/ikan3/091230/favicon.ico" type="image/x-icon" rel="shortcut icon" /--><!--show web logo-->
+    <link rel="stylesheet" type="text/css" href="http://static1.pplive.cn/passport/100415/images/loginCenter.css?20100426_2" />
+    <link rel="stylesheet" type="text/css" href="http://static1.pplive.cn/passport/100415/images/userCenter.css?20100426_2" />
+</head>
+<body>
+    
+    <!--StartL the Mini Navigation -->
+
+    <div class="l_miniMenu miniMenuSkin_1">
+        <div class="miniMenu c_b">
+            <div class="leftMenu c_b">
+                <ul class="c_b">
+                    <li><a href="../home.htm" title="home">Home</a></li>
+                    <li><a href="../home.htm" title="A">A</a></li>
+                    <li><a href="../home.htm" title="B">B</a></li>
+                    <li><a href="../home.htm" title="C">C</a></li>
+                    <li><a href="../home.htm" title="D">D</a></li>
+                    <li><a href="../home.htm" title="E">E</a></li>
+                    <li><a href="../home.htm" title="F">F</a></li>
+                </ul>
+            </div>
+
+            <!--div class="miniSearch c_b">
+                <input type="text" class="searchTxt" />
+                <input type="button" class="searchBtn" value="Search" />
+            </div-->
+            
+            <div class="miniUserInfo">
+                <a href="../home.htm" target="_blank" id="btn_uname" style="display: none;">
+                    name</a>
+                    <a href="login.htm" id="btn_logout" style="display: none;">Logout</a>
+                    <tt id="btn_login"><a href="login.htm" title="login" target="_self">Login</a>
+                    </tt>|<a href="register.htm" title="register" target="_blank" id="btn_register">Register</a>
+            </div>
+
+        </div>
+    </div>
+    <!--End: Mini navigation-->    
+    
+
+    <!--Start: the top logo-->
+    <div class="la_topInfo c_b">
+         <!--a href="../home.htm" title="PP个人中心" class="logo logo_userCenter"></a-->
+         <a href="../home.htm" title="logo" class="sp">
+            <img src="12.gif" alt="logo" style="width: 834px; height: 82px" /></a>
+    </div>
+    <!--End: the top logo-->
+
+
+
+    <!--Start: The upper side menu-->
+    <div class="la_topMenu c_b">
+
+        <span class="bg_left"></span>
+        <div class="bg_menu c_b">
+             
+            <ul class="menu c_b">
+                <li><a href="showuserinfo.htm" title="usecenter" class=""><strong>UserCenter</strong></a></li>
+                <li><a href="modifyuserinfo.htm" title="userinfo" class=""><strong>UserInfo</strong></a></li>
+            </ul>   
+            
+        </div>
+        <span class="bg_right"></span>
+    </div>
+    <!--End: the Upper Side Menu-->
+
+
+ <script src="login_reg.js" type="text/javascript"></script>
+ 
+<!--Start: the Body of the Page-->
+    <div class="la_pageLogin c_b">
+       <form action="/doreg.do" method="post"  onsubmit="return submit_check();">
+
+       <input name="action" type="hidden" id="action" value="reg" />
+	   <input name="returnurl" type="hidden" id="returnurl" value="" />
+        <p class="bg_top c_b">
+            <span class="bg_1"></span><span class="bg_2"></span>
+        </p>
+        <div class="pageLogin c_b login">
+            <div class="login_title c_b">
+                <h3 class="h3_reg">
+                    Register</h3>
+
+                <div class="h3_1">
+
+                    (The following should be fulfilled)</div>
+                <div class="h3_2">
+                   Become a VIP in 10 seconds!</div>
+            </div>
+            <div class="login_content_user">
+                <div class="login_content_user_l">
+
+                 <div class="suggest_error" id="info_error" style="display: none;">
+                    <div class="ico">
+                    </div>
+                    <div class="txt"></div>
+
+                </div>
+                    <div class="login_reg">
+                        <dl class="c_b">
+
+                            <dt><span class="em">*</span> User Name：</dt>
+
+                            <dd>
+                                <div class="dd">
+                                    <div class="ddl">
+                                        <input class="txt_normal" id="userId" name="username" maxlength="16" />
+                                    </div>
+                                    <div class="ddr">
+
+                                        <div class="desc_warning" style="display: none" id="userId_error1">
+                                            <div class="ico">
+
+                                            </div>
+                                            <div class="txt">
+                                                User Name should be 6-16 characters</div>
+                                        </div>
+                                        <div class="desc_warning" style="display: none" id="userId_error2">
+                                            <div class="ico">
+                                            </div>
+                                            <div class="txt">
+                                                Invilidated Content</div>
+                                        </div>
+                                        <div class="desc_warning" style="display: none" id="userId_error3">
+                                            <div class="ico">
+                                            </div>
+                                            <div class="txt">
+                                                Sorry, this name has been registered.</div>
+                                        </div>
+                                        <div class="desc_ok" id="userId_ok" style="display: none">
+                                            <div class="ico">
+                                            </div>
+                                        </div>
+                                        <div class="desc_default" style="display: none;" id="userId_info">
+                                            Use Name between 6 and 16 characters makes up of English letters and numbers and should start with letters.  
+                                       </div>
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class="c_b">
+                            <dt><span class="em">*</span> Password:</dt>
+                            <dd>
+
+                                <div class="dd">
+
+                                    <div class="ddl">
+                                        <input class="txt_normal" id="pwd" name="password" type="password" maxlength="12" />
+                                    </div>
+                                    <div class="ddr">
+                                        <div class="desc_warning" style="display: none" id="pwd_error1">
+                                            <div class="ico">
+                                            </div>
+                                            <div class="txt">
+                                                Password should be 6 - 12 characters.
+                                            </div>
+                                        </div>
+                                        <div class="desc_warning" style="display: none" id="pwd_error2">
+                                            <div class="ico">
+                                            </div>
+                                            <div class="txt">
+                                                Invalidated Content</div>
+                                        </div>
+
+                                        <div class="desc_ok" id="pwd_ok" style="display: none">
+                                            <div class="ico">
+                                            </div>
+                                        </div>
+                                        <div class="desc_default" style="display: none;" id="pwd_info">
+                                            Password between 6 and 12 characters makes up of English letters and numbers and should start with letters.
+                                            </div>
+                                    </div>
+                                </div>
+
+                            </dd>
+                        </dl>
+                        <dl class="c_b pwd">
+                            <dt></dt>
+                            <dd>
+                                <p class="c_b" id="pwd_strength">
+                                    <label>
+                                        The strong level of your password</label>
+
+                                    <strong class="type_0" >Void</strong>
+                                    <strong class="type_1" style="display: none;">Low</strong>
+                                    <strong class="type_2" style="display: none;">Intermediate</strong> 
+                                    <strong class="type_3" style="display: none;">Strong</strong>
+                                    <!--a href="#" title="什么是密码强度？" style="display:none">什么是密码强度？</a-->
+                                </p>
+                            </dd>
+
+                        </dl>
+                        <dl class="c_b">
+
+                            <dt><span class="em">*</span> Repeat Password:</dt>
+                            <dd>
+                                <div class="dd">
+                                    <div class="ddl">
+                                        <input type="password" class="txt_normal" id="pwd2" name="repassword" maxlength="12" />
+
+                                    </div>
+                                    <div class="ddr">
+
+                                        <div class="desc_warning" style="display: none" id="pwd2_error1">
+                                            <div class="ico">
+                                            </div>
+                                            <div class="txt">
+                                                Two times inputs are not identical.</div>
+                                        </div>
+
+                                        <div class="desc_ok" id="pwd2_ok" style="display: none">
+                                            <div class="ico">
+
+                                            </div>
+                                        </div>
+                                        <div class="desc_default" style="display: none;" id="pwd2_info">
+                                            Please input your password again.</div>
+                                    </div>
+                                </div>
+
+                            </dd>
+                        </dl>
+
+                        <dl class="c_b">
+                            <dt><span class="em">*</span> E-mail:</dt>
+                            <dd>
+                                <div class="dd">
+                                    <div class="ddl">
+
+                                        <input class="txt_normal" name="usermail" id="email" maxlength="50" />
+                                    </div>
+
+                                    <div class="ddr">
+                                        <div class="desc_warning" style="display: none" id="email_error1">
+                                            <div class="ico">
+                                            </div>
+                                            <div class="txt">
+                                                Invalidated Email address, please check!</div>
+
+                                        </div>
+                                        <div class="desc_warning" style="display: none" id="email_error2">
+
+                                            <div class="ico">
+                                            </div>
+                                            <div class="txt">
+                                                Sorry, this Email has been registered</div>
+                                        </div>
+                                        <div class="desc_ok" id="email_ok" style="display: none">
+
+                                            <div class="ico">
+                                            </div>
+
+                                        </div>
+                                        <div class="desc_default" style="display: none;" id="email_info">
+                                            Very impottant,<span class="em">using for fetching your password if you forgot it,</span>please input seriously.</div>
+                                    </div>
+                                </div>
+
+                            </dd>
+                        </dl>
+
+                        <!--dl class="c_b">
+                            <dt><span class="em">*</span> 验证码：</dt>
+                            <dd>
+                                <div class="dd">
+                                    <div class="ddl">
+                                        <input class="txt_short" id="check" />
+                                        <br />
+                                        <img src="images/GEKF.gif" align="bottom" id="checkPic" />
+                                       <a id="checkBtn" href="javascript:refreshImg()">换一个</a>
+                                    </div>
+                                    <div class="ddr">
+                                        <div class="desc_warning" style="display: none" id="check_error1">
+                                            <div class="ico">
+                                            </div>
+                                                <div class="txt">
+                                                验证码输入有误。</div>
+                                        </div>
+                                        <div class="desc_ok" id="check_ok" style="display: none">
+                                            <div class="ico">
+                                            </div>
+                                        </div>
+                                        <div class="desc_default" style="display: none;" id="check_info">
+                                            请输入图片上的数字。</div>
+                                         <script type="text/javascript">
+                                            function getRandomNum() {
+                                                return new Date().getTime() + Math.random() * 1000000000 + "" + Math.random() * 1000000000;
+                                            }
+                                            function refreshImg(){
+                                            var imgEl=document.getElementById('checkPic');
+                                                imgEl.src='/checkcode/'+getRandomNum();
+                                            }
+                                            refreshImg();
+                                    </script>
+                                    </div>
+                                 </div>
+                            </dd>
+                        </dl-->
+                        <dl class="c_b dl_last" style="*margin-top: 35px;">
+
+                            <dt></dt>
+                            <dd>
+                                <input type="checkbox" class="checkbox" id="prot" name="checkboxreaded" value="Yes" />
+                                I've read and totally accepted <a href="usingagreement.txt">Using Agrement</a></dd> <span id="checkbox_info" style="color: #999; display: none;">Didn't tick the Using Agreement</span>
+
+                        </dl>
+                        <div class="submit">
+
+                            <input type="submit" value="Register Now" class="button_big" />&nbsp;&nbsp;&nbsp;&nbsp;<a href="Login.htm" title="Login" class="gotoLogin" target="_self">Login</a>
+                        </div>
+                    </div>
+                </div>               
+                 <!--div class="login_content_user_r">
+                    <h4>
+                        Why you want to login?</h4>
+                    <p>
+                        1.<br />
+                        2.<br />
+                    </p>
+                </div-->            
+            </div>
+        </div>
+        <p class="bg_bottom c_b">
+            <span class="bg_1"></span><span class="bg_2"></span>
+        </p>
+
+      </form>
+    </div>
+    <!--End :the body of the page-->
+
+ <script type="text/javascript">
+     check_userid = false;
+	check_pwd = false;
+	check_pwd2 = false;
+	check_email = false;
+	check_check = false;
+
+     log = function(s) {
+        //console.log(s);
+     }
+        submit_check = function() {
+            log(check_userid);
+            log(check_pwd);
+            log(check_pwd2);
+            log(check_email);
+            log(check_check);
+            log($("#prot").checked);
+            if (!$("#prot").checked) $("#checkbox_info").css("display", "inline");
+			if (!check_userid || !check_pwd || !check_pwd2 || !check_email || !check_check || !$("#prot").checked) {
+				return false;
+			}
+			return true;
+		};
+		(function() {
+
+            function CharMode(iN) {
+                if (iN >= 48 && iN <= 57) //number
+                    return 1;
+                if (iN >= 65 && iN <= 90) //capital letter
+                    return 2;
+                if (iN >= 97 && iN <= 122) //lowercase
+                    return 4;
+                else
+                    return 8; //special character
+            }
+            function bitTotal(num) {
+                modes = 0;
+                for (i = 0; i < 4; i++) {
+                    if (num & 1) modes++;
+                    num >>>= 1;
+                }
+                return modes;
+            }
+            function checkStrong(sPW) {
+                if (sPW.length <= -1)
+                    return 0;
+                Modes = 0;
+                for (i = 0; i < sPW.length; i++) {
+                    Modes |= CharMode(sPW.charCodeAt(i));
+                }
+                return bitTotal(Modes);
+            }
+            var hideInfos = function() {
+                $("#userId_info").css("display", "none");
+                $("#pwd_info").css("display", "none");
+                $("#pwd2_info").css("display", "none");
+                $("#email_info").css("display", "none");
+                $("#check_info").css("display", "none");
+            };
+            var loader = new $.Loader();
+            var $userId = $("#userId").addEvent("focus", function() {
+                hideInfos();
+                if (!$userId.attr("info")) {
+                    $("#userId_info").css("display", "block");
+                    $userId.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                var v = $userId.value;
+                $("#userId_info").css("display", "none");
+                $("#userId_error1").css("display", "none");
+                $("#userId_error2").css("display", "none");
+                $("#userId_error3").css("display", "none");
+                $("#userId_ok").css("display", "none");
+				check_userid = false;
+                if (checklength(v)< 6 || checklength(v)> 20) {
+                    $("#userId_error1").css("display", "block");
+                    return;
+                }
+                var reUserId = /^[a-zA-Z\u4e00-\u9fa5][a-zA-Z0-9_\u4e00-\u9fa5]+$/;
+                if (!reUserId.test(v)) {
+                    $("#userId_error2").css("display", "block");
+                    return;
+                }
+                loader.load({
+                    url: '/isUserNameExsit.do?username=' + encodeURIComponent(v),
+                    type: 'js',
+                    callback: function(isOk) {
+
+                        if (isOk) {
+                            $("#userId_error3").css("display", "block");
+                        }
+                        else {
+                            $("#userId_ok").css("display", "block");
+							check_userid = true;
+                        }
+                    },
+                    param: true,
+                    cache: true
+                });
+
+            });
+            var $pwd = $("#pwd").addEvent("focus", function() {
+                hideInfos();
+                if (!$pwd.attr("info")) {
+                    $("#pwd_info").css("display", "block");
+                    $pwd.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                var v = $pwd.value;
+                $("#pwd_info").css("display", "none");
+                $("#pwd_error1").css("display", "none");
+                $("#pwd_error2").css("display", "none");
+                $("#pwd_ok").css("display", "none");
+				check_pwd = false;
+                var v = v.replace(/(^\s+)|(\s+$)/gm, '');
+                if (v.length < 6 || v.length > 30) {
+                    $("#pwd_error1").css("display", "block");
+                    return;
+                }
+                //if (/[]/.test(v)) {
+                //	$("#pwd_error2").css("display", "block");
+                //	return;
+                //}
+                $("#pwd_ok").css("display", "block");
+				check_pwd = true;
+
+            }).addEvent("keyup", function() {
+                var v = $pwd.value;
+                $("#pwd_strength .type_0").css("display", "none");
+                $("#pwd_strength .type_1").css("display", "none");
+                $("#pwd_strength .type_2").css("display", "none");
+                $("#pwd_strength .type_3").css("display", "none");
+                $("#pwd_strength .type_" + checkStrong(v)).css("display", "inline-block");
+            });
+
+            var $pwd2 = $("#pwd2").addEvent("focus", function() {
+                hideInfos();
+                if (!$pwd2.attr("info")) {
+                    $("#pwd2_info").css("display", "block");
+                    $pwd2.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                var v = $pwd2.value;
+				check_pwd2 = false;
+                $("#pwd2_info").css("display", "none");
+                $("#pwd2_error1").css("display", "none");
+                $("#pwd2_ok").css("display", "none");
+                if (v != $pwd.value) {
+                    $("#pwd2_error1").css("display", "block");
+                    return;
+                }
+                $("#pwd2_ok").css("display", "block");
+				check_pwd2 = true;
+            });
+            var $email = $("#email").addEvent("focus", function() {
+                hideInfos();
+                if (!$email.attr("info")) {
+                    $("#email_info").css("display", "block");
+                    $email.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                var v = $email.value;
+				check_email = false;
+                $("#email_info").css("display", "none");
+                $("#email_error1").css("display", "none");
+                $("#email_error2").css("display", "none");
+                $("#email_ok").css("display", "none");
+                if (v.length < 6 || v.length > 50 || !/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+.test(v)) {
+                    $("#email_error1").css("display", "block");
+                    return;
+                }
+                loader.load({
+                    url: '/isUserMailExsit.do?usermail=' + encodeURIComponent(v),
+                    type: 'js',
+                    callback: function(isOk) {
+
+                        if (isOk) {
+                            $("#email_error2").css("display", "block");
+                        }
+                        else {
+                            $("#email_ok").css("display", "block");
+							check_email = true;
+                        }
+                    },
+                    param: true,
+                    cache: true
+                });
+
+            });
+            
+            var $check = $("#check").addEvent("focus", function() {
+                hideInfos();
+                if (!$check.attr("info")) {
+                    $("#check_info").css("display", "block");
+                    $check.attr("info", true);
+                }
+            }).addEvent("blur", function() {
+                var v = $check.value;
+				check_check = false;
+                $("#check_info").css("display", "none");
+                $("#check_error1").css("display", "none");
+                $("#check_ok").css("display", "none");
+                if (v == "") {
+                           $("#check_error1").css("display", "none");
+                    return;
+                }
+                check_check = true;
+
+            });
+
+
+
+
+        })();
+        var checklength = function(v) {
+			var l = v.length;
+			var n = 0;
+			for (var i = 0; i < l; i++) {
+				if ((v.charCodeAt(i) >= 0) && (v.charCodeAt(i) <= 255)) n++;
+				else n += 2;
+			}
+			return n;
+		};
+   </script>
+
+ 
+<!--Start: foot info-->
+
+<div class="l_foot footColor1">
+
+    <div class="foot c_b">
+        <div class="info">
+            <p style="font-size: small; color: #808080"> Copyright &copy;  Mum's Moovog Team, Eurecom, France  &nbsp&nbsp&nbsp&nbsp&nbsp  Note:Don't use it for business!</p>
+        </div>
+    </div>
+
+</div>
+<!--End: foot info-->
+
+    <script type="text/javascript">
+        (function() {
+            var input = $('div.miniSearch input.searchTxt')[0];
+            var btn = $('div.miniSearch input.searchBtn')[0];
+            new $.IKan.SearchTips(input, btn, { tipBoxWidth: '140px', strLength: 20 });
+        })();
+
+        (function() {
+            var userName = $('#btn_uname');
+            var btnLogout = $('#btn_logout');
+            var btnLogin = $('#btn_login');
+
+            btnLogout.addEvent('click', function() { $.IKan.User2.logout(); });
+
+            $.IKan.User2.onLogined.subscribe(function(name, args) {
+                userName.html(args[0].UserName);
+                userName.css('display', '');
+                btnLogout.css('display', '');
+                btnLogin.css('display', 'none');
+            });
+            $.IKan.User2.onlogouted.subscribe(function(name, args) {
+                userName.css('display', 'none');
+                btnLogout.css('display', 'none');
+                btnLogin.css('display', '');
+            });
+            $.IKan.User2.tryReadUserInfo();
+        })();
+    </script>
+
+</body>
+</html>
