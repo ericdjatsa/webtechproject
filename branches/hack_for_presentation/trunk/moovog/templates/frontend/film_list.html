@@ -55,7 +55,7 @@
 						  {% endif %}
 						  {% endfor %}
 						</p>
-						<p>Plot: {{ movie.short_plot }}</p>
+						<p>Plot: {{ movie.short_plot|truncatewords:25 }}</p>
 						<p> <a href="{% url src.frontend.views.movie movie.title|clean_name, movie.id %}">details</a>
 							<a href="{% url src.frontend.views.movie_watch movie.title|clean_name, movie.id %}">watch</a>
 					</p>
