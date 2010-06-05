@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import re
 import settings
@@ -23,6 +24,8 @@ def downloadImage(imdb_url):
 	
 
 def getOrCacheImage(imdb_url):
+	if imdb_url == None or imdb_url == "":
+		return ""
 	if not isImageAlreadyStored(imdb_url):
 		downloadImage(imdb_url)
 	return localImageUrl(imdb_url)

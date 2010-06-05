@@ -14,6 +14,8 @@ from src.utils.imdb_cache import imdbUpdate
 from src.utils.imdb_cache import imdbGetPerson
 #from src.seeker.models import Movie_Model
 
+from src.utils.get_image import getOrCacheImage
+
 def index(request):
 	return HttpResponse(loader.get_template('frontend/film_list.html').render(Context({
 		'movies' : Movie.objects.all(), 
@@ -115,25 +117,40 @@ def movie_watch(request, name, movie_id):
 	
 def search_post(request):
 #	try:	
-		for key in request.POST.keys():
-			print "POST %s: %s" % (key, request.POST[key])
-			
-		search_type = request.POST["search-option"]
-		search_words = [cleanName(word) for word in request.POST["search-string"].split(" ")]
-		search_string = u''
-		first = True
-		print "creating search string"
-		for word in search_words:
-			if first:
-				first = False
-				search_string += word
+		search_type = request.GET["search-option"]
+		search_words = request.GET["search-string"]
+		
+		if search_type == "person":
+			template = loader.get_template('frontend/search_person.html')
+			results = Person.objects.all()
+		elif search_type == "character":
+			template = loader.get_template('frontend/search_character.html')
+			results = Character.objects.all()
+		elif search_type == "genre":
+			template = loader.get_template('frontend/search_genre.html')
+			results = Genre.objects.all()
+		else:
+			template = loader.get_template('frontend/search_movie.html')
+			results = Movie.objects.all()
+		
+		for word in search_words.split(" "):
+			if search_type == "movie":
+				results = results.filter(title__icontains = word)
 			else:
-				search_string += "+"
-				search_string += word
-		print "using search string: %s %s" % (search_type, search_string)
-		return HttpResponseRedirect(reverse(viewname='src.frontend.views.search', args= (search_type, search_string)))		
-#	except:
-#		return HttpResponseRedirect(reverse('src.frontend.views.index'))	
+				results = results.filter(name__icontains = word)
+			
+		if results.__len__() == 1:
+			if search_type ==  "movie":
+				return HttpResponseRedirect(reverse(viewname='src.frontend.views.movie', args= (cleanName(results[0].title), results[0].id)))
+			elif search_type == "person":
+				return HttpResponseRedirect(reverse(viewname='src.frontend.views.person', args= (cleanName(results[0].name), results[0].id)))
+			elif search_type == "character":
+				return HttpResponseRedirect(reverse(viewname='src.frontend.views.character', args= (cleanName(results[0].name), results[0].id)))
+			elif search_type == "genre":
+				return HttpResponseRedirect(reverse(viewname='src.frontend.views.genre', args= (cleanName(results[0].name), results[0].id)))
+	
+		context = Context({'results': results, 'query': search_words})
+		return HttpResponse(template.render(context))
 		
 def search(request, search_type, search_query):
 	print "search called: %s %s" % (search_type, search_query)
@@ -155,5 +172,64 @@ def search(request, search_type, search_query):
 			results = results.filter(title__icontains = word)
 		else:
 			results = results.filter(name__icontains = word)
+			
+	if results.__len__() == 1:
+		if search_type ==  "movie":
+			return HttpResponseRedirect(reverse(viewname='src.frontend.views.movie', args= (cleanName(results[0].title), results[0].id)))
+		elif search_type == "person":
+			return HttpResponseRedirect(reverse(viewname='src.frontend.views.person', args= (cleanName(results[0].name), results[0].id)))
+		elif search_type == "character":
+			return HttpResponseRedirect(reverse(viewname='src.frontend.views.character', args= (cleanName(results[0].name), results[0].id)))
+		elif search_type == "genre":
+			return HttpResponseRedirect(reverse(viewname='src.frontend.views.genre', args= (cleanName(results[0].name), results[0].id)))
+	
 	context = Context({'results': results, 'query': search_query.replace("+", " ")})
 	return HttpResponse(template.render(context))
+	
+def search_json(request):
+	if not (request.GET.has_key('q') or request.GET.has_key('type')):
+		# error handling
+		print "Error: request does not have keys q and type: %s" % (request.keys())
+		return HttpResponse("", mimetype='text/plain; encoding=UTF-8')
+	else:
+		query = request.GET['q']
+		qtype = request.GET['type']
+		limit = (int (request.GET['limit']) if request.GET.has_key('limit') else 5)
+		
+		
+		if qtype == "person":
+			results = Person.objects.all()
+		elif qtype == "character":
+			results = Character.objects.all()
+		elif qtype == "genre":
+			results = Genre.objects.all()
+		else:
+			results = Movie.objects.all()
+			
+		for word in query.split(" "):
+			if qtype == "movie":
+				results = results.filter(title__icontains = word)
+			else:
+				results = results.filter(name__icontains = word)
+				
+		if qtype == "movie":
+			result_strings = [ {'name': r.title, 'img': r.image_url} for r in results[:limit]]
+		else:
+			result_strings = [ {'name': r.name, 'img': r.image_url} for r in results[:limit]]
+			
+		data = ""
+		for r in result_strings:
+			data = data + r['name'];
+			if qtype == "movie" or qtype == "person":
+				image = getOrCacheImage(r['img'])
+				if not (image == None or image == ""): 
+					data = data + "&" + image
+			data = data + "\n"
+			
+#		data = simplejson.dumps({'message': {'type': 'debug', 'msg': 'no error'}, 'data': result_strings})
+#		data = serializers.serialize('json', {'message': {'type': 'debug', 'msg': 'no error'}, 'data': result_strings})
+		print data
+#		return HttpResponse(serializers.serialize('json', {'error': 'none', 'data': result_strings}), mimetype='application/json')
+#		return HttpResponse(serializers.serialize('json', result_strings), mimetype='application/json')
+#		return HttpResponse(json, mimetype='application/json')
+		return HttpResponse(content = data, mimetype='text/plain; encoding=UTF-8')

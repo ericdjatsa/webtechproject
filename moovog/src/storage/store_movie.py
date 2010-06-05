@@ -12,6 +12,55 @@ from django.utils.encoding import smart_str, smart_unicode
 
 # /////////////thread classes for storing ///////
 
+def thread_still_alive(list_of_threads):
+    for thread in list_of_threads:
+        if thread is not None:
+            if thread.is_alive(): return True
+    return False
+
+def search_movie_for_moovog(files, max_results):
+    dict = {}
+    threads = {}
+    if files is not ([] or None):
+        for file in files:
+            while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
+            thread = Thread_search_movie(file.filename, max_results)
+            threads[file.id] = thread
+            print "searching movie : %s (%s)" % (str(thread.filename), str(thread.name))
+            thread.start()
+        while thread_still_alive(threads.values()): time.sleep(1.0)
+#        time.sleep(10)
+        for key in threads.iterkeys():
+            dict[key] = threads[key].result_list
+            print (str(threads[key].name) + " : " + str(dict[key]))
+    return dict
+
+class Thread_search_movie(threading.Thread):
+    """
+        INPUT :
+            filename
+            max_results
+        OUTPUT
+            list of imdb objects
+    """
+    def __init__(self, filename, max_results):
+        threading.Thread.__init__(self)
+        self.filename = filename
+        self.max_results = max_results
+        self.result_list = []
+        
+    
+    def run(self):
+        i = imdb.IMDb()
+        self.result_list = i.search_movie(self.filename)[:self.max_results]
+        print "received %s responses (%s)" % (str(len(self.result_list)), str(self.name))
+#        for result in result_list:
+#            print "updating : %s" % str(result)
+#            i.update(result)
+        print "search DONE for search objective : %s (%s)" % (str(self.filename), str(self.name))
+        self._Thread__stop()
+        return True
+
 class Thread_store_actor_and_character(threading.Thread):
     """
         INPUT :
@@ -24,6 +73,8 @@ class Thread_store_actor_and_character(threading.Thread):
         threading.Thread.__init__(self)
         self.person = person
         self.movie = movie
+        self.actor = None
+        self.character = None
         
     def run(self):
         i = imdb.IMDb()
@@ -50,31 +101,31 @@ class Thread_store_actor_and_character(threading.Thread):
         
         # Storing the actor in seeker's models
         actor_creation = Create_Or_Get_Actor_WF(Input, None)
-        with threading.Lock() as lock: a = actor_creation.work()
-        a = actor_creation.response()['actor-model']
+        with threading.Lock() as lock: actor_creation.work()
+        self.actor = actor_creation.response()['actor-model']
 
         def record_character(self, a):
-            b = Character_Model.get_character_model_by_imdb_id(self.person.currentRole.getID())
-            if b is None:
+            self.character = Character_Model.get_character_model_by_imdb_id(self.person.currentRole.getID())
+            if self.character is None:
                 print "storing character : %s (current thread : %s)" % (str(self.person.currentRole), str(self.name))
                 input_character = {}
                 input_character['imdb-id'] = self.person.currentRole.getID()
                 input_character['character-name'] = str(self.person.currentRole)
-                input_character['related-actor'] = a
+                input_character['related-actor'] = self.actor
                 input_character['related-movie'] = self.movie
                 
                 # Storing the role of the actor in seeker's models
                 character_creation = Create_Or_Get_Character_WF(input_character, None)
                 with threading.Lock() as lock: character_creation.work()
-        
+                self.character = character_creation.response()["character-model"]
+
         try:
             self.person.currentRole.getID()
-            record_character(self, a)
+            record_character(self, self.actor)
         except Exception, x:
-            print "No imdb id for character '%s' : operation abortion (current thread : %s)" % (str(self.person.currentRole), str(self.name))
+            print "no imdb id for character '%s' : operation abortion (current thread : %s)" % (str(self.person.currentRole), str(self.name))
 
         self._Thread__stop()
-        return a
 
 class Thread_store_director(threading.Thread):
     """
@@ -88,6 +139,7 @@ class Thread_store_director(threading.Thread):
         threading.Thread.__init__(self)
         self.person = person
         self.movie = movie
+        self.director = None
         
     def run(self):
         i = imdb.IMDb()
@@ -114,12 +166,10 @@ class Thread_store_director(threading.Thread):
         
         # Storing the director in seeker's models
         director_creation = Create_Or_Get_Director_WF(Input, None)
-        with threading.Lock() as lock: d = director_creation.work()
-        d = director_creation.response()['director-model']
-        
+        with threading.Lock() as lock: director_creation.work()
+        self.director = director_creation.response()['director-model']
         self._Thread__stop()
-        return d
-#Writers
+
 class Thread_store_writer(threading.Thread):
     """
         INPUT :
@@ -132,6 +182,7 @@ class Thread_store_writer(threading.Thread):
         threading.Thread.__init__(self)
         self.person = person
         self.movie = movie
+        self.writer = None
         
     def run(self):
         i = imdb.IMDb()
@@ -158,11 +209,9 @@ class Thread_store_writer(threading.Thread):
         
         # Storing the director in seeker's models
         writer_creation = Create_Or_Get_Writer_WF(Input, None)
-        with threading.Lock() as lock: w = writer_creation.work()
-        w = writer_creation.response()['writer-model']
-        
+        with threading.Lock() as lock: writer_creation.work()
+        self.writer = writer_creation.response()['writer-model']
         self._Thread__stop()
-        return w
 
 class Thread_award_section(threading.Thread):
     """
@@ -182,6 +231,7 @@ class Thread_award_section(threading.Thread):
         self.award = award
         self.category = category
         self.film = film
+        self.match = None
         
     def run(self):
         input_matcher = {}
@@ -199,10 +249,10 @@ class Thread_award_section(threading.Thread):
         elif self.person_category == "writer":
             input_matcher['writer-model'] =  Writer_Model.get_writer_model_by_imdb_id(self.person.getID())
         
-        with threading.Lock() as lock: match = Create_Or_Get_Award_Matcher_WF(input_matcher, None).work()
-
+        matcher_creation = Create_Or_Get_Award_Matcher_WF(input_matcher, None)
+        with threading.Lock() as lock: matcher_creation.work()
+        self.match = matcher_creation.response()["award-matcher-model"]
         self._Thread__stop()
-        return match
 
 def person_is(person,movie):
 
@@ -229,6 +279,7 @@ class Store_movie():
         self.fichier = fichier
 
     def start(self):
+        start = time.time()
         #Starting the movie
         print 'starting movie %s...' % smart_str(self.movie["title"])
         start_movie = {}
@@ -245,47 +296,83 @@ class Store_movie():
 
         #///Storing actors ////////
         print 'storing actors...'
+        actor_threads = []
         acteurs = []
-        actors = self.movie['actors']
+        try:
+            actors = self.movie['actors']
+        except Exception, x:
+            actors = []
+            print "problem with self.movie['actors']"
         for actor in actors:
             while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
             a = Actor_Model.get_actor_model_by_imdb_id(actor.getID())
             if a is None:
                 print "storing actor : %s" % smart_str(actor)
-                acteurs.append(Thread_store_actor_and_character(actor, film).start())
+                thread = Thread_store_actor_and_character(actor, film)
+                actor_threads.append(thread)
+                thread.start()
             else: acteurs.append(a)
 
         #////storing directors/////
         print 'storing directors...'
+        director_threads = []
         directeurs = []
-        directors = self.movie['director']
+        try:
+            directors = self.movie['director']
+        except Exception, x:
+            directors = []
+            print "problem with self.movie['director']"
         for director in directors:
             while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
             d = Director_Model.get_director_model_by_imdb_id(director.getID())
             if d is None:
                 print "storing director : %s" % smart_str(director)
-                directeurs.append(Thread_store_director(director, film).start())
+                thread = Thread_store_director(director, film)
+                director_threads.append(thread)
+                thread.start()
             else: directeurs.append(d)
 
         #///////storing writers//////////
         print 'storing writers...'
+        writer_threads = []
         ecrivains = []
-        writers = self.movie['writer']
+        try:
+            writers = self.movie['writer']
+        except Exception, x:
+            writers = []
+            print "problem with self.movie['writer']"
         for writer in writers:
             while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
             w = Writer_Model.get_writer_model_by_imdb_id(writer.getID())
             if w is None:
                 print "storing writers : %s" % smart_str(writer)
-                ecrivains.append(Thread_store_writer(writer, film).start())
+                thread = Thread_store_writer(writer, film)
+                writer_threads.append(thread)
+                thread.start()
             else: ecrivains.append(w)
+        
         while threading.active_count() > 1:
-            time.sleep(5.0)
-            print "still waiting for processes to finish (1/2)..."
+            time.sleep(1.0)
+            print "still waiting for processes to finish (step 1/2)..."
+            
+        for a_t in actor_threads:
+            if a_t is not None:
+                acteurs.append(a_t.actor)
+        for d_t in director_threads:
+            if d_t is not None:
+                directeurs.append(d_t.director)
+        for w_t in writer_threads:
+            if w_t is not None:
+                ecrivains.append(w_t.writer)
         print "all actors, directors, writers have been processed"
 
 #        //////////storing countries//////////
         pays = []
-        countries = self.movie['country']
+        try:
+            countries = self.movie['country']
+        except Exception, x:
+            countries = []
+            print "problem with self.movie['country']"
         for country in countries:
             country_input = {'country-name' : smart_str(country)}
             country_creation = Create_Or_Get_Country_WF(country_input, None).work()
@@ -295,7 +382,11 @@ class Store_movie():
 
         #/////////storing genres//////////
         genres = []
-        kinds = self.movie['genre']
+        try:
+            kinds = self.movie['genre']
+        except Exception, x:
+            kinds = []
+            print "problem with self.movie['genre']"
         for kind in kinds:
             genre_input = {'genre-name' : smart_str(kind)}
             genre_creation = Create_Or_Get_Genre_WF(genre_input, None).work()
@@ -304,7 +395,11 @@ class Store_movie():
         print 'all genres stored'
 
         #/////////////storing akas////////////////
-        akas = self.movie['aka']
+        try:
+            akas = self.movie['aka']
+        except Exception, x:
+            akas = []
+            print "problem with self.movie['akas']"
         k = 0 
         for aka in akas:
             try:
@@ -324,8 +419,14 @@ class Store_movie():
         print 'all akas stored'
 
         #/////////store release date///////////////////
+        try:
+            year = self.movie['year']
+        except Exception, x:
+            year = None
+            print "problem with self.movie['year']"
+            
         input_release_date = {}
-        input_release_date['release-date'] = date(self.movie['year'], 1, 1)
+        input_release_date['release-date'] = date(year, 1, 1)
         input_release_date['movie-model'] = film
         input_release_date['country-models'] = pays
         release_creation = Create_Or_Get_Release_Date_WF(input_release_date, None)
@@ -335,16 +436,19 @@ class Store_movie():
         #////////complete Movie///////
         input_complete_movie = {}
         try: input_complete_movie['runtime'] = str(self.movie['runtime'][0])
-        except Exception, x: input_complete_movie['runtime'] = None
+        except: input_complete_movie['runtime'] = None
         try: input_complete_movie['user-rating'] = self.movie['user rating']
         except: input_complete_movie['user-rating'] = None
         try: input_complete_movie['thumbnail-url'] = str(self.movie['cover'])
-        except Exception, x: input_complete_movie['thumbnail-url'] = None
+        except: input_complete_movie['thumbnail-url'] = None
         input_complete_movie['movie-model'] = film
         input_complete_movie['original-countries'] = pays
-        input_complete_movie['actors'] = acteurs
-        input_complete_movie['writers'] = ecrivains
-        input_complete_movie['directors'] = directeurs
+        try: input_complete_movie['actors'] = acteurs
+        except: input_complete_movie['actors'] = None
+        try: input_complete_movie['writers'] = ecrivains
+        except: input_complete_movie['writers'] = None
+        try: input_complete_movie['directors'] = directeurs
+        except: input_complete_movie['directors'] = None
         input_complete_movie['genres'] = genres
         try: input_complete_movie['plot'] = self.movie['plot'][1]
         except: input_complete_movie['plot'] = "no plot available"
@@ -359,7 +463,7 @@ class Store_movie():
             i.update(movie, info = ['awards'])
             return movie
         
-        # Storing Awards for the movie
+        print "creating matches between persons, movies, awards and award categories..."
         next_step = False
         while next_step is False:
             try:
@@ -387,31 +491,26 @@ class Store_movie():
     
                 for person in award['to']:
                     while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
-#                    print "".join["award matching for :", "\n", "\b",
-#                                  "award : ", smart_str(award_model.award_name), "\n", "\b", 
-#                                  "category : ", smart_str(category), "\n", "\b",
-#                                  "person : ", smart_str(person)]
-#                    print ("award matching for :" + "\n" + "    award : " +
-#                            smart_str(award_model.award_name) + "\n" +
-#                            "    category : " + smart_str(category) + "\n" +
-#                            "    person : " + smart_str(person))
+                    
                     print "award matching for :"
                     print "    award : %s" % smart_str(award_model.award_name)
                     if category is None: print "    category : no category found"
                     else: print "    category : %s" % category.__unicode__()
                     print "    person : %s" % smart_str(person)
-                    if person in self.movie["actors"]:
+                    
+                    if person in actors:
                         Thread_award_section(person, "actor", film, award_model, category).start()
-                    if person in self.movie["director"]:
+                    elif person in directors:
                         Thread_award_section(person, "director", film, award_model, category).start()
-                    if person in self.movie["writer"]:
+                    elif person in writers:
                         Thread_award_section(person, "writer", film, award_model, category).start()
                     else: Thread_award_section(person, "unknown", film, award_model, category).start()
                     
             while threading.active_count() > 1:
                 time.sleep(1.0)
-                print "still waiting for processes to finish (2/2)..."
+                print "still waiting for processes to finish (step 2/2)..."
             
             print 'all awards stored'
-            
+        
         print "storage DONE."
+        print "operation took : %s seconds" % str(time.time() - start)

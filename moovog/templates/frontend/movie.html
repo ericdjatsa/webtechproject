@@ -23,19 +23,19 @@
 <div class="l_miniMenu miniMenuSkin_2">
 	<div class="miniMenu c_b">
     	<div class="leftMenu c_b">
-            <a href="{% url src.frontend.views.index %}" title="Mum's Moovog" class="miniLogo">Moovog</a>
+            <a href="{% url src.seeker.views.index %}" title="Mum's Moovog" class="miniLogo">Moovog</a>
 
             <ul class="c_b">
 
-                <li><a href="{% url src.frontend.views.index %}" title="Home">Home</a></li>
+                <li><a href="{% url src.seeker.views.index %}" title="Home">Home</a></li>
             </ul>
         </div>
         <div class="miniSearch c_b">
-        	<input type="text" class="searchTxt" value="-- Input Key Word--" id="Text1" />
+        	<input type="text" class="searchTxt" value="hello@hello.com" id="Text1" />
             <input type="submit" class="searchBtn" value="Search" id="Submit1" />
         </div>
         <div class="miniUserInfo">
-			<a href="{% url src.frontend.views.preferences %}" title="register" target="_blank" id="btn_register">Administrate...</a>
+			<a href="{% url src.seeker.views.preferences %}" title="register" target="_blank" id="btn_register">Administrate...</a>
 
         </div>
     </div>
@@ -60,10 +60,10 @@
 <div id="nav">
 
 	<div class="caption">
-		<b>{{ movie.title }}</b>
+		<b>{{ movie.original_title }}</b>
 <!--		<i>{{ movie.aka }}</i>	-->	
 		
-		(Relaese Date: {{ movie.year }})
+		(Release Date: {{ movie.release_date_model_set.all.get.release_date.year }})
 	</div>
 </div>
 
@@ -80,7 +80,7 @@
 	<!-- coverpic -->
 
 	<div class="poster">
-		<img src="{{ movie.image_url|get_cover_image }}" alt="poster" />
+		<img src="{{ movie.thumbnail_url|get_cover_image }}" alt="poster" />
 	</div>
 
 	<dl class="thumb_msg" style="position: relative;">
@@ -99,20 +99,20 @@
 {% for rnd_movie in random_movies %}		
 <dl>		
 
-<dt><a href="{% url src.frontend.views.movie rnd_movie.title|clean_name, rnd_movie.id %}">
-	<img src="{{ rnd_movie.image_url|get_cover_image }}"/></a></dt>
+<dt><a href="{% url src.seeker.views.movie rnd_movie.original_title|clean_name, rnd_movie.id %}">
+	<img src="{{ rnd_movie.thumbnail_url|get_cover_image }}"/></a></dt>
 <dd>
-<h1><a href="{% url src.frontend.views.movie rnd_movie.title|clean_name, rnd_movie.id %}">{{ rnd_movie.title }}</a></h1>
+<h1><a href="{% url src.seeker.views.movie rnd_movie.original_title|clean_name, rnd_movie.id %}">{{ rnd_movie.original_title }}</a></h1>
 <h2>Type:
 	{% for genre in rnd_movie.genres.all %}
-	{%if forloop.last %}
-	{{ genre.name }}
+	{% if forloop.last %}
+	{{ genre.genre_name }}
 	{% else %}
-	{{ genre.name }},
+	{{ genre.genre_name }},
 	{% endif %}
 	{% endfor %}
 </h2>
-<div class="UserEvaluation" title="hotlevel"><div class="bg"><div class="qg" style="width:92.0%">&nbsp;</div></div><code>9.2</code></div>
+<div class="UserEvaluation" title="hotlevel"><div class="bg"><div class="qg" style="width:92.0%">&nbsp;</div></div><code>{{ rnd_movie.user_rating }}</code></div>
 </dd>
 </dl>
 {% endfor %}
@@ -159,48 +159,50 @@
             <div class="subcolumns">
               <div class="c66l">
               <div class="figure_detail">
- <!--                   <var><b>Also as:</b>
-					<a href="" title="intername">Internationnal Name; </a>
-					<a href="" title="oriname">Original Name; </a>
-					<a href="" title="altname">Alternate Name...</a>
-
-					</var> -->
+              		{% if movie.aka_model_set.all %}
+						<var><b>Also known as:</b>
+					{% endif %}
+					{% for aka in movie.aka_model_set.all %}
+						{% if forloop.last %}
+							<a href="" title="altname">{{ aka.aka_name }}</a>
+						{% else %}
+							<a href="" title="altname">{{ aka.aka_name }},</a>
+						{% endif %}
+					{% endfor %}
+					</var>
                      <var>
                     <b>Director:</b>
-							{% if directed %}
-							{% for director in directed %}
+							{% for director in movie.directors.all %}
 							{% if forloop.first %}
-					<a href="{% url src.frontend.views.person director.person.name|clean_name, director.person.id %}" > {{ director.person.name }} </a></var>
+					<a href="{% url src.seeker.views.director director.full_name|clean_name, director.id %}" > {{ director.full_name }} </a></var>
 							{% endif %}
-							{% endfor %}
-							{% endif %}						
+							{% endfor %}	
 					<br clear="all" />
 					
 					<var class="movie_actors">
 					<b>Cast: </b>
 
-					{% if acted %}
-					{% for a in acted %}
+					{% for actor in movie.actors.all|slice:":5" %}
 						<i>
-							<a href="{% url src.frontend.views.person a.actor.name|clean_name, a.actor.id %}" class="picsBox_img_85x83" title="A">
-			<img src="{{ actedin.actor.image_url|get_cover_image }}" alt=""></a>
+							<a href="{% url src.seeker.views.actor actor.full_name|clean_name, actor.id %}" class="picsBox_img_85x83" title="A">
+			<img src="{{ actor.thumbnail_url|get_cover_image }}" alt=""></a>
 
-							<p class="pl-7"><a href="{% url src.frontend.views.person a.actor.name|clean_name, a.actor.id %}" title="">{{ a.actor.name }}</a></p>
+							<p class="pl-7"><a href="{% url src.seeker.views.actor actor.full_name|clean_name, actor.id %}" title="">{{ actor.full_name }}</a></p>
 						</i>
 						{% endfor %}
-						{% endif %}
 					</var>
 					<br clear="all" />
-					<var><b>Run Time:</b> {{ movie.runtimes }} (min)</var>
+					<var><b>Run Time:</b> {{ movie.runtime }} (min)</var>
 
-					
+					{% comment %}
 					<var><b>Release Date in US:</b>
 					<a href="" title="2009">{{ movie.year }}</a>
 					</var>
+					{% endcomment %}
 					
 					<var><b>Type:</b>
 					{% for genre in movie.genres.all %}
-					<a href="{% url src.frontend.views.genre genre.name|clean_name, genre.id %}" title="story">{{ genre.name }}</a>
+					<a href="{% url src.seeker.views.genre genre.genre_name|clean_name, genre.id %}" title="story">{{ genre.genre_name }}</a>
 					{% endfor %}
 					</var>
 <!--					
@@ -293,12 +295,12 @@ function _showDiv1(episodeid){
 
 </h4>
 <div id="short_" class="figure_content">
-{{ movie.short_plot }}
+{{ movie.plot }}
 </div>
 
 
 <div id="content_" class="figure_content figure_all">
-<br>            {{ movie.plot }}
+<br>            {{ movie.summary }}
 </div>
 <!--End: Basic Into-->
 
@@ -406,7 +408,7 @@ function _showDiv1(episodeid){
 <div class="splitline" style="margin-top:10px;">&nbsp;</div>
 <script type="text/javascript" language="JavaScript" src="/static/script/qiang/bk_epg.js"></script>
 
-<a style="text-align: center; font-size: 2em;" href="{% url src.frontend.views.movie_watch movie.title|clean_name, movie.id %}">Watch this movie!</a>
+<a style="text-align: center; font-size: 2em;" href="{% url src.seeker.views.movie_watch movie.original_title|clean_name, movie.id %}">Watch this movie!</a>
 
 
 
@@ -511,7 +513,7 @@ function _showDiv1(episodeid){
 
 <!--Start:CopyRight-->
     <div class="foot c_b">
-		<div class="info">
+		<div class="info" style="clear: both;">
 			<p align="center"> Copyright &copy;  Mum's Moovog Team, Eurecom, France  &nbsp&nbsp&nbsp&nbsp&nbsp  Note:Don't use it for business!</p>
 		</div>
 

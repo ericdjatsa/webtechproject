@@ -69,7 +69,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    r'C:\xampplite\svn\moovog\templates',
+#    r'C:\xampplite\svn\moovog\templates',
+    r'C:\moovog\svn\trunk\moovog\templates',
     r'/home/zaddach/projects/webtech/svn/trunk/moovog/templates',
     r'/home/rachid/Bureau/Proet_Django/svn/trunk/moovog/templates',
 )
@@ -84,7 +85,7 @@ INSTALLED_APPS = (
     'moovog.src.frontend',
     'moovog.src.utils',
     'moovog.src.crawler',
-    'moovog.src.storage', 
+    'moovog.src.storage',
 )
 
 STATIC_DOC_ROOT = 'static_content'

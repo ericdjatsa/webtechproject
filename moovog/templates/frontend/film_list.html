@@ -4,9 +4,9 @@
 {% load i18n %}
 
 {% block head %}
-<script src="http://cdn.jquerytools.org/1.1.2/jquery.tools.min.js" />
 <link rel="stylesheet" type="text/css" href="/static/css/film_list.css" />
-<script src="/static/script/film_list.js" />
+<script src="/static/ext/script/jquery.tools.tooltip.js" type="text/javascript"></script>
+<script src="/static/script/film_list.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block page_header %}
@@ -35,40 +35,43 @@
 	<p id="film_list">
 	<p>
 		{% if movies %}
-		{% for movie in movies %}
-			<div class="film_thumbnail">
+			{% for movie in movies %}
+				<div class="film_thumbnail">
 					<div class="left">
-						<a href="{% url src.frontend.views.movie movie.title|clean_name, movie.pk %}">
-							<img src="{{ movie.image_url|get_cover_image }}" class="thumbnail_image"/>
+						<a href="{% url src.seeker.views.movie movie.original_title|clean_name, movie.id %}">
+						<img src="{{ movie.thumbnail_url|get_cover_image }}" class="thumbnail_image"/>
 						</a>
 					</div>
 					<div class="right">
-						<p>Title: {{ movie.title }}</p>
-						<p>Year: {{ movie.year }}</p>
+						<p>Title: {{ movie.original_title }}</p>
+						<p>Year: {{ movie.release_date_model_set.all.get.release_date.year }}</p>
 
 						<p>Genre: 
 						  {% for genre in movie.genres.all %}
 						  {% if forloop.last %}
-						  <a href="{% url src.frontend.views.genre genre.name|clean_name, genre.pk %}">{{ genre. }}</a>
+						  <a href="{% url src.seeker.views.genre genre.genre_name|clean_name, genre.pk %}">{{ genre. }}</a>
 						  {% else %}
-						  <a href="{% url src.frontend.views.genre genre.name|clean_name, genre.pk %}">{{ genre }}</a>,
+						  <a href="{% url src.seeker.views.genre genre.genre_name|clean_name, genre.pk %}">{{ genre }}</a>,
 						  {% endif %}
 						  {% endfor %}
 						</p>
-						<p>Plot: {{ movie.short_plot }}</p>
-						<p> <a href="{% url src.frontend.views.movie movie.title|clean_name, movie.id %}">details</a>
-							<a href="{% url src.frontend.views.movie_watch movie.title|clean_name, movie.id %}">watch</a>
-					</p>
+						<p>Plot: {{ movie.plot|truncatewords:30 }}</p>
+						<p>
+							{% comment %}
+							<a href="{% url src.seeker.views.movie movie.original_title|clean_name, movie.id %}">details</a>
+							<a href="{% url src.seeker.views.movie_watch movie.original_title|clean_name, movie.id %}">watch</a>
+							{% endcomment %}
+						</p>
 					</div>
-			</div>
-			<div class="film_tooltip">
+				</div>
+				<div class="film_tooltip">
 				<embed 
 					 src="{{ movie.imdb_id|internet_movie_archive_player }}" 
-					 FlashVars="width=320&height=260&autostart=True&mute=True&controlbar=None"
+					 FlashVars="width=320&height=300&autostart=True&mute=True&controlbar=bottom"
 					 type="application/x-shockwave-flash" />
-			</div>
+				</div>
 			{% endfor %}
-	{% endif %}
+		{% endif %}
 	</p>
 	<p>
   		{% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}

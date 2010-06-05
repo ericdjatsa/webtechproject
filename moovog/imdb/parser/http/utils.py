@@ -421,9 +421,9 @@ class DOMParserBase(object):
                     raise IMDbError, 'unable to use any parser in %s: %s' % \
                                     (str(useModule), str(e))
                 else:
-                    warnings.warn('unable to use "%s": %s' % (mod, str(e)))
-                    _gotError = True
-                continue
+#                    warnings.warn('unable to use "%s": %s' % (mod, str(e)))
+#                    _gotError = True
+                    continue
         else:
             raise IMDbError, 'unable to use parsers in %s' % str(useModule)
         # Fall-back defaults.
@@ -525,8 +525,8 @@ class DOMParserBase(object):
                 result.append(item)
             return result
         except Exception, e:
-            self._logger.error('%s: caught exception extracting XPath "%s"',
-                                self._cname, path, exc_info=True)
+#            self._logger.error('%s: caught exception extracting XPath "%s"',
+#                                self._cname, path, exc_info=True)
             return []
 
     def tostring(self, element):

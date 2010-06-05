@@ -1,33 +1,18 @@
 <div class="contentMain" >
-	<!-- <h1 style="color: rgb(56, 149, 19); text-transform: uppercase;">moovog</h1> -->
-<!--	<div class="headerContent"><strong><label>Search Bar</label></strong></div> -->
-	<form action="/frontend/search/" method="POST">
+	<form action="/seeker/search/" method="GET">
 		<p>
-	        <input name="search-string" type="text" size="40" style="margin-top:10px; margin-right:5px"/>
+	        <input id="search-string" name="search-string" type="text" size="40" style="margin-top:10px; margin-right:5px"/>
 	   </p>
 		<p>
 			<div>
 				<input type="submit" value="Let's Go"/>
-				<select name="search-option">
+				<select id="search-type" name="search-option">
 					<option value="movie">movies</option>
 					<option value="person">persons</option>
 					<option value="genre">genre</option>
 					<option value="character">character</option>
-<!--					<option value="director">It is a movie director</option>
-					<option value="writer">It is a movie screenplay writer</option>
-					<option value="genre">It is a movie genre</option> -->
-			<!--	<option value="character">It is a movie character</option>
-					<option value="award">awards</option>
-					<option value="award-category">It is a movie award category</option>
-			-->
 				</select>
 			</div>
 		</p>
-		
-<!--        <p>
-            <input type="submit" value="Let's Go" />
-        </p> -->
-		
-		
     </form
 </div>

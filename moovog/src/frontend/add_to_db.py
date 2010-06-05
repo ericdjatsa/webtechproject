@@ -15,21 +15,32 @@ from src.frontend.models import get_or_create_character
 from src.frontend.models import get_or_create_person
 from src.frontend.models import get_or_create_genre
 from src.utils.internet_movie_archive import get_trailer_embed
-#from src.storage.store_movie import Store_movie
+from src.storage.store_movie import Store_movie, search_movie_for_moovog
+
+maxResults = 5
+maxFiles = 20
 
 #get all files which are not in the ignore table or in the movie table from the crawler table. This query
 #uses raw sql because django is stupid and not capable of doing this query (as opposed to rubyOnRails),
 #and might easily be broken by changing table names, so please do not do this!!!!
 def getNewCrawledFiles():
-#	return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.md5 = crawler_file.hash_code) and not exists (select * from seeker_movie_model where seeker_movie_model.hash_code = crawler_file.hash_code and seeker_movie_model.filename = crawler_file.filename))"])
-  return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.hash_code = crawler_file.hash_code) and not exists (select * from frontend_movie where frontend_movie.hash_code = crawler_file.hash_code and frontend_movie.filename = crawler_file.filename))"])
+    return File.objects.extra( where=["(not exists (select * from frontend_ignoretable where frontend_ignoretable.filename = crawler_file.filename and frontend_ignoretable.hash_code = crawler_file.hash_code) and not exists (select * from seeker_movie_model where seeker_movie_model.hash_code = crawler_file.hash_code and seeker_movie_model.filename = crawler_file.filename))"])
 
 def queryImdbWithCrawledFiles():
-	diskScanResult  = getNewCrawledFiles()
-	imdbMatches = {}
-	for file in File.objects.all():
-		imdbMatches[file.id] = imdbSearchMovie(file.filename)
-	return (diskScanResult, imdbMatches)
+    diskScanResult = getNewCrawledFiles()
+    imdbMatches = {}
+    files = []
+    for file in File.objects.all()[:maxFiles]:
+    	files.append(file)
+    imdbMatches = search_movie_for_moovog(files, maxResults)
+    return (diskScanResult, imdbMatches)
+
+#def queryImdbWithCrawledFiles():
+#    diskScanResult  = getNewCrawledFiles()
+#    imdbMatches = {}
+#    for file in File.objects.all():
+#        imdbMatches[file.id] = imdbSearchMovie(file.filename)
+#    return (diskScanResult, imdbMatches)
 
 def dictGet(dict, key, defaultValue = u""):
 	if dict.has_key(key):

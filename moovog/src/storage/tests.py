@@ -3,13 +3,19 @@ from moovog.src.crawler.models import *
 from moovog import imdb 
 
 def test(list_of_titles):
+    """
+        to avoid display of error/warning messages, were commented lines 424-425
+        and lines 528-529 of imdb.parser.http.utils.py
+    """
     for title in list_of_titles:
         i = imdb.IMDb()
-        film = i.search_movie(title)[0]
-        i.update(film)
-        fichier = File.objects.all()[0]
-        data = Store_movie(film,fichier)
-        data.start()
+        films = i.search_movie(title)
+        if films is not []:
+            for film in films: 
+                i.update(film)
+                fichier = File.objects.all()[0]
+                data = Store_movie(film,fichier)
+                data.start()
 
 class Thread_Test(threading.Thread):
     

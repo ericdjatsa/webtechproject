@@ -10,7 +10,7 @@
 {% if results %}
 <ul>
 {% for result in results %}
-<li><a href="{% url src.frontend.views.movie result.title|clean_name, result.id %}">{{ result.title }}({{ result.year }})</a></li>
+<li><a href="{% url src.seeker.views.movie result.original_title|clean_name, result.id %}">{{ result.original_title }} ({{ result.release_date_model_set.all|first }})</a></li>
 {% endfor %}
 </ul>
 {% endif %}
