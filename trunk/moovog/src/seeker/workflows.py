@@ -39,28 +39,24 @@ class Search_WF(Base_Workflow):
     
     def process(self):
         start = datetime.now()
-        search_string = self.request()["search-string"]
-        strings_to_search = search_string.split()
+        string_to_search = self.request()["search-string"]
         
         search_option = self.request()["search-option"]
         if search_option not in Search_WF.SEARCH_OPTIONS: search_option = None
         else:
-            search_results = []
-            for string_to_search in strings_to_search:
-                search_result = {
-                'a': lambda string_to_search: self.repository().search_all(string_to_search),
-                'b': lambda string_to_search: self.repository().search_actor(string_to_search),
-                'c': lambda string_to_search: self.repository().search_director(string_to_search),
-                'd': lambda string_to_search: self.repository().search_writer(string_to_search),
-                'e': lambda string_to_search: self.repository().search_movie(string_to_search),
-                'f': lambda string_to_search: self.repository().search_aka(string_to_search),
-                'g': lambda string_to_search: self.repository().search_genre(string_to_search),
-                'h': lambda string_to_search: self.repository().search_character(string_to_search),
-                'i': lambda string_to_search: self.repository().search_award(string_to_search),
-                'j': lambda string_to_search: self.repository().search_award_category(string_to_search),
-                'k': lambda string_to_search: None
-                }[Search_WF.SEARCH_OPTIONS[search_option]](string_to_search)
-                search_results.append(search_result)
+            search_result = {
+            'a': lambda string_to_search: self.repository().search_all(string_to_search),
+            'b': lambda string_to_search: self.repository().search_actor(string_to_search),
+            'c': lambda string_to_search: self.repository().search_director(string_to_search),
+            'd': lambda string_to_search: self.repository().search_writer(string_to_search),
+            'e': lambda string_to_search: self.repository().search_movie(string_to_search),
+            'f': lambda string_to_search: self.repository().search_aka(string_to_search),
+            'g': lambda string_to_search: self.repository().search_genre(string_to_search),
+            'h': lambda string_to_search: self.repository().search_character(string_to_search),
+            'i': lambda string_to_search: self.repository().search_award(string_to_search),
+            'j': lambda string_to_search: self.repository().search_award_category(string_to_search),
+            'k': lambda string_to_search: None
+            }[Search_WF.SEARCH_OPTIONS[search_option]](string_to_search)
             
         # TO DO : merge informations for different search_results
         # INPUT : search_results
@@ -69,13 +65,13 @@ class Search_WF(Base_Workflow):
         # OUTPUT : {"movie-models" : [movie_model, ...], actors-models : [actor_model, ...], ...}
         # (See search functions in seeker.repository.py to know all possible keys)
         
-        merged_results = {}
-        type_of_result = ""
-        if search_option in [u"unknown", u"actor", u"director", u"writer", u"movie-original-title",
-                             u"movie-aka-title", u"genre"]:
-            type_of_result = "homogeneous"
-            for dict in search_results:
-                if dict is not None: merged_results = homogeneous_search_dictionary_merger(dict, merged_results)
+#        merged_results = {}
+#        type_of_result = ""
+#        if search_option in [u"unknown", u"actor", u"director", u"writer", u"movie-original-title",
+#                             u"movie-aka-title", u"genre"]:
+#            type_of_result = "homogeneous"
+#            for dict in search_results:
+#                if dict is not None: merged_results = homogeneous_search_dictionary_merger(dict, merged_results)
                 
 #        if search_option in [u"unknown", u"character", u"award", u"award-category"]:
 #            type_of_result = "heterogeneous"
@@ -95,8 +91,7 @@ class Search_WF(Base_Workflow):
 #                                                                 search_string)
         
         self.add_to_response("status", "ok")
-        self.add_to_response("type-of-result", type_of_result)
-        self.add_to_response("search-result", merged_results)
+        self.add_to_response("search-result", search_result["models"])
         self.add_to_response("time-to-serve", datetime.now() - start)
         
 class Get_Infos_For_Homogeneous_Search_WF(Base_Workflow):
@@ -461,26 +456,21 @@ class Complete_Movie_Model_WF(Base_Workflow):
         self.validate_string_field_not_empty("plot")
         self.validate_string_field_not_empty("summary")
         self.validate_field_not_null("movie-model")
-        self.validate_list_field_not_empty("original-countries")
-        self.validate_list_field_not_empty("actors")
-        self.validate_list_field_not_empty("writers")
-        self.validate_list_field_not_empty("directors")
-        self.validate_list_field_not_empty("genres")
     
     def process(self):
-        movie_model = self.request()["movie-model"]                if self.validate_field_not_null("original-countries"):
+        movie_model = self.request()["movie-model"]                if self.validate_list_field_not_empty("original-countries"):
             original_countries = self.request()["original-countries"]
         else: original_countries = None
-        if self.validate_field_not_null("actors"):
+        if self.validate_list_field_not_empty("actors"):
             actors = self.request()["actors"]
         else: actors = None
-        if self.validate_field_not_null("writers"):
+        if self.validate_list_field_not_empty("writers"):
             writers = self.request()["writers"]
         else: writers = None
-        if self.validate_field_not_null("directors"):
+        if self.validate_list_field_not_empty("directors"):
             directors = self.request()["directors"]
         else: directors = None
-        if self.validate_field_not_null("genres"):
+        if self.validate_list_field_not_empty("genres"):
             genres = self.request()["genres"]
         else: genres = None
         
@@ -935,7 +925,7 @@ class Create_Or_Get_Award_Matcher_WF(Base_Workflow):
             writer-model (optional)
         OUTPUT :
             status : "ok"
-            award-manager-model
+            award-matcher-model
             already-existed (boolean)
     """
     def __init__(self, input, authorization):

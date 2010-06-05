@@ -9,7 +9,21 @@
 {% if results %}
 <ul>
 {% for result in results %}
-<li><a href="{% url src.frontend.views.person result.name|clean_name, result.id %}">{{ result.name }}</a></li>
+{% ifequal type "actor" %}
+<li><a href="{% url src.seeker.views.actor result.full_name|clean_name, result.id %}">{{ result.full_name }}</a></li>
+{% endifequal %}
+{% ifequal type "director" %}
+<li><a href="{% url src.seeker.views.director result.full_name|clean_name, result.id %}">{{ result.full_name }}</a></li>
+{% endifequal %}
+{% ifequal type "writer" %}
+<li><a href="{% url src.seeker.views.writer result.full_name|clean_name, result.id %}">{{ result.full_name }}</a></li>
+{% endifequal %}
 {% endfor %}
+<br/>
+{% if results|length_is:"1" %}
+{{ results|length }} result (0.{{ time }} s)
+{% else %}
+{{ results|length }} results (0.{{ time }} s)
+{% endif %}
 {% endif %}
 {% endblock page_content %}

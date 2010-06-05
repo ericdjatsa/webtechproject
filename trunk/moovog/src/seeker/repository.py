@@ -106,12 +106,13 @@ class Repository:
             Searches into full_name of all Actor_Model instances
             
             OUTPUT :
-                actor-models : a list of Actor_Model
+                a list of Actor_Model
         """
-        query = Actor_Model.objects.filter(full_name__icontains = string_to_search)
+        for string in string_to_search.split(" "):
+            query = Actor_Model.objects.filter(full_name__icontains = string)
         result = []
         for model in query: result.append(model)
-        return {"actor-models" : result}
+        return {"models" : result}
     
     @staticmethod
     def search_director(string_to_search):
@@ -119,12 +120,13 @@ class Repository:
             Searches into full_name of all Director_Model instances
             
             OUTPUT :
-                director-models : a list of Director_Model
+                a list of Director_Model
         """
-        query = Director_Model.objects.filter(full_name__icontains = string_to_search)
+        for string in string_to_search.split(" "):
+            query = Director_Model.objects.filter(full_name__icontains = string)
         result = []
         for model in query: result.append(model)
-        return {"director-models" : result}
+        return {"models" : result}
     
     @staticmethod
     def search_writer(string_to_search):
@@ -132,12 +134,13 @@ class Repository:
             Searches into full_name of all Writer_Model instances
             
             OUTPUT :
-                writer-models : a list of Writer_Model
+                a list of Writer_Model
         """
-        query = Writer_Model.objects.filter(full_name__icontains = string_to_search)
+        for string in string_to_search.split(" "):
+            query = Writer_Model.objects.filter(full_name__icontains = string)
         result = []
         for model in query: result.append(model)
-        return {"writer-models" : result}
+        return {"models" : result}
     
     @staticmethod
     def search_movie(string_to_search):
@@ -146,12 +149,13 @@ class Repository:
             Movie_Model instances
             
             OUTPUT :
-                movie-models : a list of Movie_Model
+                a list of Movie_Model
         """
-        query = Movie_Model.objects.filter(original_title__icontains = string_to_search)
+        for string in string_to_search.split(" "):
+            query = Movie_Model.objects.filter(original_title__icontains = string)
         result = []
         for model in query: result.append(model)
-        return {"movie-models" : result}
+        return {"models" : result}
     
     @staticmethod
     def search_aka(string_to_search):
@@ -160,12 +164,13 @@ class Repository:
             Aka_Model instances
             
             OUTPUT :
-                movie-models : a list of Movie_Model
+                list of movie models
         """
-        query = Aka_Model.objects.filter(aka_name__icontains = string_to_search)
+        for string in string_to_search.split(" "):
+            query = Aka_Model.objects.filter(aka_name__icontains = string)
         result = []
         for model in query: result.append(model)
-        return {"movie-models" : result}
+        return {"models" : result}
     
     @staticmethod
     def search_genre(string_to_search):
@@ -174,14 +179,15 @@ class Repository:
             Genre_Model instances
             
             OUTPUT :
-                movie-models : a list of Movie_Model
+                a list of genre models
         """
-        query = Genre_Model.objects.filter(genre_name__icontains = string_to_search)
+        for string in string_to_search.split(" "):
+            query = Genre_Model.objects.filter(genre_name__icontains = string)
         result = []
-        for genre_model in query:
-            for movie_model in genre_model.movie_model_set.all():
-                result.append(movie_model)
-        return {"movie-models" : result}
+#        for genre_model in query:
+#            for movie_model in genre_model.movie_model_set.all():
+#                result.append(movie_model)
+        return {"models" : result}
     
     @staticmethod
     def search_character(string_to_search):
@@ -190,18 +196,20 @@ class Repository:
             Character_Model instances
             
             OUTPUT :
-                {match-1 : {"actor" : actor_1, "movie" : movie_1}, match-2 : ...}
+                a list of character models
         """
-        query = Character_Model.objects.filter(character_name__icontains = string_to_search)
-        result = {}
-        i = 0
-        if query is not None:
-            for character_model in query:
-                i += 1
-                result["match"+str(i)] = {}
-                result["match"+str(i)]["actor"] = character_model.related_actor
-                result["match"+str(i)]["movie"] = character_model.related_movie
-        return result
+        for string in string_to_search.split(" "):
+            query = Character_Model.objects.filter(character_name__icontains = string)
+        result = []
+        for model in query: result.append(model)
+#        i = 0
+#        if query is not None:
+#            for character_model in query:
+#                i += 1
+#                result["match"+str(i)] = {}
+#                result["match"+str(i)]["actor"] = character_model.related_actor
+#                result["match"+str(i)]["movie"] = character_model.related_movie
+        return {"models" : result}
     
     @staticmethod
     def search_award(string_to_search):
@@ -210,29 +218,29 @@ class Repository:
             Award_Model instances
             
             OUTPUT :
-                {match-1 : {"movie" : movie_1, "person" : person_1, "award-category" : 
-                award_category_1, "date-of-awarding" : date, award-status : status
-                }, match-2 : ...}
+                a list of award models
         """
-        query = Award_Model.objects.filter(award_name__icontains = string_to_search)
-        result = {}
-        if query is not None:
-            for award_model in query:
-                matches = Award_Matcher_Model.objects.filter(award = award_model)
-                i = 0
-                if matches is not None:
-                    for match in matches:
-                        i += 1
-                        result["match"+str(i)] = {}
-                        result["match"+str(i)]["movie"] = match.movie
-                        if match.actor is not None: result["match"+str(i)]["person"] = match.actor
-                        elif match.director is not None: result["match"+str(i)]["person"] = match.director
-                        elif match.writer is not None: result["match"+str(i)]["person"] = match.writer
-                        else: result["match"+str(i)]["person"] = None
-                        result["match"+str(i)]["award-category"] = match.award_category
-                        result["match"+str(i)]["date-of-awarding"] = award_model.date_of_awarding
-                        result["match"+str(i)]["award-status"] = award_model.award_status
-        return result
+        for string in string_to_search.split(" "):
+            query = Award_Model.objects.filter(award_name__icontains = string)
+        result = []
+        for model in query: result.append(model)
+#        if query is not None:
+#            for award_model in query:
+#                matches = Award_Matcher_Model.objects.filter(award = award_model)
+#                i = 0
+#                if matches is not None:
+#                    for match in matches:
+#                        i += 1
+#                        result["match"+str(i)] = {}
+#                        result["match"+str(i)]["movie"] = match.movie
+#                        if match.actor is not None: result["match"+str(i)]["person"] = match.actor
+#                        elif match.director is not None: result["match"+str(i)]["person"] = match.director
+#                        elif match.writer is not None: result["match"+str(i)]["person"] = match.writer
+#                        else: result["match"+str(i)]["person"] = None
+#                        result["match"+str(i)]["award-category"] = match.award_category
+#                        result["match"+str(i)]["date-of-awarding"] = award_model.date_of_awarding
+#                        result["match"+str(i)]["award-status"] = award_model.award_status
+        return {"models" : result}
 
     @staticmethod
     def search_award_category(string_to_search):
@@ -241,24 +249,29 @@ class Repository:
             Award_Category_Model instances
             
             OUTPUT :
-                models : {"movie_model" : [actor_model_1, ...], ...}
+                a list of award matcher models
         """
-        query = Award_Category_Model.objects.filter(award_category_name__icontains = string_to_search)
-        result = {}
-        for award_category_model in query:
-            matcher_list = award_category_model.award_matcher_model_set.all()
-            if matcher_list is not None:
-                i = 0
-                for award_matcher_model in matcher_list:
-                    i += 1
-                    result["award-category-"+str(i)] = []
-                    result["award-category-"+str(i)].append(award_matcher_model.actor)
-                    result["award-category-"+str(i)].append(award_matcher_model.director)
-                    result["award-category-"+str(i)].append(award_matcher_model.writer)
-                    result["award-category-"+str(i)].append(award_matcher_model.movie)
-                    result["award-category-"+str(i)].append(award_matcher_model.award)
-                    result["award-category-"+str(i)].append(award_matcher_model.award_category)
-        return result
+#        query = Award_Category_Model.objects.filter(award_category_name__icontains = string_to_search)
+        result = []
+        for string in string_to_search.split(" "):
+            query = Award_Matcher_Model.objects.filter(award_category = string)
+        for model in query: result.append(model)
+#            for matcher_model in query:
+#                result.append(matcher_model.award)
+#        for award_category_model in query:
+#            matcher_list = award_category_model.award_matcher_model_set.all()
+#            if matcher_list is not None:
+#                i = 0
+#                for award_matcher_model in matcher_list:
+#                    i += 1
+#                    result["award-category-"+str(i)] = []
+#                    result["award-category-"+str(i)].append(award_matcher_model.actor)
+#                    result["award-category-"+str(i)].append(award_matcher_model.director)
+#                    result["award-category-"+str(i)].append(award_matcher_model.writer)
+#                    result["award-category-"+str(i)].append(award_matcher_model.movie)
+#                    result["award-category-"+str(i)].append(award_matcher_model.award)
+#                    result["award-category-"+str(i)].append(award_matcher_model.award_category)
+        return {"models" : result}
     
     @staticmethod    
     def get_attr_value(model_object,attribute_name):

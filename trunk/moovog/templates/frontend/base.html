@@ -9,14 +9,18 @@
   <link rel="stylesheet" href="/static/css/base.css" />
   <style type="text/css"> {% block style %} {% endblock %} </style>
   <title> {% block title %}Moovog{% endblock %} </title>
+	<script src="/static/ext/script/jquery-1.4.2.dev.js" type="text/javascript"></script>
+	<script src="/static/ext/script/jquery.autocomplete.js" type="text/javascript"></script>
+	<script src="/static/script/search_bar.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="/static/ext/css/jquery.autocomplete.css" />
 {% block head %} {% endblock %}
  </head>
  <body>
   <p id="page_header"> 
 		<img src="/static/image/oie_aa.gif" id="title_image"/>
 		<table id="searchbox"><tr>
-		<td><div>	{% include "frontend/search_bar.html" %} </div></td></tr>
-		<tr><td class="administration_link"><a href="{% url src.frontend.views.preferences %}" id="administration_link">
+		<td><div>	{% include "seeker/search_bar.html" %} </div></td></tr>
+		<tr><td class="administration_link"><a href="{% url src.seeker.views.preferences %}" id="administration_link">
 				{% blocktrans %}administrate...{% endblocktrans %}
 			</a></td></tr></table>
 		

@@ -9,7 +9,7 @@
 {% if results %}
 <ul>
 {% for result in results %}
-<li><a href="{% url src.frontend.views.genre result.name|clean_name, result.id %}">{{ result.name }}</a></li>
+<li><a href="{% url src.seeker.views.genre result.genre_name|clean_name, result.id %}">{{ result.genre_name }}</a></li>
 {% endfor %}
 {% endif %}
 {% endblock page_content %}

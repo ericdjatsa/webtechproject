@@ -5,11 +5,15 @@
 
 {% block page_content %}
 {% if genre %}
-<h1>Genre {{ genre.name }}</h1><br />
+<h1>Genre {{ genre.genre_name }}</h1><br />
 Films in that genre:
 <ul>
-{% for movie in genre.movie_set.all %}
-<li><a href="{% url src.frontend.views.movie movie.title|clean_name, movie.id %}">{{ movie.title }} ({{ movie.year }})</a></li>
+{% for movie in genre.movie_model_set.all %}
+	{% if movie.release_date_model_set %}
+		<li><a href="{% url src.seeker.views.movie movie.original_title|clean_name, movie.id %}">{{ movie.original_title }}</a></li>
+	{% else %}
+	<li><a href="{% url name = src.seeker.views.movie movie.original_title|clean_name movie.id %}">{{ movie.original_title }}</a></li>
+	{% endif %}
 {% endfor %}
 {% endif %}
 {% endblock page_content %}
