@@ -14,19 +14,19 @@ def test(list_of_titles):
             for film in films: 
                 i.update(film)
                 fichier = File.objects.all()[0]
-                data = Store_movie(film,fichier)
+                data = Thread_store_movie(film,fichier)
                 data.start()
 
 class Thread_Test(threading.Thread):
     
-    def __init__(self, name):
+    def __init__(self, name, consigne):
         threading.Thread.__init__(self, name = name)
     
     def run(self):
         j = 0
-        for i in range(1,1000000): j+=i/2
-        print i
-        return i
+        for i in range(1, consigne): j+=i/2
+        print j
+        Thread.__stop()
     
 def thread_test():
     print "currently active : %s" % str(threading.active_count())

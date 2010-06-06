@@ -23,7 +23,7 @@ def search_movie_for_moovog(files, max_results):
     threads = {}
     if files is not ([] or None):
         for file in files:
-            while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
+            while threading.active_count() > Thread_store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
             thread = Thread_search_movie(file.filename, max_results)
             threads[file.id] = thread
             print "searching movie : %s (%s)" % (str(thread.filename), str(thread.name))
@@ -32,7 +32,7 @@ def search_movie_for_moovog(files, max_results):
 #        time.sleep(10)
         for key in threads.iterkeys():
             dict[key] = threads[key].result_list
-            print (str(threads[key].name) + " : " + str(dict[key]))
+#            print (str(threads[key].name) + " : " + str(dict[key]))
     return dict
 
 class Thread_search_movie(threading.Thread):
@@ -271,17 +271,52 @@ def person_is(person,movie):
 
     return table
 
-class Store_movie():
+class Thread_store_movie(threading.Thread):
+#    """
+#        INPUT :
+#            Store_movie object
+#        OUTPUT :
+#            (empty)
+#    """
+#    
+#    def __init__(self, s_m_o):
+#        threading.Thread.__init__(self)
+#        self.store_movie_object = s_m_o
+#        
+#    def run(self):
+#        s_m_o.start()
+#        self._Thread__stop()
+#
+#class Store_movie():
     MAX_THREAD_QUOTA = 20 # reduce the risk of dead lock or cpu bottlenecks
 
     def __init__(self, movie, fichier):
+        threading.Thread.__init__(self)
         self.movie = movie
         self.fichier = fichier
 
-    def start(self):
+    def run(self):
         start = time.time()
+        
         #Starting the movie
+        print ""
         print 'starting movie %s...' % smart_str(self.movie["title"])
+        
+        def upgrade_movie(movie):
+            i = imdb.IMDb()
+            i.update(movie)
+            return movie
+        
+        print "seeking information for movie on imdb..."
+        next_step = False
+        while next_step is False:
+            try:
+                self.movie = upgrade_movie(self.movie)
+                next_step = True
+            except Exception, x:
+                print x
+                next_step = False
+        
         start_movie = {}
         start_movie['imdb-id'] = self.movie.getID()
         start_movie['original-title'] = smart_str(self.movie['title'])
@@ -304,7 +339,7 @@ class Store_movie():
             actors = []
             print "problem with self.movie['actors']"
         for actor in actors:
-            while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
+            while threading.active_count() > Thread_store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
             a = Actor_Model.get_actor_model_by_imdb_id(actor.getID())
             if a is None:
                 print "storing actor : %s" % smart_str(actor)
@@ -323,7 +358,7 @@ class Store_movie():
             directors = []
             print "problem with self.movie['director']"
         for director in directors:
-            while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
+            while threading.active_count() > Thread_store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
             d = Director_Model.get_director_model_by_imdb_id(director.getID())
             if d is None:
                 print "storing director : %s" % smart_str(director)
@@ -342,7 +377,7 @@ class Store_movie():
             writers = []
             print "problem with self.movie['writer']"
         for writer in writers:
-            while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
+            while threading.active_count() > Thread_store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
             w = Writer_Model.get_writer_model_by_imdb_id(writer.getID())
             if w is None:
                 print "storing writers : %s" % smart_str(writer)
@@ -351,9 +386,9 @@ class Store_movie():
                 thread.start()
             else: ecrivains.append(w)
         
-        while threading.active_count() > 1:
+        while threading.active_count() > 5:
             time.sleep(1.0)
-            print "still waiting for processes to finish (step 1/2)..."
+            print "waiting... still " +str(threading.active_count()) + "processes running (step 1/2)..."
             
         for a_t in actor_threads:
             if a_t is not None:
@@ -490,7 +525,7 @@ class Store_movie():
                 else: category = None
     
                 for person in award['to']:
-                    while threading.active_count() > Store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
+                    while threading.active_count() > Thread_store_movie.MAX_THREAD_QUOTA: time.sleep(1.0)
                     
                     print "award matching for :"
                     print "    award : %s" % smart_str(award_model.award_name)
@@ -506,11 +541,12 @@ class Store_movie():
                         Thread_award_section(person, "writer", film, award_model, category).start()
                     else: Thread_award_section(person, "unknown", film, award_model, category).start()
                     
-            while threading.active_count() > 1:
+            while threading.active_count() > 5:
                 time.sleep(1.0)
-                print "still waiting for processes to finish (step 2/2)..."
+                print "waiting... still " +str(threading.active_count()) + "processes running (step 2/2)..."
             
             print 'all awards stored'
         
+        self._Thread__stop()
         print "storage DONE."
         print "operation took : %s seconds" % str(time.time() - start)
