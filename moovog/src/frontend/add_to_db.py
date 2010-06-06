@@ -22,7 +22,7 @@ import time
 import sys
 
 maxResults = 5
-maxFiles = 1
+maxFiles = 20
 maxUpdates = 1
 
 #get all files which are not in the ignore table or in the movie table from the crawler table. This query
@@ -35,7 +35,7 @@ def queryImdbWithCrawledFiles():
     diskScanResult = getNewCrawledFiles()
     imdbMatches = {}
     files = []
-    for file in File.objects.all()[:maxFiles+1]:
+    for file in File.objects.all()[:maxFiles]:
     	files.append(file)
     imdbMatches = search_movie_for_moovog(files, maxResults)
     return (diskScanResult, imdbMatches)
@@ -125,28 +125,35 @@ def getImdbMovie(imdbMovies, imdbId):
 #    	except Exception, e:
 #    		print e
 
+class Thread_add_films_to_db(threading.Thread):
+    
+    def __init__(self, disk_scan_result, imdb_matches, association):
+        threading.Thread.__init__(self)
+        self.disk_scan_result = disk_scan_result
+        self.imdb_matches = imdb_matches
+        self.association = association
+        
+    def run(self):
+#        threads = []
+        for d in self.disk_scan_result:
+            assoc = self.association["%s" % (d.id)]
+        #        assoc = association[str(d.id)]
+            print str(assoc)
+            if assoc == 'ignore':
+                print "putting file %s in ignore table" % (d.path)
+                IgnoreTable(filename = d.filename, hash_code = d.hash_code, extension = d.extension, path = d.path).save()
+            else:
+                while threading.active_count() > maxUpdates+3: time.sleep(1.0) # One movie at a time
+                imdbMovie = getImdbMovie(self.imdb_matches[d.id], assoc)
+                print "putting file %s as film %s in film table" % (d.path, dictGet(imdbMovie, 'title'))
+                thread = Thread_store_movie(imdbMovie, d)
+#                threads.append(thread)
+                thread.start()
+                
+                if Trailer.objects.filter(imdb_id = imdbMovie.getID()).__len__() == 0:
+                    Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
+        self._Thread__stop()
+
 def addFilmsToDb(diskScanResult, imdbMatches, association):
-    threads = []
-    print "DISK SCAN RESULT : " + str(diskScanResult)
-    print "IMDB MATCHES : " + str(imdbMatches)
-    print "ASSOCIATIONS : " + str(association)
-    for d in diskScanResult:
-        assoc = association["%s" % (d.id)]
-#        assoc = association[str(d.id)]
-        print str(assoc)
-        if assoc == 'ignore':
-        	print "putting file %s in ignore table" % (d.path)
-        	IgnoreTable(filename = d.filename, hash_code = d.hash_code, extension = d.extension, path = d.path).save()
-        else:
-#            while threading.active_count() > maxUpdates: time.sleep(1.0)
-            imdbMovie = getImdbMovie(imdbMatches[d.id], assoc)
-            print "putting file %s as film %s in film table" % (d.path, dictGet(imdbMovie, 'title'))
-            thread = Thread_store_movie(imdbMovie, d)
-            threads.append(thread)
-            thread.start()
-#            sys._current_frames(thread)
-            
-            if Trailer.objects.filter(imdb_id = imdbMovie.getID()).__len__() == 0:
-                Trailer(imdb_id = imdbMovie.getID(), trailer_url = get_trailer_embed(imdbMovie.getID())).save()
-#    while thread_still_alive(threads): time.sleep(1.0)
+    Thread_add_films_to_db(diskScanResult, imdbMatches, association).start()
     return True
