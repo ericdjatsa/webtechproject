@@ -154,15 +154,10 @@ def add_to_db(request, step):
         request.session.set_expiry(0) # delete session on web browser close
         return HttpResponse(template.render(context))
     elif step == '2':
-#        try:
-            addFilmsToDb(request.session['disk_scan_result'], request.session['imdb_matches'], request.POST)
-#        except:
-            #TODO show error message
-#            pass
-#        finally:
-            return HttpResponseRedirect(reverse('src.frontend.views.index'))        
+        addFilmsToDb(request.session['disk_scan_result'], request.session['imdb_matches'], request.POST)
+        return HttpResponseRedirect(reverse('src.seeker.views.index'))
     else:
-        return HttpResponseRedirect(reverse('src.frontend.views.index'))        
+        return HttpResponseRedirect(reverse('src.seeker.views.index'))        
     
 def preferences(request):
      return HttpResponse(loader.get_template('frontend/preferences.html').render(Context({})))
