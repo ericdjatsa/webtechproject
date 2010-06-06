@@ -386,9 +386,9 @@ class Thread_store_movie(threading.Thread):
                 thread.start()
             else: ecrivains.append(w)
         
-        while threading.active_count() > 5:
+        while threading.active_count() > 10:
             time.sleep(1.0)
-            print "waiting... still " +str(threading.active_count()) + "processes running (step 1/2)..."
+            print "waiting... still " +str(threading.active_count()) + " processes running (step 1/2)..."
             
         for a_t in actor_threads:
             if a_t is not None:
@@ -541,9 +541,9 @@ class Thread_store_movie(threading.Thread):
                         Thread_award_section(person, "writer", film, award_model, category).start()
                     else: Thread_award_section(person, "unknown", film, award_model, category).start()
                     
-            while threading.active_count() > 5:
+            while threading.active_count() > 10:
                 time.sleep(1.0)
-                print "waiting... still " +str(threading.active_count()) + "processes running (step 2/2)..."
+                print "waiting... still " +str(threading.active_count()) + " processes running (step 2/2)..."
             
             print 'all awards stored'
         

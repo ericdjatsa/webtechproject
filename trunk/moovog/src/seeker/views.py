@@ -204,19 +204,19 @@ def fetch_person(person):
 def actor(request, name, person_id):
     p = get_object_or_404(Actor_Model, id = person_id)
     template = loader.get_template('frontend/person.html')
-    context = Context({'person': p})
+    context = Context({'person': p, 'type' : 'actor'})
     return HttpResponse(template.render(context))
 
 def director(request, name, person_id):
     p = get_object_or_404(Director_Model, id = person_id)
     template = loader.get_template('frontend/person.html')
-    context = Context({'person': p})
+    context = Context({'person': p, 'type' : 'director'})
     return HttpResponse(template.render(context))
 
 def writer(request, name, person_id):
     p = get_object_or_404(Writer_Model, id = person_id)
     template = loader.get_template('frontend/person.html')
-    context = Context({'person': p})
+    context = Context({'person': p, 'type' : 'writer'})
     return HttpResponse(template.render(context))
     
 def character(request, name, character_id):
